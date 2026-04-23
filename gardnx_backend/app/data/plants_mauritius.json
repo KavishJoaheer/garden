@@ -70,7 +70,7 @@
     ],
     "description": "One of the most popular vegetables in Mauritius. Thrives in warm weather and produces abundantly from winter to summer.",
     "care_notes": "Water regularly at the base. Stake plants when tall. Watch for whitefly in summer.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Tomato_je.jpg/330px-Tomato_je.jpg"
+    "image_url": null
   },
   {
     "id": "brinjal",
@@ -134,7 +134,7 @@
     ],
     "description": "A warm-season crop that thrives in the Mauritius summer heat. Popular in local cuisine.",
     "care_notes": "Needs warm soil. Mulch to retain moisture. Protect young plants from strong winds.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Solanum_melongena_24_08_2012_%281%29.JPG/330px-Solanum_melongena_24_08_2012_%281%29.JPG"
+    "image_url": null
   },
   {
     "id": "chili",
@@ -204,7 +204,7 @@
     ],
     "description": "A Mauritius staple in every household garden. Grows well year-round in warm conditions.",
     "care_notes": "Drought tolerant once established. Harvest regularly to encourage more fruiting.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Capsicum_annuum_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-027.jpg/640px-Capsicum_annuum_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-027.jpg"
+    "image_url": null
   },
   {
     "id": "cucumber",
@@ -267,7 +267,7 @@
     ],
     "description": "Fast-growing vine that loves the Mauritius summer heat. Requires a trellis or support.",
     "care_notes": "Water frequently and consistently. Provide support structure. Harvest before over-ripening.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/ARS_cucumber.jpg/640px-ARS_cucumber.jpg"
+    "image_url": null
   },
   {
     "id": "bitter_gourd",
@@ -323,7 +323,7 @@
     "incompatible_plants": [],
     "description": "Extremely popular in Mauritian cuisine. Thrives in tropical heat on a trellis or fence.",
     "care_notes": "Needs strong trellis. Soak seeds 24 hours before planting. Harvest while still green.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Momordica_charantia_Blanco2.357.png/330px-Momordica_charantia_Blanco2.357.png"
+    "image_url": null
   },
   {
     "id": "ridge_gourd",
@@ -378,7 +378,7 @@
     "incompatible_plants": [],
     "description": "Popular local vegetable grown on trellises. Also used as loofah when dried.",
     "care_notes": "Needs strong support. Regular watering required. Harvest young for best flavor.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Luffa_aegyptica.jpg/330px-Luffa_aegyptica.jpg"
+    "image_url": null
   },
   {
     "id": "pumpkin",
@@ -439,7 +439,7 @@
     "incompatible_plants": [],
     "description": "Space-demanding but highly productive. Grows well in most Mauritius regions.",
     "care_notes": "Needs plenty of space. Keep soil moist when fruiting. Cure harvested pumpkins in sun.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Cucurbita_moschata_Butternut_2012_G2.jpg/640px-Cucurbita_moschata_Butternut_2012_G2.jpg"
+    "image_url": null
   },
   {
     "id": "cabbage",
@@ -503,7 +503,7 @@
     ],
     "description": "A cool-season crop best grown during Mauritius winter in the central plateau or south.",
     "care_notes": "Needs cool temperatures. Protect from caterpillars. Use row covers if needed.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Cabbage_and_cross_section_on_white.jpg/330px-Cabbage_and_cross_section_on_white.jpg"
+    "image_url": null
   },
   {
     "id": "lettuce",
@@ -561,7 +561,7 @@
     "incompatible_plants": [],
     "description": "Fast-growing cool-season green. Best grown in Mauritius winter, especially in higher regions.",
     "care_notes": "Keep soil moist. Harvest outer leaves to extend the season. Bolts in heat.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Iceberg_lettuce_in_SB.jpg/330px-Iceberg_lettuce_in_SB.jpg"
+    "image_url": null
   },
   {
     "id": "spinach",
@@ -617,7 +617,7 @@
     "incompatible_plants": [],
     "description": "Nutritious cool-season green. Grows quickly in Mauritius winter months.",
     "care_notes": "Sow directly. Keep evenly moist. Cut leaves 1cm above ground for regrowth.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Spinacia_oleracea_Spinazie_bloeiend.jpg/330px-Spinacia_oleracea_Spinazie_bloeiend.jpg"
+    "image_url": null
   },
   {
     "id": "french_beans",
@@ -685,7 +685,7 @@
     ],
     "description": "Quick-growing legume that fixes nitrogen in the soil. Very popular in Mauritius.",
     "care_notes": "Direct sow. Keep soil moist. Harvest when pods are young and crisp.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Heaps_of_beans.jpg/330px-Heaps_of_beans.jpg"
+    "image_url": null
   },
   {
     "id": "long_beans",
@@ -748,7 +748,7 @@
     ],
     "description": "Heat-tolerant bean that thrives in Mauritius summer. Needs trellis. Very productive.",
     "care_notes": "Provide trellis. Drought tolerant once established. Harvest daily when pods form.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Lobia.jpg/330px-Lobia.jpg"
+    "image_url": null
   },
   {
     "id": "okra",
@@ -806,7 +806,7 @@
     "incompatible_plants": [],
     "description": "A Mauritius staple. Extremely heat-tolerant and produces abundantly in summer.",
     "care_notes": "Soak seeds overnight before planting. Harvest every 2-3 days when pods are 7-10cm.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Hong_Kong_Okra_Aug_25_2012.JPG/640px-Hong_Kong_Okra_Aug_25_2012.JPG"
+    "image_url": null
   },
   {
     "id": "sweet_potato",
@@ -863,7 +863,7 @@
     "incompatible_plants": [],
     "description": "Easy-to-grow root vegetable that spreads as ground cover. Very low maintenance.",
     "care_notes": "Plant slips (cuttings) in well-drained soil. Little fertiliser needed. Harvest before rains.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Ipomoea_batatas_006.JPG/330px-Ipomoea_batatas_006.JPG"
+    "image_url": null
   },
   {
     "id": "spring_onion",
@@ -928,7 +928,7 @@
     ],
     "description": "Fast-growing essential herb/vegetable in Mauritius cooking. Grows in both seasons.",
     "care_notes": "Can be grown in containers. Keep moist. Harvest by cutting, leaving roots to regrow.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/CSA-Red-Spring-Onions.jpg/640px-CSA-Red-Spring-Onions.jpg"
+    "image_url": null
   },
   {
     "id": "radish",
@@ -986,7 +986,7 @@
     "incompatible_plants": [],
     "description": "One of the fastest vegetables to grow. Ready in just 3-4 weeks. Great for beginners.",
     "care_notes": "Direct sow. Keep soil moist for even germination. Harvest promptly when ready.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Radish_3371103037_4ab07db0bf_o.jpg/330px-Radish_3371103037_4ab07db0bf_o.jpg"
+    "image_url": null
   },
   {
     "id": "corn",
@@ -1049,7 +1049,7 @@
     ],
     "description": "Tall, space-efficient when grown in rows. Part of the Three Sisters companion planting group.",
     "care_notes": "Plant in blocks of at least 4x4 for wind pollination. Mound soil around base when 30cm tall.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Zea_mays_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-283.jpg/330px-Zea_mays_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-283.jpg"
+    "image_url": null
   },
   {
     "id": "basil",
@@ -1122,7 +1122,7 @@
     ],
     "description": "Essential herb in Mauritian and Mediterranean cooking. Repels pests when grown near tomatoes.",
     "care_notes": "Pinch flowers to extend leaf production. Water at base, not leaves. Harvest regularly.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Ocimum_basilicum_8zz.jpg/330px-Ocimum_basilicum_8zz.jpg"
+    "image_url": null
   },
   {
     "id": "coriander",
@@ -1182,7 +1182,7 @@
     ],
     "description": "Cornerstone of Mauritian cuisine. Best grown in cooler months in shaded spots.",
     "care_notes": "Sow in stages every 2-3 weeks. Bolts quickly in heat. Harvest leaves before flowering.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Coriandrum_sativum_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-193.jpg/640px-Coriandrum_sativum_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-193.jpg"
+    "image_url": null
   },
   {
     "id": "mint",
@@ -1262,7 +1262,7 @@
     "incompatible_plants": [],
     "description": "Vigorous perennial herb. Grow in containers to control spreading. Used widely in Mauritian cooking.",
     "care_notes": "Grow in containers to prevent invasive spreading. Keep moist. Harvest regularly.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Mentha_spicata-IMG_6186.jpg/330px-Mentha_spicata-IMG_6186.jpg"
+    "image_url": null
   },
   {
     "id": "thyme",
@@ -1340,7 +1340,7 @@
     "incompatible_plants": [],
     "description": "Drought-tolerant perennial herb. Excellent companion plant and insect repellent.",
     "care_notes": "Well-drained soil essential. Drought tolerant. Trim regularly to prevent woody stems.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Thyme-Bundle.jpg/330px-Thyme-Bundle.jpg"
+    "image_url": null
   },
   {
     "id": "rosemary",
@@ -1413,7 +1413,7 @@
     ],
     "description": "Mediterranean herb that adapts well to Mauritius dry/warm coastal areas.",
     "care_notes": "Avoid overwatering — roots rot easily. Prune after flowering to keep bushy.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Rosemary_in_bloom.JPG/330px-Rosemary_in_bloom.JPG"
+    "image_url": null
   },
   {
     "id": "parsley",
@@ -1478,7 +1478,7 @@
     "incompatible_plants": [],
     "description": "Slow to germinate but very productive biennial. Best in Mauritius winter.",
     "care_notes": "Soak seeds 24 hours before planting. Slow germination — be patient. Harvest outer stems first.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Petroselinum.jpg/330px-Petroselinum.jpg"
+    "image_url": null
   },
   {
     "id": "lemongrass",
@@ -1552,7 +1552,7 @@
     "incompatible_plants": [],
     "description": "Tropical grass herb used widely in Mauritian teas and cooking. Repels mosquitoes.",
     "care_notes": "Divide clumps every 2-3 years. Drought tolerant once established. Harvest outer stalks.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Gardenology.org-IMG_2892_rbgs11jan.jpg/640px-Gardenology.org-IMG_2892_rbgs11jan.jpg"
+    "image_url": null
   },
   {
     "id": "chives",
@@ -1635,7 +1635,7 @@
     ],
     "description": "Mild onion-flavored herb. Easy to grow in pots or borders. Deters aphids.",
     "care_notes": "Cut back to 2cm above ground after harvesting. Divide clumps every 3 years.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Allium_schoenoprasum_-_Bombus_lapidarius_-_Tootsi.jpg/640px-Allium_schoenoprasum_-_Bombus_lapidarius_-_Tootsi.jpg"
+    "image_url": null
   },
   {
     "id": "papaya",
@@ -1704,7 +1704,7 @@
     "incompatible_plants": [],
     "description": "Very fast-growing tropical fruit tree. Can produce fruit within 7-9 months from seed.",
     "care_notes": "Protect from strong winds. Never overwater — roots rot easily. Plant multiple for pollination.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Carica_papaya_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-029.jpg/640px-Carica_papaya_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-029.jpg"
+    "image_url": null
   },
   {
     "id": "pineapple",
@@ -1765,7 +1765,7 @@
     "incompatible_plants": [],
     "description": "Mauritius pineapples are world-famous. Plant crowns or slips. Takes 18 months to first harvest.",
     "care_notes": "Plant crowns or side shoots. Very drought tolerant. Acidic soil preferred.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/%E0%B4%95%E0%B5%88%E0%B4%A4%E0%B4%9A%E0%B5%8D%E0%B4%9A%E0%B4%95%E0%B5%8D%E0%B4%95.jpg/640px-%E0%B4%95%E0%B5%88%E0%B4%A4%E0%B4%9A%E0%B5%8D%E0%B4%9A%E0%B4%95%E0%B5%8D%E0%B4%95.jpg"
+    "image_url": null
   },
   {
     "id": "passion_fruit",
@@ -1826,7 +1826,7 @@
     "incompatible_plants": [],
     "description": "Vigorous climbing vine producing delicious fruit. Needs a strong trellis or fence.",
     "care_notes": "Needs strong support structure. Prune after fruiting. Plant in sheltered spot.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Passiflora_edulis_forma_flavicarpa.jpg/330px-Passiflora_edulis_forma_flavicarpa.jpg"
+    "image_url": null
   },
   {
     "id": "watermelon",
@@ -1879,7 +1879,7 @@
     "incompatible_plants": [],
     "description": "Space-hungry but rewarding. Best grown in the warm north and west of Mauritius.",
     "care_notes": "Needs very warm soil. Reduce watering when fruit develops. Thump to check ripeness.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Taiwan_2009_Tainan_City_Organic_Farm_Watermelon_FRD_7962.jpg/640px-Taiwan_2009_Tainan_City_Organic_Farm_Watermelon_FRD_7962.jpg"
+    "image_url": null
   },
   {
     "id": "strawberry",
@@ -1941,7 +1941,7 @@
     ],
     "description": "Grows well in Mauritius winter in the cooler central and southern regions.",
     "care_notes": "Protect fruit from slugs. Remove runners to encourage fruiting. Replace plants every 3 years.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Garden_strawberry_%28Fragaria_%C3%97_ananassa%29_single2.jpg/330px-Garden_strawberry_%28Fragaria_%C3%97_ananassa%29_single2.jpg"
+    "image_url": null
   },
   {
     "id": "marigold",
@@ -2015,7 +2015,7 @@
     "incompatible_plants": [],
     "description": "The ultimate companion plant. Repels nematodes, aphids and whitefly. Grows anywhere.",
     "care_notes": "Low maintenance. Deadhead regularly to extend flowering. Grows in almost any soil.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Tagetes_erecta_chendumalli_chedi.jpg/330px-Tagetes_erecta_chendumalli_chedi.jpg"
+    "image_url": null
   },
   {
     "id": "sunflower",
@@ -2077,7 +2077,7 @@
     ],
     "description": "Fast-growing annual that attracts pollinators. Can be grown as trellis for climbing plants.",
     "care_notes": "Direct sow. Stake in windy areas. Harvest seeds when back of head turns brown.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Sunflower_sky_backdrop.jpg/330px-Sunflower_sky_backdrop.jpg"
+    "image_url": null
   },
   {
     "id": "zinnia",
@@ -2137,7 +2137,7 @@
     "incompatible_plants": [],
     "description": "Colorful, heat-loving annual. Excellent pollinator attractant. Easy for beginners.",
     "care_notes": "Direct sow. Drought tolerant once established. Deadhead to encourage continuous blooming.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Zinnia_single_layer_and_12_Petals_2.jpg/330px-Zinnia_single_layer_and_12_Petals_2.jpg"
+    "image_url": null
   },
   {
     "id": "bougainvillea",
@@ -2206,7 +2206,7 @@
     "incompatible_plants": [],
     "description": "Iconic Mauritius ornamental climber. Almost no care needed once established.",
     "care_notes": "Drought stress triggers blooming. Reduce watering to encourage flowers. Prune after bloom.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Bougainvillea_closeup.jpg/330px-Bougainvillea_closeup.jpg"
+    "image_url": null
   },
   {
     "id": "hibiscus",
@@ -2278,7 +2278,7 @@
     "incompatible_plants": [],
     "description": "National flower of Mauritius. Tropical perennial flowering shrub. Attracts butterflies.",
     "care_notes": "Regular watering. Prune lightly after each bloom cycle. Fertilize monthly in growing season.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Hibiscus_flower_TZ.jpg/330px-Hibiscus_flower_TZ.jpg"
+    "image_url": null
   },
   {
     "id": "taro",
@@ -2335,7 +2335,7 @@
     "incompatible_plants": [],
     "description": "Traditional Mauritian staple (songe). Grown in wet, low-lying areas. Both leaves and tubers used.",
     "care_notes": "Needs consistently moist soil. Can tolerate partial flooding. Harvest corms when leaves yellow.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Songe-R%C3%A9union.JPG/640px-Songe-R%C3%A9union.JPG"
+    "image_url": null
   },
   {
     "id": "carrot",
@@ -2396,7 +2396,7 @@
     ],
     "description": "Root vegetable best grown in Mauritius winter in loose, deep soil.",
     "care_notes": "Needs loose, deep, stone-free soil. Thin seedlings to prevent forking. Don't over-fertilize.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Vegetable-Carrot-Bundle-wStalks.jpg/640px-Vegetable-Carrot-Bundle-wStalks.jpg"
+    "image_url": null
   },
   {
     "id": "onion",
@@ -2460,7 +2460,7 @@
     ],
     "description": "Essential kitchen vegetable grown in Mauritius winter. Long growing season.",
     "care_notes": "Reduce watering when tops start to brown and fall. Cure harvested bulbs in sun.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Mixed_onions.jpg/640px-Mixed_onions.jpg"
+    "image_url": null
   },
   {
     "id": "garlic",
@@ -2518,6 +2518,6 @@
     ],
     "description": "Plant individual cloves in winter. Ready to harvest when tops dry. Great pest deterrent.",
     "care_notes": "Plant pointed end up, 5cm deep. Stop watering when leaves start yellowing. Cure in dry shade.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/39/Allium_sativum_Woodwill_1793.jpg"
+    "image_url": null
   }
 ]

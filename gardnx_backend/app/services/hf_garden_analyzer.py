@@ -23,7 +23,7 @@ from app.models.analysis_models import Point, SegmentationResponse, ZoneInfo
 logger = logging.getLogger("gardnx")
 
 HF_API_URL = (
-    "https://api-inference.huggingface.co/models/"
+    "https://router.huggingface.co/hf-inference/models/"
     "nvidia/segformer-b0-finetuned-ade-512-512"
 )
 

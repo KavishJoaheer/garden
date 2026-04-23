@@ -23,19 +23,28 @@ class PlantPlacement {
 
   int get cellsOccupied => rowSpan * colSpan;
 
-  factory PlantPlacement.fromJson(Map<String, dynamic> json) =>
-      PlantPlacement(
-        id: json['id'] as String? ??
-            '${json['plant_id']}_${json['start_row']}_${json['start_col']}',
-        plantId: json['plant_id'] as String? ?? '',
-        plantName: json['plant_name'] as String? ?? '',
-        startRow: (json['start_row'] as int?) ?? 0,
-        startCol: (json['start_col'] as int?) ?? 0,
-        rowSpan: json['row_span'] as int? ?? 1,
-        colSpan: json['col_span'] as int? ?? 1,
-        count: json['count'] as int? ?? 1,
-        notes: json['notes'] as String?,
-      );
+  factory PlantPlacement.fromJson(Map<String, dynamic> json) {
+    // Support both backend field names (row/col/span_rows/span_cols)
+    // and Firestore-persisted names (start_row/start_col/row_span/col_span).
+    final row = (json['row'] as int?) ?? (json['start_row'] as int?) ?? 0;
+    final col = (json['col'] as int?) ?? (json['start_col'] as int?) ?? 0;
+    final rowSpan =
+        (json['span_rows'] as int?) ?? (json['row_span'] as int?) ?? 1;
+    final colSpan =
+        (json['span_cols'] as int?) ?? (json['col_span'] as int?) ?? 1;
+    return PlantPlacement(
+      id: json['id'] as String? ??
+          '${json['plant_id']}_${row}_$col',
+      plantId: json['plant_id'] as String? ?? '',
+      plantName: json['plant_name'] as String? ?? '',
+      startRow: row,
+      startCol: col,
+      rowSpan: rowSpan,
+      colSpan: colSpan,
+      count: json['count'] as int? ?? 1,
+      notes: json['notes'] as String?,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id,

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 class PlantConditions {
   final double minTempC;
   final double maxTempC;
@@ -140,13 +141,27 @@ class Plant {
     this.difficultyLevel = 'easy',
   });
 
+  static String? normalizeImageUrl(String? imageUrl) {
+    if (imageUrl == null) return null;
+    final normalized = imageUrl.trim();
+    if (normalized.isEmpty) return null;
+
+    // Reject HTML-page wiki URLs (not direct image links).
+    // Reject Perenual paywall placeholder (returned when API tier lacks image access).
+    final lower = normalized.toLowerCase();
+    final isHtmlPage = (lower.contains('commons.wikimedia.org/wiki/') ||
+        lower.contains('wikipedia.org/wiki/'));
+    final isPaywallPlaceholder = lower.contains('upgrade_access');
+    return (isHtmlPage || isPaywallPlaceholder) ? null : normalized;
+  }
+
   factory Plant.fromJson(Map<String, dynamic> json) => Plant(
         id: json['id'] as String? ?? '',
         name: json['name'] as String,
         scientificName: json['scientific_name'] as String? ?? '',
         category: json['category'] as String? ?? 'vegetable',
         description: json['description'] as String? ?? '',
-        imageUrl: json['image_url'] as String?,
+        imageUrl: normalizeImageUrl(json['image_url'] as String?),
         conditions: PlantConditions.fromJson(
             json['conditions'] as Map<String, dynamic>? ?? {}),
         spacing: PlantSpacing.fromJson(

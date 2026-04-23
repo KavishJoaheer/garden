@@ -73,6 +73,10 @@ class PlantCard extends StatelessWidget {
                   ? Image.network(
                       plant.imageUrl!,
                       fit: BoxFit.cover,
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return _PlaceholderImage(plant: plant, isLoading: true);
+                      },
                       errorBuilder: (_, __, ___) =>
                           _PlaceholderImage(plant: plant),
                     )
@@ -146,7 +150,7 @@ class PlantCard extends StatelessWidget {
                       child: LinearProgressIndicator(
                         value: plant.suitabilityScore,
                         backgroundColor:
-                            colorScheme.surfaceVariant,
+                            colorScheme.surfaceContainerHighest,
                         valueColor: AlwaysStoppedAnimation<Color>(
                           plant.suitabilityScore > 0.7
                               ? Colors.green
@@ -170,8 +174,12 @@ class PlantCard extends StatelessWidget {
 
 class _PlaceholderImage extends StatelessWidget {
   final Plant plant;
+  final bool isLoading;
 
-  const _PlaceholderImage({required this.plant});
+  const _PlaceholderImage({
+    required this.plant,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -179,11 +187,20 @@ class _PlaceholderImage extends StatelessWidget {
     return Container(
       color: colorScheme.primaryContainer.withOpacity(0.4),
       child: Center(
-        child: Icon(
-          Icons.local_florist,
-          size: 48,
-          color: colorScheme.primary.withOpacity(0.5),
-        ),
+        child: isLoading
+            ? SizedBox(
+                width: 28,
+                height: 28,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  color: colorScheme.primary.withOpacity(0.7),
+                ),
+              )
+            : Icon(
+                Icons.local_florist,
+                size: 48,
+                color: colorScheme.primary.withOpacity(0.5),
+              ),
       ),
     );
   }

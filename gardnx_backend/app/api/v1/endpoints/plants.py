@@ -51,8 +51,50 @@ def _get_gemini() -> GeminiRecommender:
 def _get_ollama() -> OllamaRecommender:
     global _ollama
     if _ollama is None:
-        _ollama = OllamaRecommender(model="gemma3:1b")
+        _ollama = OllamaRecommender()
     return _ollama
+
+
+async def _run_engine_chain(
+    req: RecommendRequest,
+    recommender: PlantRecommender,
+    gemini: GeminiRecommender,
+    ollama: OllamaRecommender,
+) -> tuple[RecommendResponse, str, str | None, str | None]:
+    """Run the engine chain honoring `req.preferred_engine`.
+
+    Returns (result, engine_used, engine_requested, fallback_reason).
+    `fallback_reason` is non-None only when the preferred engine was not the
+    one that produced the result — it lists each skipped engine's failure."""
+    requested = req.preferred_engine
+    if requested == "ollama":
+        order = [("ollama", ollama), ("gemini", gemini), ("rules", None)]
+    elif requested == "rules":
+        order = [("rules", None)]
+    else:
+        order = [("gemini", gemini), ("ollama", ollama), ("rules", None)]
+
+    failures: list[str] = []
+    for name, engine in order:
+        if name == "rules":
+            result = recommender.recommend(req)
+            used = "rules"
+            break
+        try:
+            attempt = await engine.recommend(req, recommender.plants)
+        except Exception as exc:  # noqa: BLE001 — we want to surface these
+            failures.append(f"{name}: {exc}")
+            continue
+        if attempt is not None and attempt.recommendations:
+            result, used = attempt, name
+            break
+        failures.append(f"{name}: no result")
+    else:
+        result = recommender.recommend(req)
+        used = "rules"
+
+    fallback_reason = "; ".join(failures) if (failures and used != requested) else None
+    return result, used, requested, fallback_reason
 
 
 @router.get("/search")
@@ -138,7 +180,7 @@ async def get_engine_status(user_id: str = Depends(get_current_user)):
         try:
             import google.generativeai as genai
             genai.configure(api_key=settings.gemini_api_key)
-            statuses["gemini"] = {"available": True, "reason": "Gemini 2.0 Flash Lite (cloud AI)"}
+            statuses["gemini"] = {"available": True, "reason": "Gemini 2.5 Flash Lite (cloud AI)"}
         except Exception as e:
             statuses["gemini"] = {"available": False, "reason": f"Gemini error: {str(e)[:80]}"}
 
@@ -176,8 +218,11 @@ async def get_plant(
     if plant is None:
         raise HTTPException(status_code=404, detail=f"Plant '{plant_id}' not found")
 
-    if enrich and plant.image_url is None:
-        perenual = _get_perenual()
+    perenual = _get_perenual() if enrich else None
+    if enrich and perenual and (
+        plant.image_url is None
+        or perenual.uses_legacy_image_source(plant.image_url)
+    ):
         data = await perenual.search_plant(
             name=plant.name,
             scientific_name=plant.scientific_name,
@@ -199,44 +244,17 @@ async def recommend_plants(
     """Generate scored plant recommendations, enriched with Perenual images.
 
     Engine priority:
-      1. Gemini 2.0 Flash Lite (cloud — free tier, needs internet)
+      1. Gemini 2.5 Flash Lite (cloud — free tier, needs internet)
       2. Ollama (local LLM — free, offline, no quota)
       3. Rule-based weighted algorithm (always works)
     Results are then enriched with Perenual plant images.
     """
     recommender = _get_recommender()
-    ollama = _get_ollama()
-    gemini = _get_gemini()
+    result, engine, requested, fallback = await _run_engine_chain(
+        body, recommender, _get_gemini(), _get_ollama(),
+    )
 
-    preferred = getattr(body, 'preferred_engine', None)
-
-    # Build ordered engine list based on preference
-    # Default priority: gemini → ollama → rules
-    if preferred == "ollama":
-        engine_order = [("ollama", ollama), ("gemini", gemini), ("rules", None)]
-    elif preferred == "rules":
-        engine_order = [("rules", None)]
-    else:  # gemini or None (default)
-        engine_order = [("gemini", gemini), ("ollama", ollama), ("rules", None)]
-
-    result = None
-    engine = "rules"
-    for eng_name, eng in engine_order:
-        if eng_name == "rules":
-            result = recommender.recommend(body)
-            engine = "rules"
-            break
-        attempt = await eng.recommend(body, recommender.plants)
-        if attempt is not None:
-            result = attempt
-            engine = eng_name
-            break
-
-    if result is None:
-        result = recommender.recommend(body)
-        engine = "rules"
-
-    # --- Enrich with Perenual images -----------------------------------------
+    # Enrich with Perenual images
     perenual = _get_perenual()
     enriched_plants = await perenual.enrich_plants(
         [r.plant for r in result.recommendations],
@@ -248,10 +266,13 @@ async def recommend_plants(
     ]
 
     logger.info(
-        "Recommend [%s]: %d results for month=%d sun=%s region=%s",
-        engine, result.total, body.month, body.bed_sunlight, body.region,
+        "Recommend [%s → %s]: %d results for month=%d sun=%s region=%s exp=%s",
+        requested or "auto", engine, result.total,
+        body.month, body.bed_sunlight, body.region, body.experience_level,
     )
     result.engine_used = engine
+    result.engine_requested = requested
+    result.fallback_reason = fallback
     return result
 
 

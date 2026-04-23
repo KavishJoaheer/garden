@@ -32,7 +32,10 @@ class _AreaSelectionScreenState extends ConsumerState<AreaSelectionScreen> {
   Offset? _startPoint;
   Offset? _endPoint;
   bool _isDragging = false;
-  Size _imageSize = Size.zero;
+  Size _viewportSize = Size.zero;
+  Size _sourceImageSize = Size.zero;
+  ImageStream? _imageStream;
+  ImageStreamListener? _imageStreamListener;
 
   Rect? get _selectionRect {
     if (_startPoint == null || _endPoint == null) return null;
@@ -48,13 +51,103 @@ class _AreaSelectionScreenState extends ConsumerState<AreaSelectionScreen> {
   /// Converts the drawn rect to normalised coordinates (0-1).
   Rect? get _normalizedRect {
     final rect = _selectionRect;
-    if (rect == null || _imageSize == Size.zero) return null;
+    final imageRect = _displayedImageRect;
+    if (rect == null || imageRect == null) return null;
 
     return Rect.fromLTRB(
-      (rect.left / _imageSize.width).clamp(0.0, 1.0),
-      (rect.top / _imageSize.height).clamp(0.0, 1.0),
-      (rect.right / _imageSize.width).clamp(0.0, 1.0),
-      (rect.bottom / _imageSize.height).clamp(0.0, 1.0),
+      ((rect.left - imageRect.left) / imageRect.width).clamp(0.0, 1.0),
+      ((rect.top - imageRect.top) / imageRect.height).clamp(0.0, 1.0),
+      ((rect.right - imageRect.left) / imageRect.width).clamp(0.0, 1.0),
+      ((rect.bottom - imageRect.top) / imageRect.height).clamp(0.0, 1.0),
+    );
+  }
+
+  Rect? get _displayedImageRect {
+    if (_viewportSize == Size.zero) return null;
+    if (_sourceImageSize == Size.zero) {
+      return Rect.fromLTWH(0, 0, _viewportSize.width, _viewportSize.height);
+    }
+
+    final imageAspect = _sourceImageSize.width / _sourceImageSize.height;
+    final viewportAspect = _viewportSize.width / _viewportSize.height;
+
+    if (imageAspect > viewportAspect) {
+      final displayedHeight = _viewportSize.width / imageAspect;
+      final top = (_viewportSize.height - displayedHeight) / 2;
+      return Rect.fromLTWH(0, top, _viewportSize.width, displayedHeight);
+    }
+
+    final displayedWidth = _viewportSize.height * imageAspect;
+    final left = (_viewportSize.width - displayedWidth) / 2;
+    return Rect.fromLTWH(left, 0, displayedWidth, _viewportSize.height);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _resolveImageSize();
+  }
+
+  @override
+  void didUpdateWidget(covariant AreaSelectionScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.photoPath != widget.photoPath) {
+      _disposeImageStream();
+      _sourceImageSize = Size.zero;
+      _resolveImageSize();
+    }
+  }
+
+  @override
+  void dispose() {
+    _disposeImageStream();
+    super.dispose();
+  }
+
+  void _disposeImageStream() {
+    if (_imageStream != null && _imageStreamListener != null) {
+      _imageStream!.removeListener(_imageStreamListener!);
+    }
+    _imageStream = null;
+    _imageStreamListener = null;
+  }
+
+  void _resolveImageSize() {
+    final photoPath = widget.photoPath;
+    if (photoPath == null || photoPath.isEmpty) return;
+
+    final imageProvider = photoPath.startsWith('http')
+        ? NetworkImage(photoPath)
+        : FileImage(File(photoPath)) as ImageProvider;
+
+    final stream = imageProvider.resolve(const ImageConfiguration());
+    late final ImageStreamListener listener;
+    listener = ImageStreamListener((imageInfo, _) {
+      if (!mounted) return;
+      setState(() {
+        _sourceImageSize = Size(
+          imageInfo.image.width.toDouble(),
+          imageInfo.image.height.toDouble(),
+        );
+      });
+      stream.removeListener(listener);
+      if (identical(_imageStream, stream)) {
+        _imageStream = null;
+        _imageStreamListener = null;
+      }
+    });
+
+    _imageStream = stream;
+    _imageStreamListener = listener;
+    stream.addListener(listener);
+  }
+
+  Offset _clampToImageBounds(Offset point) {
+    final imageRect = _displayedImageRect;
+    if (imageRect == null) return point;
+    return Offset(
+      point.dx.clamp(imageRect.left, imageRect.right),
+      point.dy.clamp(imageRect.top, imageRect.bottom),
     );
   }
 
@@ -120,61 +213,73 @@ class _AreaSelectionScreenState extends ConsumerState<AreaSelectionScreen> {
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                _imageSize = Size(
+                _viewportSize = Size(
                   constraints.maxWidth,
                   constraints.maxHeight,
                 );
 
-                return GestureDetector(
-                  onPanStart: (details) {
-                    setState(() {
-                      _startPoint = details.localPosition;
-                      _endPoint = details.localPosition;
-                      _isDragging = true;
-                    });
-                  },
-                  onPanUpdate: (details) {
-                    if (_isDragging) {
-                      setState(() {
-                        _endPoint = Offset(
-                          details.localPosition.dx
-                              .clamp(0.0, _imageSize.width),
-                          details.localPosition.dy
-                              .clamp(0.0, _imageSize.height),
-                        );
-                      });
-                    }
-                  },
-                  onPanEnd: (_) {
-                    setState(() {
-                      _isDragging = false;
-                    });
-                  },
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      // Background photo
-                      _buildPhotoWidget(),
+                return Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // Gesture area (covers the full viewport)
+                    GestureDetector(
+                      onPanStart: (details) {
+                        final localPoint =
+                            _clampToImageBounds(details.localPosition);
+                        setState(() {
+                          _startPoint = localPoint;
+                          _endPoint = localPoint;
+                          _isDragging = true;
+                        });
+                      },
+                      onPanUpdate: (details) {
+                        if (_isDragging) {
+                          setState(() {
+                            _endPoint =
+                                _clampToImageBounds(details.localPosition);
+                          });
+                        }
+                      },
+                      onPanEnd: (_) {
+                        setState(() {
+                          _isDragging = false;
+                        });
+                      },
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          // Background photo
+                          _buildPhotoWidget(),
 
-                      // Selection rect overlay
-                      if (_selectionRect != null)
-                        CustomPaint(
-                          painter: _AreaSelectionPainter(
-                            rect: _selectionRect!,
-                            isDragging: _isDragging,
-                          ),
-                        ),
-                    ],
-                  ),
+                          // Selection rect overlay
+                          if (_selectionRect != null)
+                            CustomPaint(
+                              painter: _AreaSelectionPainter(
+                                rect: _selectionRect!,
+                                isDragging: _isDragging,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+
+                    // Bottom confirm/reset bar — rendered as overlay so the
+                    // viewport (and therefore the displayed image rect) does
+                    // not change when it appears, preventing selection drift.
+                    if (_selectionRect != null && !_isDragging)
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: _buildBottomBar(),
+                      ),
+                  ],
                 );
               },
             ),
           ),
         ],
       ),
-      bottomNavigationBar: _selectionRect != null && !_isDragging
-          ? _buildBottomBar()
-          : null,
     );
   }
 

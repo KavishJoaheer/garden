@@ -50,7 +50,7 @@ class MonthView extends StatelessWidget {
                   margin:
                       const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
                   decoration: BoxDecoration(
-                    color: cellColor ?? colorScheme.surfaceVariant,
+                    color: cellColor ?? colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(4),
                     border: isCurrent
                         ? Border.all(color: colorScheme.primary, width: 2)

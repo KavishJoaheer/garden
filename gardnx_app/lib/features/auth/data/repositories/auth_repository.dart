@@ -2,18 +2,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../domain/models/user_model.dart';
+import '../../../../shared/services/session_service.dart';
 
 /// Repository that handles all Firebase Authentication and user document
 /// operations for the GardNx application.
 class AuthRepository {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
+  final SessionService _sessionService;
 
   AuthRepository({
     FirebaseAuth? firebaseAuth,
     FirebaseFirestore? firestore,
   })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _firestore = firestore ?? FirebaseFirestore.instance;
+        _firestore = firestore ?? FirebaseFirestore.instance,
+        _sessionService = SessionService(
+          firebaseAuth: firebaseAuth ?? FirebaseAuth.instance,
+        );
 
   /// Reference to the users collection in Firestore.
   CollectionReference<Map<String, dynamic>> get _usersCollection =>
@@ -45,6 +50,7 @@ class AuthRepository {
       if (!doc.exists) {
         await createUserDocument(credential.user!);
       }
+      await _sessionService.startSession();
     }
     return credential;
   }
@@ -72,6 +78,7 @@ class AuthRepository {
     // Create the user document in Firestore.
     if (credential.user != null) {
       await createUserDocument(credential.user!, displayName: displayName);
+      await _sessionService.startSession();
     }
 
     return credential;
@@ -80,19 +87,66 @@ class AuthRepository {
   /// Signs the current user out.
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
+    await _sessionService.clearSession();
   }
 
-  /// Deletes the current user's account from Firebase Auth and Firestore.
+  /// Deletes the current user's account, cascading through all owned data.
+  ///
+  /// Order: gardens (+ their beds/layouts/events/tasks subcollections) →
+  /// user-owned plants in the shared catalog → users/{uid} → Firebase Auth
+  /// account → local sign-out. Each step runs while auth privileges are
+  /// still valid so Firestore rules accept the writes.
   Future<void> deleteAccount() async {
     final user = currentUser;
     if (user == null) return;
+    final uid = user.uid;
 
-    // Delete the Firestore document first, before losing auth privileges.
-    await _usersCollection.doc(user.uid).delete();
-    // Delete the Firebase Auth user.
+    await _deleteOwnedGardens(uid);
+    await _deleteOwnedPlants(uid);
+    await _usersCollection.doc(uid).delete();
     await user.delete();
-    // Sign out to clear local state.
     await signOut();
+  }
+
+  Future<void> _deleteOwnedGardens(String uid) async {
+    final gardens = await _firestore
+        .collection('gardens')
+        .where('userId', isEqualTo: uid)
+        .get();
+    for (final garden in gardens.docs) {
+      for (final sub in const ['beds', 'layouts', 'events', 'tasks']) {
+        await _deleteSubcollection(garden.reference.collection(sub));
+      }
+      await garden.reference.delete();
+    }
+  }
+
+  Future<void> _deleteOwnedPlants(String uid) async {
+    final snapshot = await _firestore
+        .collection('plants')
+        .where('userId', isEqualTo: uid)
+        .get();
+    await _deleteDocs(snapshot.docs.map((d) => d.reference));
+  }
+
+  /// Deletes every doc in [col] in 400-doc batches.
+  Future<void> _deleteSubcollection(
+    CollectionReference<Map<String, dynamic>> col,
+  ) async {
+    final snapshot = await col.get();
+    await _deleteDocs(snapshot.docs.map((d) => d.reference));
+  }
+
+  Future<void> _deleteDocs(Iterable<DocumentReference> refs) async {
+    const chunkSize = 400;
+    final list = refs.toList();
+    for (var i = 0; i < list.length; i += chunkSize) {
+      final batch = _firestore.batch();
+      for (final ref in list.skip(i).take(chunkSize)) {
+        batch.delete(ref);
+      }
+      await batch.commit();
+    }
   }
 
   /// Sends a password-reset email to the given [email] address.

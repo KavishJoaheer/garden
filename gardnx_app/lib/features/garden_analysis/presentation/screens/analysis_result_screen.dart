@@ -295,11 +295,13 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen> {
                   ),
                 ),
 
-              // Segmentation overlay
+              // Segmentation overlay — photoPath lets it resolve the image's
+              // intrinsic size so zone polygons align with BoxFit.contain.
               SegmentationOverlay(
                 zones: result.zones,
                 selectedZoneIds: selectedZones,
                 onZoneTap: _handleZoneTap,
+                photoPath: widget.photo.localPath ?? widget.photo.imageUrl,
               ),
 
               // Fallback recommendation banner

@@ -25,6 +25,14 @@ class AnalysisRepository {
   })  : _apiClient = apiClient,
         _firestore = firestore ?? FirebaseFirestore.instance;
 
+  String? _resolvePhotoUrl(String? imageUrl) {
+    if (imageUrl == null || imageUrl.isEmpty) return null;
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    return '${ApiConstants.baseUrl}$imageUrl';
+  }
+
   /// Uploads a garden photo to the backend for analysis.
   ///
   /// Returns a [GardenPhoto] with the server-assigned id and imageUrl.
@@ -58,7 +66,11 @@ class AnalysisRepository {
         );
       }
 
-      return GardenPhoto.fromJson(data);
+      final photo = GardenPhoto.fromJson(data);
+      return photo.copyWith(
+        localPath: imageFile.path,
+        imageUrl: _resolvePhotoUrl(photo.imageUrl),
+      );
     } on DioException catch (e) {
       throw UploadException(
         message: e.response?.data?['message'] as String? ??

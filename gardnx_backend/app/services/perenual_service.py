@@ -17,6 +17,11 @@ logger = logging.getLogger("gardnx")
 
 BASE_URL = "https://perenual.com/api"
 CACHE_TTL = 86400  # 24 hours
+LEGACY_IMAGE_HOSTS = (
+    "upload.wikimedia.org",
+    "commons.wikimedia.org",
+    "wikipedia.org",
+)
 
 # Map Perenual sunlight values → our internal values
 SUNLIGHT_MAP: dict[str, str] = {
@@ -35,6 +40,63 @@ WATERING_MAP: dict[str, str] = {
     "minimum": "low",
     "none": "low",
 }
+
+
+# Keyword rules for classification. Ordered: the first matching bucket wins.
+_CATEGORY_KEYWORDS: list[tuple[str, tuple[str, ...]]] = [
+    ("herb", (
+        "basil", "mint", "thyme", "parsley", "rosemary", "sage", "oregano",
+        "cilantro", "coriander", "chive", "dill", "lavender", "lemon balm",
+        "tarragon", "bay", "marjoram",
+    )),
+    ("fruit", (
+        "apple", "pear", "peach", "plum", "cherry", "strawberry", "raspberry",
+        "blueberry", "blackberry", "mango", "papaya", "banana", "pineapple",
+        "grape", "citrus", "orange", "lemon", "lime", "melon", "watermelon",
+        "passionfruit", "fig", "guava", "lychee",
+    )),
+    ("vegetable", (
+        "tomato", "lettuce", "cabbage", "carrot", "onion", "potato", "pepper",
+        "chili", "chilli", "bean", "pea", "squash", "cucumber", "zucchini",
+        "broccoli", "cauliflower", "spinach", "kale", "chard", "corn", "maize",
+        "radish", "beet", "eggplant", "aubergine", "pumpkin", "okra", "garlic",
+        "leek", "celery", "turnip", "sweet potato", "yam", "cassava",
+    )),
+    ("flower", (
+        "rose", "tulip", "daisy", "sunflower", "lily", "orchid", "marigold",
+        "hibiscus", "jasmine", "peony", "daffodil", "dahlia", "iris", "poppy",
+        "petunia", "zinnia", "begonia", "geranium", "pansy", "anthurium",
+    )),
+    ("tree", ("tree", "oak", "maple", "pine", "palm", "eucalyptus")),
+    ("shrub", ("shrub", "hedge", "bush")),
+]
+
+
+def _categorize_perenual(item: dict) -> str:
+    """Classify a Perenual species-list item into our internal category.
+
+    Priority: common-name keyword → Perenual cycle/type → fallback 'vegetable'.
+    """
+    name = (item.get("common_name") or "").lower()
+    sci_names = item.get("scientific_name") or []
+    sci = sci_names[0].lower() if sci_names else ""
+    haystack = f"{name} {sci}"
+
+    for category, keywords in _CATEGORY_KEYWORDS:
+        if any(kw in haystack for kw in keywords):
+            return category
+
+    # Perenual's own hints — 'cycle' ('Annual'/'Perennial'/'Biennial') and
+    # 'type' (sometimes 'flower', 'tree', etc.). Only useful as a weak signal.
+    p_type = (item.get("type") or "").lower()
+    if p_type in {"herb", "fruit", "vegetable", "flower", "tree", "shrub"}:
+        return p_type
+
+    logger.debug(
+        "Perenual categorize: no rule matched for '%s' (%s); defaulting to vegetable",
+        name, sci,
+    )
+    return "vegetable"
 
 
 class PerenualService:
@@ -67,6 +129,13 @@ class PerenualService:
 
     def _set_cache(self, key: str, data: dict) -> None:
         self._cache[key] = (time.time(), data)
+
+    def uses_legacy_image_source(self, image_url: Optional[str]) -> bool:
+        """Return True for old Wikipedia/Wikimedia image URLs."""
+        if not image_url:
+            return False
+        image_url_lower = image_url.lower()
+        return any(host in image_url_lower for host in LEGACY_IMAGE_HOSTS)
 
     # ------------------------------------------------------------------
     # Public API
@@ -183,7 +252,7 @@ class PerenualService:
                     "id": f"perenual_{item['id']}",
                     "name": item.get("common_name") or "Unknown Plant",
                     "scientific_name": sci_names[0] if sci_names else "",
-                    "category": "vegetable",
+                    "category": _categorize_perenual(item),
                     "description": (
                         f"Watering: {item.get('watering', 'Average')}. "
                         f"Cycle: {item.get('cycle', 'Annual')}."
@@ -228,15 +297,20 @@ class PerenualService:
     async def enrich_plants(self, plants: list, max_lookups: int = 10) -> list:
         """Return a new list of plants enriched with Perenual image URLs.
 
-        Only the first *max_lookups* plants without an existing image_url are
-        looked up to respect the daily rate limit. Plants that already have an
-        image_url are left unchanged.
+        Only the first *max_lookups* plants without an image or with a legacy
+        Wikipedia/Wikimedia image are looked up to respect the daily rate
+        limit. Plants that already have a non-legacy image_url are left
+        unchanged.
         """
         enriched = []
         lookups_done = 0
 
         for plant in plants:
-            if plant.image_url is None and lookups_done < max_lookups:
+            should_replace_image = (
+                plant.image_url is None
+                or self.uses_legacy_image_source(plant.image_url)
+            )
+            if should_replace_image and lookups_done < max_lookups:
                 data = await self.search_plant(
                     name=plant.name,
                     scientific_name=plant.scientific_name,

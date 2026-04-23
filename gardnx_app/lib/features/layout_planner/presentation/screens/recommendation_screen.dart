@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gardnx_app/features/layout_planner/data/repositories/layout_repository.dart';
 import 'package:gardnx_app/features/layout_planner/domain/models/layout_suggestion.dart';
 import 'package:gardnx_app/features/layout_planner/presentation/providers/recommendation_provider.dart';
 import 'package:gardnx_app/features/layout_planner/presentation/screens/layout_editor_screen.dart';
@@ -230,6 +229,8 @@ class _EngineSelector extends ConsumerWidget {
     final engineStatusAsync = ref.watch(engineStatusProvider);
     final preferredEngine = ref.watch(enginePreferenceProvider);
     final engineUsed = ref.watch(engineUsedProvider);
+    final engineRequested = ref.watch(engineRequestedProvider);
+    final fallbackReason = ref.watch(fallbackReasonProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -254,6 +255,17 @@ class _EngineSelector extends ConsumerWidget {
                   color: colorScheme.primary, fontWeight: FontWeight.bold,
                 )),
                 const Spacer(),
+                if (engineRequested != null)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: Chip(
+                      label: Text('Requested: $engineRequested',
+                          style: const TextStyle(fontSize: 10)),
+                      padding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                      backgroundColor: colorScheme.surfaceContainerHighest,
+                    ),
+                  ),
                 if (engineUsed != null)
                   Chip(
                     label: Text('Using: $engineUsed', style: const TextStyle(fontSize: 10)),
@@ -263,6 +275,36 @@ class _EngineSelector extends ConsumerWidget {
                   ),
               ],
             ),
+            if (fallbackReason != null) ...[
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withValues(alpha: 0.15),
+                  border: Border.all(
+                      color: Colors.amber.withValues(alpha: 0.5)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.warning_amber_rounded,
+                        size: 16, color: Colors.amber),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        'Fell back: $fallbackReason',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontSize: 11,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             const SizedBox(height: 8),
             engineStatusAsync.when(
               loading: () => const LinearProgressIndicator(),
@@ -428,7 +470,7 @@ class _SuggestionCard extends StatelessWidget {
                       child: LinearProgressIndicator(
                         value: score,
                         backgroundColor:
-                            colorScheme.surfaceVariant,
+                            colorScheme.surfaceContainerHighest,
                         valueColor:
                             AlwaysStoppedAnimation<Color>(scoreColor),
                         minHeight: 6,

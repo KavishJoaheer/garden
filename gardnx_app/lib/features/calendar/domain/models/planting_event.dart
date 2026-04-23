@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gardnx_app/config/constants/firebase_constants.dart';
 
 enum PlantingEventType { sow, transplant, harvest, water, fertilize, general }
 
@@ -93,8 +94,10 @@ class PlantingEvent {
   final String id;
   final String gardenId;
   final String? bedId;
+  final String? bedName;
   final String? plantId;
   final String plantName;
+  final String? userId;
   final PlantingEventType eventType;
   final DateTime date;
   final String? notes;
@@ -104,45 +107,61 @@ class PlantingEvent {
     required this.id,
     required this.gardenId,
     this.bedId,
+    this.bedName,
     this.plantId,
     required this.plantName,
+    this.userId,
     required this.eventType,
     required this.date,
     this.notes,
     this.isCompleted = false,
   });
 
-  factory PlantingEvent.fromJson(Map<String, dynamic> json) => PlantingEvent(
-        id: json['id'] as String? ?? '',
-        gardenId: json['garden_id'] as String? ?? '',
-        bedId: json['bed_id'] as String?,
-        plantId: json['plant_id'] as String?,
-        plantName: json['plant_name'] as String? ?? '',
-        eventType: PlantingEventTypeExt.fromValue(
-            json['event_type'] as String? ?? 'general'),
-        date: DateTime.parse(json['date'] as String),
-        notes: json['notes'] as String?,
-        isCompleted: json['is_completed'] as bool? ?? false,
-      );
+  /// Dual-read: accepts camelCase (canonical) or snake_case (legacy).
+  factory PlantingEvent.fromJson(Map<String, dynamic> json) {
+    final eventTypeStr =
+        readField<String>(json, 'eventType', 'event_type') ?? 'general';
+    final completed = (json['completed'] as bool?) ??
+        (json['is_completed'] as bool?) ??
+        false;
+    return PlantingEvent(
+      id: json['id'] as String? ?? '',
+      gardenId: readField<String>(json, 'gardenId', 'garden_id') ?? '',
+      bedId: readField<String>(json, 'bedId', 'bed_id'),
+      bedName: readField<String>(json, 'bedName', 'bed_name'),
+      plantId: readField<String>(json, 'plantId', 'plant_id'),
+      plantName: readField<String>(json, 'plantName', 'plant_name') ?? '',
+      userId: readField<String>(json, 'userId', 'user_id'),
+      eventType: PlantingEventTypeExt.fromValue(eventTypeStr),
+      date: DateTime.parse(json['date'] as String),
+      notes: json['notes'] as String?,
+      isCompleted: completed,
+    );
+  }
 
+  /// Canonical camelCase write.
   Map<String, dynamic> toJson() => {
         'id': id,
-        'garden_id': gardenId,
-        'bed_id': bedId,
-        'plant_id': plantId,
-        'plant_name': plantName,
-        'event_type': eventType.value,
+        FirebaseConstants.fieldGardenId: gardenId,
+        FirebaseConstants.fieldBedId: bedId,
+        FirebaseConstants.fieldBedName: bedName,
+        FirebaseConstants.fieldPlantId: plantId,
+        FirebaseConstants.fieldPlantName: plantName,
+        if (userId != null) FirebaseConstants.fieldUserId: userId,
+        FirebaseConstants.fieldEventType: eventType.value,
         'date': date.toIso8601String(),
         'notes': notes,
-        'is_completed': isCompleted,
+        FirebaseConstants.fieldCompleted: isCompleted,
       };
 
   PlantingEvent copyWith({
     String? id,
     String? gardenId,
     String? bedId,
+    String? bedName,
     String? plantId,
     String? plantName,
+    String? userId,
     PlantingEventType? eventType,
     DateTime? date,
     String? notes,
@@ -152,8 +171,10 @@ class PlantingEvent {
       id: id ?? this.id,
       gardenId: gardenId ?? this.gardenId,
       bedId: bedId ?? this.bedId,
+      bedName: bedName ?? this.bedName,
       plantId: plantId ?? this.plantId,
       plantName: plantName ?? this.plantName,
+      userId: userId ?? this.userId,
       eventType: eventType ?? this.eventType,
       date: date ?? this.date,
       notes: notes ?? this.notes,

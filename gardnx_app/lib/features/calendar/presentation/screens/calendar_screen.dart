@@ -169,10 +169,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 4, 16, 80),
                   itemCount: selectedEvents.length,
                   itemBuilder: (context, index) {
-                    return _EventListTile(
-                      event: selectedEvents[index],
-                      gardenId: ref.watch(activeGardenIdProvider),
-                    );
+                    return _EventListTile(event: selectedEvents[index]);
                   },
                 );
               },
@@ -203,9 +200,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
 class _EventListTile extends ConsumerWidget {
   final PlantingEvent event;
-  final String? gardenId;
 
-  const _EventListTile({required this.event, this.gardenId});
+  const _EventListTile({required this.event});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -216,11 +212,9 @@ class _EventListTile extends ConsumerWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
-        onTap: gardenId != null
-            ? () => ref
-                .read(calendarEventsNotifierProvider(gardenId!).notifier)
-                .toggleEventCompletion(event)
-            : null,
+        onTap: () => ref
+            .read(gardenEventsProvider.notifier)
+            .toggleEventCompletion(event),
         leading: Container(
           width: 40,
           height: 40,

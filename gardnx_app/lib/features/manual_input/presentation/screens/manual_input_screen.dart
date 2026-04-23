@@ -31,22 +31,54 @@ class ManualInputScreen extends ConsumerStatefulWidget {
 class _ManualInputScreenState extends ConsumerState<ManualInputScreen> {
   int _bedCounter = 0;
 
+  /// Snapshot of beds loaded from Firestore for this garden, keyed by bed id.
+  /// Used to diff against the current edit state on save so we can upsert
+  /// correctly (add new / update changed / delete removed).
+  final Map<String, ManualBed> _originalBeds = {};
+
   @override
   void initState() {
     super.initState();
     // Warm up location so the permission dialog appears early.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(currentLocationProvider.future).ignore();
 
       if (widget.initialBeds != null && widget.initialBeds!.isNotEmpty) {
         final notifier = ref.read(manualInputProvider.notifier);
-        notifier.clear();
-        for (final bed in widget.initialBeds!) {
-          _bedCounter++;
-          notifier.updateBed(bed);
-        }
+        final initialBeds = widget.initialBeds!;
+        notifier.setAll(initialBeds);
+        _bedCounter = initialBeds.length;
+        ref.read(selectedBedIdProvider.notifier).state = initialBeds.first.id;
+        return;
+      }
+
+      // Editing an existing garden — hydrate from Firestore so the canvas
+      // shows the beds the user previously drew.
+      final gardenId = widget.gardenId;
+      if (gardenId != null && gardenId.isNotEmpty) {
+        final repo = ref.read(manualGardenRepositoryProvider);
+        final beds = await repo.getBeds(gardenId);
+        if (!mounted || beds.isEmpty) return;
+        _originalBeds
+          ..clear()
+          ..addEntries(beds.map((b) => MapEntry(b.id, b)));
+        ref.read(manualInputProvider.notifier).setAll(beds);
+        _bedCounter = beds.length;
+        ref.read(selectedBedIdProvider.notifier).state = beds.first.id;
       }
     });
+  }
+
+  @override
+  void dispose() {
+    // Reset the shared editing state so the next garden we open starts clean.
+    Future.microtask(() {
+      if (!mounted) {
+        ref.invalidate(manualInputProvider);
+        ref.invalidate(selectedBedIdProvider);
+      }
+    });
+    super.dispose();
   }
 
   void _onBedDrawn(Rect rect) {
@@ -159,43 +191,47 @@ class _ManualInputScreenState extends ConsumerState<ManualInputScreen> {
     try {
       final repo = ref.read(manualGardenRepositoryProvider);
       final savedBeds = <ManualBed>[];
+      final currentIds = beds.map((b) => b.id).toSet();
+
+      // Delete beds that were loaded from Firestore but are no longer in
+      // the edit state (user removed them).
+      for (final originalId in _originalBeds.keys) {
+        if (!currentIds.contains(originalId)) {
+          await repo.removeBed(gardenId, originalId);
+        }
+      }
+
       for (final bed in beds) {
-        final saved = await repo.addBed(gardenId, bed);
-        savedBeds.add(saved);
+        final original = _originalBeds[bed.id];
+        if (original == null) {
+          // New bed — insert (Firestore assigns a real id).
+          final saved = await repo.addBed(gardenId, bed);
+          savedBeds.add(saved);
+        } else {
+          // Existing bed — update in place. ManualBed.== only compares id,
+          // so we can't cheaply detect a no-op; the write is idempotent.
+          await repo.updateBed(gardenId, bed);
+          savedBeds.add(bed);
+        }
       }
       await repo.updateGardenTimestamp(gardenId);
 
       if (!mounted) return;
 
-      final firstBed = savedBeds.first;
       final season =
           MauritiusDateUtils.currentPrimarySeason().toLowerCase();
       final region = ref.read(currentLocationProvider).valueOrNull?.region
           ?? 'north';
+      final resolvedGardenId = gardenId; // non-null guaranteed by flow above
 
-      // Prime the recommendation engine before navigating.
-      ref.read(recommendationParamsProvider.notifier).state =
-          RecommendationParams(
-        gardenId: gardenId,
-        bedId: firstBed.id,
-        widthCm: firstBed.widthCm,
-        heightCm: firstBed.heightCm,
-        sunExposure: firstBed.sunExposure,
-        soilType: firstBed.soilType,
+      // Walk through every bed — user plans plants + layout for each in turn.
+      // Returning from one bed loops back to the picker until all beds are
+      // visited (or the user bails out).
+      await _planBedsSequentially(
+        beds: savedBeds,
+        gardenId: resolvedGardenId,
         season: season,
         region: region,
-      );
-
-      final resolvedGardenId = gardenId; // non-null guaranteed by flow above
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => RecommendationScreen(
-            bed: firstBed,
-            gardenId: resolvedGardenId,
-            season: season,
-            region: region,
-          ),
-        ),
       );
     } catch (e) {
       if (mounted) {
@@ -204,6 +240,101 @@ class _ManualInputScreenState extends ConsumerState<ManualInputScreen> {
         );
       }
     }
+  }
+
+  Future<void> _planBedsSequentially({
+    required List<ManualBed> beds,
+    required String gardenId,
+    required String season,
+    required String region,
+  }) async {
+    final remaining = List<ManualBed>.of(beds);
+    while (remaining.isNotEmpty && mounted) {
+      final ManualBed? picked = remaining.length == 1
+          ? remaining.first
+          : await _pickBedToPlan(remaining);
+      if (picked == null || !mounted) return;
+
+      remaining.removeWhere((b) => b.id == picked.id);
+
+      // Prime the recommendation engine for this specific bed.
+      ref.read(recommendationParamsProvider.notifier).state =
+          RecommendationParams(
+        gardenId: gardenId,
+        bedId: picked.id,
+        widthCm: picked.widthCm,
+        heightCm: picked.heightCm,
+        sunExposure: picked.sunExposure,
+        soilType: picked.soilType,
+        season: season,
+        region: region,
+      );
+      ref.read(selectedPlantsProvider.notifier).clear();
+
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => RecommendationScreen(
+            bed: picked,
+            gardenId: gardenId,
+            season: season,
+            region: region,
+          ),
+        ),
+      );
+
+      if (!mounted) return;
+      if (remaining.isEmpty) return;
+
+      final continueNext = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Plan another bed?'),
+          content: Text(
+              '${remaining.length} bed(s) remaining. Plan another now, or come back later.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Later'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('Next bed'),
+            ),
+          ],
+        ),
+      );
+      if (continueNext != true) return;
+    }
+  }
+
+  Future<ManualBed?> _pickBedToPlan(List<ManualBed> beds) async {
+    return showModalBottomSheet<ManualBed>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text('Choose a bed to plan',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
+            ...beds.map((b) => ListTile(
+                  leading:
+                      Icon(Icons.grid_view, color: b.color),
+                  title: Text(b.name),
+                  subtitle: Text(
+                      '${b.widthCm.toStringAsFixed(0)}x${b.heightCm.toStringAsFixed(0)} cm  ·  ${b.sunExposureLabel}  ·  ${b.soilTypeLabel}'),
+                  onTap: () => Navigator.pop(ctx, b),
+                )),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<String?> _askGardenName() async {
@@ -260,7 +391,7 @@ class _ManualInputScreenState extends ConsumerState<ManualInputScreen> {
       body: Column(
         children: [
           Container(
-            color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
+            color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.4),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             child: Row(
               children: [
@@ -498,7 +629,7 @@ class _BedEditSheetState extends State<_BedEditSheet> {
             Text('Soil Type', style: theme.textTheme.labelLarge),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
-              value: _soilType,
+              initialValue: _soilType,
               decoration: const InputDecoration(border: OutlineInputBorder()),
               items: const [
                 DropdownMenuItem(value: 'loam', child: Text('Loam')),

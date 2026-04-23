@@ -17,7 +17,14 @@ class EngineStatus {
 class RecommendationResult {
   final List<LayoutSuggestion> suggestions;
   final String engineUsed;
-  RecommendationResult({required this.suggestions, required this.engineUsed});
+  final String? engineRequested;
+  final String? fallbackReason;
+  RecommendationResult({
+    required this.suggestions,
+    required this.engineUsed,
+    this.engineRequested,
+    this.fallbackReason,
+  });
 }
 
 class LayoutRepository {
@@ -92,6 +99,8 @@ class LayoutRepository {
     required String soilType,
     required String season,
     required String region,
+    List<String> preferences = const [],
+    String? experienceLevel,
     String? preferredEngine,
   }) async {
     try {
@@ -104,21 +113,26 @@ class LayoutRepository {
         'soil_type': soilType,
         'season': season,
         'region': region,
+        'preferences': preferences,
       };
-      if (preferredEngine != null) {
-        data['preferred_engine'] = preferredEngine;
-      }
+      if (experienceLevel != null) data['experience_level'] = experienceLevel;
+      if (preferredEngine != null) data['preferred_engine'] = preferredEngine;
 
       final response = await _dio.post('/layout/recommend', data: data);
 
       if (response.statusCode == 200 && response.data != null) {
-        final list = response.data['recommendations'] as List<dynamic>? ?? [];
+        final body = response.data as Map<String, dynamic>;
+        final list = body['recommendations'] as List<dynamic>? ?? [];
         final suggestions = list
             .map((e) =>
                 LayoutSuggestion.fromJson(e as Map<String, dynamic>))
             .toList();
-        final engineUsed = response.data['engine_used'] as String? ?? 'rules';
-        return RecommendationResult(suggestions: suggestions, engineUsed: engineUsed);
+        return RecommendationResult(
+          suggestions: suggestions,
+          engineUsed: body['engine_used'] as String? ?? 'rules',
+          engineRequested: body['engine_requested'] as String?,
+          fallbackReason: body['fallback_reason'] as String?,
+        );
       }
     } on DioException {
       // Fall through
@@ -146,16 +160,43 @@ class LayoutRepository {
 
   // ---- Validate layout (backend call) ----------------------------------------
 
-  Future<List<LayoutWarning>> validateLayout(GardenLayout layout) async {
+  Future<List<LayoutWarning>> validateLayout({
+    required GardenLayout layout,
+    required double bedWidthCm,
+    required double bedHeightCm,
+    String sunExposure = 'full_sun',
+    String soilType = 'loamy',
+  }) async {
     try {
-      final response = await _dio.post('/layout/validate',
-          data: layout.toJson());
+      final response = await _dio.post('/layout/validate', data: {
+        'bed': {
+          'width_cm': bedWidthCm,
+          'height_cm': bedHeightCm,
+          'sun_exposure': sunExposure,
+          'soil_type': soilType,
+        },
+        'placements': layout.placements
+            .map((p) => {
+                  'plant_id': p.plantId,
+                  'plant_name': p.plantName,
+                  'row': p.startRow,
+                  'col': p.startCol,
+                  'span_rows': p.rowSpan,
+                  'span_cols': p.colSpan,
+                  'count': p.count,
+                })
+            .toList(),
+      });
       if (response.statusCode == 200 && response.data != null) {
         final warnings =
             response.data['warnings'] as List<dynamic>? ?? [];
         return warnings
-            .map((e) =>
-                LayoutWarning.fromJson(e as Map<String, dynamic>))
+            .map((e) => LayoutWarning.fromJson({
+                  'type': e['type'],
+                  'message': e['message'],
+                  // Backend emits plant1_id; expose as plant_id for UI filtering.
+                  'plant_id': e['plant1_id'] ?? e['plant2_id'],
+                }))
             .toList();
       }
     } on DioException {

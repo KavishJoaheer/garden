@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:gardnx_app/config/constants/api_constants.dart';
+import 'package:gardnx_app/config/constants/firebase_constants.dart';
+import 'package:gardnx_app/core/network/api_interceptors.dart';
 import 'package:gardnx_app/features/calendar/domain/models/planting_event.dart';
 import 'package:gardnx_app/features/calendar/domain/models/task.dart';
 import 'package:gardnx_app/features/plant_database/domain/models/plant.dart';
@@ -11,12 +13,39 @@ class CalendarRepository {
 
   CalendarRepository({FirebaseFirestore? firestore, Dio? dio})
       : _firestore = firestore ?? FirebaseFirestore.instance,
-        _dio = dio ??
-            Dio(BaseOptions(
-              baseUrl: ApiConstants.baseUrl,
-              connectTimeout: ApiConstants.connectTimeout,
-              receiveTimeout: ApiConstants.receiveTimeout,
-            ));
+        _dio = dio ?? _buildDio();
+
+  static Dio _buildDio() {
+    final dio = Dio(BaseOptions(
+      baseUrl: ApiConstants.baseUrl,
+      connectTimeout: ApiConstants.connectTimeout,
+      receiveTimeout: ApiConstants.receiveTimeout,
+    ));
+    dio.interceptors.add(AuthInterceptor());
+    return dio;
+  }
+
+  /// Stable, deterministic id so re-generating the same plan overwrites
+  /// instead of duplicating. Format: `${bedId}_${plantId}_${type}_${yyyy-mm-dd}`.
+  static String stableEventId({
+    required String? bedId,
+    required String? plantId,
+    required String type,
+    required DateTime date,
+  }) {
+    final d = date.toIso8601String().split('T').first;
+    return '${bedId ?? "nobed"}_${plantId ?? "noplant"}_${type}_$d';
+  }
+
+  static String stableTaskId({
+    required String? bedId,
+    required String? plantId,
+    required String type,
+    required DateTime date,
+  }) {
+    final d = date.toIso8601String().split('T').first;
+    return '${bedId ?? "nobed"}_${plantId ?? "noplant"}_${type}_$d';
+  }
 
   // ---- Backend: Generate calendar events from plant list -------------------
 
@@ -61,15 +90,20 @@ class CalendarRepository {
         final raw = response.data['events'] as List<dynamic>? ?? [];
         return raw.map((e) {
           final m = e as Map<String, dynamic>;
+          final plantId = m['plant_id'] as String?;
+          final eventType = PlantingEventTypeExt.fromValue(
+              m['event_type'] as String? ?? 'general');
+          final date = DateTime.parse(m['start_date'] as String);
           return PlantingEvent(
-            id: '',
+            id: stableEventId(
+                bedId: bedId, plantId: plantId, type: eventType.value, date: date),
             gardenId: gardenId,
             bedId: bedId,
-            plantId: m['plant_id'] as String?,
+            bedName: bedName,
+            plantId: plantId,
             plantName: m['plant_name'] as String? ?? '',
-            eventType: PlantingEventTypeExt.fromValue(
-                m['event_type'] as String? ?? 'general'),
-            date: DateTime.parse(m['start_date'] as String),
+            eventType: eventType,
+            date: date,
             notes: m['description'] as String?,
             isCompleted: false,
           );
@@ -88,7 +122,7 @@ class CalendarRepository {
       _firestore
           .collection('gardens')
           .doc(gardenId)
-          .collection('events');
+          .collection(FirebaseConstants.eventsSubcollection);
 
   Future<List<PlantingEvent>> getEvents(String gardenId) async {
     try {
@@ -104,15 +138,25 @@ class CalendarRepository {
     }
   }
 
+  /// Persists [events] under the given [gardenId]. Every doc is stamped with
+  /// [uid] — required by Firestore security rules and the collectionGroup
+  /// query in [getUpcomingTasks]. Callers must provide the current user's
+  /// uid; this method refuses to write when [uid] is null or empty.
   Future<void> saveEvents(
-      String gardenId, List<PlantingEvent> events) async {
+    String gardenId,
+    List<PlantingEvent> events, {
+    required String uid,
+  }) async {
+    if (uid.isEmpty) {
+      throw StateError('saveEvents requires a non-empty uid');
+    }
     final batch = _firestore.batch();
     for (final event in events) {
-      final data = event.toJson();
-      data['saved_at'] = FieldValue.serverTimestamp();
+      final stamped = event.copyWith(userId: uid, gardenId: gardenId);
+      final data = stamped.toJson();
+      data[FirebaseConstants.fieldSavedAt] = FieldValue.serverTimestamp();
       if (event.id.isNotEmpty) {
-        batch.set(
-            _eventsCollection(gardenId).doc(event.id), data);
+        batch.set(_eventsCollection(gardenId).doc(event.id), data);
       } else {
         batch.set(_eventsCollection(gardenId).doc(), data);
       }
@@ -120,11 +164,73 @@ class CalendarRepository {
     await batch.commit();
   }
 
+  /// Deletes any existing events under [gardenId] whose `bedId == bedId` and
+  /// whose `plantId` is in [plantIds], then writes [events]. Use this when
+  /// re-generating a plan for a given bed so stale dates/types don't linger.
+  Future<void> replaceEventsForBed({
+    required String gardenId,
+    required String bedId,
+    required List<String> plantIds,
+    required List<PlantingEvent> events,
+    required String uid,
+  }) async {
+    if (uid.isEmpty) throw StateError('replaceEventsForBed requires uid');
+    await _deleteByBedAndPlants(
+      collection: _eventsCollection(gardenId),
+      bedId: bedId,
+      plantIds: plantIds,
+    );
+    await saveEvents(gardenId, events, uid: uid);
+  }
+
+  Future<void> replaceTasksForBed({
+    required String gardenId,
+    required String bedId,
+    required List<String> plantIds,
+    required List<PlantingTask> tasks,
+    required String uid,
+  }) async {
+    if (uid.isEmpty) throw StateError('replaceTasksForBed requires uid');
+    await _deleteByBedAndPlants(
+      collection: _tasksCollection(gardenId),
+      bedId: bedId,
+      plantIds: plantIds,
+    );
+    await saveTasks(gardenId, tasks, uid: uid);
+  }
+
+  Future<void> _deleteByBedAndPlants({
+    required CollectionReference<Map<String, dynamic>> collection,
+    required String bedId,
+    required List<String> plantIds,
+  }) async {
+    if (plantIds.isEmpty) return;
+    // Firestore `whereIn` supports up to 10 values; chunk if needed.
+    for (int i = 0; i < plantIds.length; i += 10) {
+      final chunk = plantIds.sublist(
+          i, i + 10 > plantIds.length ? plantIds.length : i + 10);
+      try {
+        final snap = await collection
+            .where(FirebaseConstants.fieldBedId, isEqualTo: bedId)
+            .where(FirebaseConstants.fieldPlantId, whereIn: chunk)
+            .get();
+        if (snap.docs.isEmpty) continue;
+        final batch = _firestore.batch();
+        for (final doc in snap.docs) {
+          batch.delete(doc.reference);
+        }
+        await batch.commit();
+      } catch (_) {
+        // Non-fatal — save will still proceed (stable ids dedupe the same doc).
+      }
+    }
+  }
+
   Future<void> updateEventCompletion(
       String gardenId, String eventId, bool completed) async {
-    await _eventsCollection(gardenId)
-        .doc(eventId)
-        .update({'is_completed': completed});
+    await _eventsCollection(gardenId).doc(eventId).update({
+      FirebaseConstants.fieldCompleted: completed,
+    });
   }
 
   // ---- Firestore: Tasks ---------------------------------------------------
@@ -134,12 +240,13 @@ class CalendarRepository {
       _firestore
           .collection('gardens')
           .doc(gardenId)
-          .collection('tasks');
+          .collection(FirebaseConstants.tasksSubcollection);
 
   Future<List<PlantingTask>> getTasks(String gardenId) async {
     try {
-      final snapshot =
-          await _tasksCollection(gardenId).orderBy('due_date').get();
+      final snapshot = await _tasksCollection(gardenId)
+          .orderBy(FirebaseConstants.fieldDueDate)
+          .get();
       return snapshot.docs
           .map((doc) =>
               PlantingTask.fromJson({...doc.data(), 'id': doc.id}))
@@ -149,20 +256,28 @@ class CalendarRepository {
     }
   }
 
-  Future<List<PlantingTask>> getUpcomingTasks(
-      {int daysAhead = 14}) async {
+  /// Returns upcoming tasks across every garden owned by [uid].
+  ///
+  /// Relies on the composite index `(userId, completed, dueDate)` declared in
+  /// firestore.indexes.json and on Firestore rules permitting the caller to
+  /// read their own task docs via the collectionGroup rule.
+  Future<List<PlantingTask>> getUpcomingTasks({
+    required String uid,
+    int daysAhead = 14,
+  }) async {
+    if (uid.isEmpty) return const [];
     final now = DateTime.now();
     final until = now.add(Duration(days: daysAhead));
     try {
-      // Query across all gardens by using collection group
       final snapshot = await _firestore
-          .collectionGroup('tasks')
-          .where('is_completed', isEqualTo: false)
-          .where('due_date',
+          .collectionGroup(FirebaseConstants.tasksSubcollection)
+          .where(FirebaseConstants.fieldUserId, isEqualTo: uid)
+          .where(FirebaseConstants.fieldCompleted, isEqualTo: false)
+          .where(FirebaseConstants.fieldDueDate,
               isGreaterThanOrEqualTo: now.toIso8601String())
-          .where('due_date',
+          .where(FirebaseConstants.fieldDueDate,
               isLessThanOrEqualTo: until.toIso8601String())
-          .orderBy('due_date')
+          .orderBy(FirebaseConstants.fieldDueDate)
           .limit(20)
           .get();
       return snapshot.docs
@@ -174,12 +289,20 @@ class CalendarRepository {
     }
   }
 
+  /// Persists [tasks] under the given [gardenId] with a mandatory [uid] stamp.
   Future<void> saveTasks(
-      String gardenId, List<PlantingTask> tasks) async {
+    String gardenId,
+    List<PlantingTask> tasks, {
+    required String uid,
+  }) async {
+    if (uid.isEmpty) {
+      throw StateError('saveTasks requires a non-empty uid');
+    }
     final batch = _firestore.batch();
     for (final task in tasks) {
-      final data = task.toJson();
-      data['saved_at'] = FieldValue.serverTimestamp();
+      final stamped = task.copyWith(userId: uid, gardenId: gardenId);
+      final data = stamped.toJson();
+      data[FirebaseConstants.fieldSavedAt] = FieldValue.serverTimestamp();
       if (task.id.isNotEmpty) {
         batch.set(_tasksCollection(gardenId).doc(task.id), data);
       } else {
@@ -192,16 +315,15 @@ class CalendarRepository {
   Future<void> completeTask(
       String gardenId, String taskId, bool completed) async {
     await _tasksCollection(gardenId).doc(taskId).update({
-      'is_completed': completed,
-      'completed_at': completed
-          ? DateTime.now().toIso8601String()
-          : null,
+      FirebaseConstants.fieldCompleted: completed,
+      FirebaseConstants.fieldCompletedAt:
+          completed ? DateTime.now().toIso8601String() : null,
     });
   }
 
   Stream<List<PlantingTask>> tasksStream(String gardenId) {
     return _tasksCollection(gardenId)
-        .orderBy('due_date')
+        .orderBy(FirebaseConstants.fieldDueDate)
         .snapshots()
         .map((snap) => snap.docs
             .map((doc) =>

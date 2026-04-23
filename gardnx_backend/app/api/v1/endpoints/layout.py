@@ -1,6 +1,7 @@
 """Garden layout generation and validation endpoints."""
 
 import logging
+import math
 
 from fastapi import APIRouter, Depends
 
@@ -16,10 +17,13 @@ from app.models.layout_models import (
     RecommendBedResponse,
     BedSuggestion,
 )
+from app.models.plant_models import RecommendRequest
 from app.config import settings
 from app.services.layout_generator import LayoutGenerator
 from app.services.companion_checker import CompanionChecker
 from app.services.gemini_companion_checker import GeminiCompanionChecker
+from app.services.gemini_recommender import GeminiRecommender
+from app.services.ollama_recommender import OllamaRecommender
 from app.services.plant_recommender import PlantRecommender
 from app.services.spacing_calculator import calculate_max_plants
 
@@ -31,6 +35,8 @@ _layout_gen: LayoutGenerator | None = None
 _companion: CompanionChecker | None = None
 _gemini_companion: GeminiCompanionChecker | None = None
 _plant_rec: PlantRecommender | None = None
+_gemini_rec: GeminiRecommender | None = None
+_ollama_rec: OllamaRecommender | None = None
 
 
 def _get_layout_generator() -> LayoutGenerator:
@@ -59,6 +65,20 @@ def _get_plant_recommender() -> PlantRecommender:
     if _plant_rec is None:
         _plant_rec = PlantRecommender()
     return _plant_rec
+
+
+def _get_gemini_recommender() -> GeminiRecommender:
+    global _gemini_rec
+    if _gemini_rec is None:
+        _gemini_rec = GeminiRecommender(api_key=settings.gemini_api_key)
+    return _gemini_rec
+
+
+def _get_ollama_recommender() -> OllamaRecommender:
+    global _ollama_rec
+    if _ollama_rec is None:
+        _ollama_rec = OllamaRecommender()
+    return _ollama_rec
 
 
 @router.post("/generate", response_model=LayoutResponse)
@@ -169,58 +189,98 @@ async def recommend_plants_for_bed(
 ):
     """Recommend suitable plants for a garden bed.
 
-    Scores plants from the Mauritius catalog based on bed sun exposure,
-    current season, soil type, and region, then returns the top 15.
+    Engine priority: Gemini 2.5 Flash Lite → Ollama (local) → rule-based.
+    Falls back transparently — the client always gets results.
     """
     rec = _get_plant_recommender()
     season_months = _SEASON_MONTHS.get(body.season.lower(), list(range(1, 13)))
-    bed_area = body.width_cm * body.height_cm
+    current_month = season_months[0] if season_months else 1
 
-    suggestions: list[BedSuggestion] = []
-    for plant in rec.plants.values():
-        score = 0.75  # base score for all Mauritius-curated plants
-        reasons: list[str] = []
+    # Shared contract: reuse the same engine chain and request model as
+    # /plants/recommend so preferences + experience_level actually affect
+    # recommendations and the UI can show engine_used / fallback_reason.
+    ai_req = RecommendRequest(
+        bed_sunlight=body.sun_exposure,
+        bed_soil_type=body.soil_type,
+        month=current_month,
+        region=body.region,
+        preferences=body.preferences,
+        experience_level=body.experience_level,  # type: ignore[arg-type]
+        preferred_engine=body.preferred_engine,
+    )
 
-        # Sun exposure match
-        if plant.conditions.sunlight == body.sun_exposure:
-            score = min(score + 0.10, 1.0)
-            reasons.append(f"Suits {body.sun_exposure.replace('_', ' ')}")
+    from app.api.v1.endpoints.plants import _run_engine_chain
+    ai_result, engine_used, engine_requested, fallback_reason = await _run_engine_chain(
+        ai_req, rec, _get_gemini_recommender(), _get_ollama_recommender(),
+    )
 
-        # Season match
-        if any(m in plant.timing.sowing_months for m in season_months):
-            score = min(score + 0.10, 1.0)
-            reasons.append("Good planting season")
+    def _max_count_for_plant(plant) -> int:
+        """How many of this plant fit in the bed using the same grid math as the layout generator."""
+        cols = max(1, math.floor(body.width_cm / max(plant.spacing.between_plants_cm, 15.0)))
+        rows = max(1, math.floor(body.height_cm / max(plant.spacing.between_rows_cm, 15.0)))
+        return max(1, min(20, rows * cols))
 
-        # Region match
-        if body.region in plant.mauritius_regions:
-            score = min(score + 0.05, 1.0)
-            reasons.append(f"Grows well in {body.region}")
+    if engine_used != "rules":
+        # Convert AI PlantRecommendation → BedSuggestion
+        suggestions: list[BedSuggestion] = []
+        for ai_rec in ai_result.recommendations:
+            plant = ai_rec.plant
+            companion_names = [
+                rec.plants[cid].name
+                for cid in plant.companion_plants[:3]
+                if cid in rec.plants
+            ]
+            suggestions.append(BedSuggestion(
+                plant_id=plant.id,
+                plant_name=plant.name,
+                suitability_score=round(ai_rec.score, 2),
+                reasons=ai_rec.reasons,
+                companion_names=companion_names,
+                max_count=_max_count_for_plant(plant),
+            ))
+    else:
+        # Pure rule-based fallback
+        suggestions = []
+        for plant in rec.plants.values():
+            score = 0.75
+            reasons: list[str] = []
 
-        if score < 0.35:
-            continue
+            if plant.conditions.sunlight == body.sun_exposure:
+                score = min(score + 0.10, 1.0)
+                reasons.append(f"Suits {body.sun_exposure.replace('_', ' ')}")
+            if any(m in plant.timing.sowing_months for m in season_months):
+                score = min(score + 0.10, 1.0)
+                reasons.append("Good planting season")
+            if body.region in plant.mauritius_regions:
+                score = min(score + 0.05, 1.0)
+                reasons.append(f"Grows well in {body.region}")
 
-        spacing = plant.spacing.between_plants_cm * plant.spacing.between_rows_cm
-        max_count = max(1, min(20, int(bed_area / max(spacing, 900))))
+            if score < 0.35:
+                continue
 
-        # Companion names
-        companion_names = [
-            rec.plants[cid].name
-            for cid in plant.companion_plants[:3]
-            if cid in rec.plants
-        ]
-
-        suggestions.append(BedSuggestion(
-            plant_id=plant.id,
-            plant_name=plant.name,
-            suitability_score=round(score, 2),
-            reasons=reasons if reasons else ["Suitable for Mauritius climate"],
-            companion_names=companion_names,
-            max_count=max_count,
-        ))
+            companion_names = [
+                rec.plants[cid].name
+                for cid in plant.companion_plants[:3]
+                if cid in rec.plants
+            ]
+            suggestions.append(BedSuggestion(
+                plant_id=plant.id,
+                plant_name=plant.name,
+                suitability_score=round(score, 2),
+                reasons=reasons if reasons else ["Suitable for Mauritius climate"],
+                companion_names=companion_names,
+                max_count=_max_count_for_plant(plant),
+            ))
 
     suggestions.sort(key=lambda s: s.suitability_score, reverse=True)
     logger.info(
-        "Bed recommendations: %d results (sun=%s season=%s region=%s)",
-        len(suggestions[:15]), body.sun_exposure, body.season, body.region,
+        "Bed recommendations [%s → %s]: %d results (sun=%s season=%s region=%s exp=%s)",
+        engine_requested or "auto", engine_used, len(suggestions[:15]),
+        body.sun_exposure, body.season, body.region, body.experience_level,
     )
-    return RecommendBedResponse(recommendations=suggestions[:15])
+    return RecommendBedResponse(
+        recommendations=suggestions[:15],
+        engine_used=engine_used,
+        engine_requested=engine_requested,
+        fallback_reason=fallback_reason,
+    )

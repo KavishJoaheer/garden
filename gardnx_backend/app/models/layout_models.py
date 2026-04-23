@@ -145,6 +145,9 @@ class RecommendBedRequest(BaseModel):
     soil_type: str = Field(default="loamy")
     season: str = Field(default="summer")
     region: str = Field(default="north")
+    preferences: list[str] = Field(default_factory=list)
+    experience_level: str | None = Field(default=None)
+    preferred_engine: str | None = Field(default=None)
 
 
 class BedSuggestion(BaseModel):
@@ -162,3 +165,6 @@ class RecommendBedResponse(BaseModel):
     """Response with plant recommendations for a bed."""
 
     recommendations: list[BedSuggestion]
+    engine_used: str = "rules"
+    engine_requested: str | None = None
+    fallback_reason: str | None = None

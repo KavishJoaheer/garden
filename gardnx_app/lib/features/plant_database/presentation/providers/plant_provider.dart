@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gardnx_app/config/constants/api_constants.dart';
+import 'package:gardnx_app/core/network/api_interceptors.dart';
 import 'package:gardnx_app/features/plant_database/domain/models/plant.dart';
 import 'package:gardnx_app/features/plant_database/domain/models/companion_rule.dart';
 import 'package:gardnx_app/features/plant_database/data/repositories/plant_repository.dart';
+import 'package:gardnx_app/shared/providers/firebase_providers.dart';
 
 final plantRepositoryProvider =
     Provider<PlantRepository>((ref) => PlantRepository());
@@ -11,7 +13,8 @@ final plantRepositoryProvider =
 /// All plants (cached)
 final allPlantsProvider = FutureProvider<List<Plant>>((ref) async {
   final repo = ref.read(plantRepositoryProvider);
-  return repo.getAllPlants();
+  final uid = ref.watch(currentFirebaseUserProvider)?.uid;
+  return repo.getAllPlants(uid: uid);
 });
 
 /// Single plant by id
@@ -49,11 +52,31 @@ final plantsForCurrentMonthProvider = FutureProvider<List<Plant>>((ref) async {
 // Keyed on query string; auto-disposed when the widget leaves the tree.
 // ---------------------------------------------------------------------------
 
-final _globalSearchDio = Provider<Dio>((ref) => Dio(BaseOptions(
-      baseUrl: ApiConstants.baseUrl,
-      connectTimeout: ApiConstants.connectTimeout,
-      receiveTimeout: ApiConstants.receiveTimeout,
-    )));
+final _globalSearchDio = Provider<Dio>((ref) {
+  final dio = Dio(BaseOptions(
+    baseUrl: ApiConstants.baseUrl,
+    connectTimeout: ApiConstants.connectTimeout,
+    receiveTimeout: ApiConstants.receiveTimeout,
+  ));
+  dio.interceptors.add(AuthInterceptor());
+  return dio;
+});
+
+/// Saves a Perenual plant to the local Firestore collection.
+/// Returns the new document ID on success.
+final addPlantProvider =
+    Provider<Future<String> Function(Plant)>((ref) {
+  final repo = ref.read(plantRepositoryProvider);
+  return (Plant plant) async {
+    final uid = ref.read(currentFirebaseUserProvider)?.uid ?? '';
+    if (uid.isEmpty) {
+      throw StateError('Sign in required to save a plant.');
+    }
+    final id = await repo.addPlant(plant, uid: uid);
+    ref.invalidate(allPlantsProvider);
+    return id;
+  };
+});
 
 /// Searches the Perenual global plant database through the backend.
 /// Only fires for queries of 2+ characters.

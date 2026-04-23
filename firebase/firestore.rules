@@ -2,10 +2,18 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Plants and companion rules — any authenticated user can read
+    // Plants catalog — curated rows (userId == null) are world-readable for
+    // any authenticated user; user-added rows are owner-scoped. Clients
+    // fan out into two parallel queries (userId == null, userId == me) and
+    // merge client-side because Firestore does not support `whereIn: [null,…]`.
     match /plants/{plantId} {
-      allow read: if request.auth != null;
-      allow write: if false;
+      allow read: if request.auth != null &&
+        (resource.data.userId == null ||
+         resource.data.userId == request.auth.uid);
+      allow create: if request.auth != null &&
+        request.resource.data.userId == request.auth.uid;
+      allow update, delete: if request.auth != null &&
+        resource.data.userId == request.auth.uid;
     }
     match /companion_rules/{ruleId} {
       allow read: if request.auth != null;
@@ -41,6 +49,24 @@ service cloud.firestore {
         allow read, write: if request.auth != null &&
           request.auth.uid == get(/databases/$(database)/documents/gardens/$(gardenId)).data.userId;
       }
+
+      // Events subcollection (calendar planting events)
+      match /events/{eventId} {
+        allow read, write: if request.auth != null &&
+          request.auth.uid == get(/databases/$(database)/documents/gardens/$(gardenId)).data.userId;
+      }
+
+      // Tasks subcollection (per-garden planting tasks)
+      match /tasks/{taskId} {
+        allow read, write: if request.auth != null &&
+          request.auth.uid == get(/databases/$(database)/documents/gardens/$(gardenId)).data.userId;
+      }
+    }
+
+    // collectionGroup query for tasks (UpcomingTasksWidget reads across all gardens)
+    match /{path=**}/tasks/{taskId} {
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
     }
 
     // Tasks — owner only

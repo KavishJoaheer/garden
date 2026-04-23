@@ -1,6 +1,10 @@
 import 'dart:ui';
 
 /// Represents a manually drawn garden bed.
+///
+/// In Firestore the document ID (`doc.id`) is the source of truth for [id].
+/// Older documents stored a separate embedded `id` field; it is ignored on
+/// read and never written on save.
 class ManualBed {
   final String id;
   final String name;
@@ -22,10 +26,14 @@ class ManualBed {
     this.color = const Color(0xFF8D6E63),
   });
 
-  /// Creates from a Firestore document map.
-  factory ManualBed.fromFirestore(Map<String, dynamic> map) {
+  /// Creates from a Firestore document. The [docId] is authoritative; any
+  /// `id` value embedded in [map] is ignored.
+  factory ManualBed.fromFirestore(
+    String docId,
+    Map<String, dynamic> map,
+  ) {
     return ManualBed(
-      id: map['id'] as String? ?? '',
+      id: docId,
       name: map['name'] as String? ?? 'Untitled Bed',
       widthCm: (map['widthCm'] as num?)?.toDouble() ?? 100,
       heightCm: (map['heightCm'] as num?)?.toDouble() ?? 100,
@@ -42,9 +50,10 @@ class ManualBed {
   }
 
   /// Converts to a Firestore-compatible map.
+  ///
+  /// Deliberately omits `id` — callers rely on the Firestore document ID.
   Map<String, dynamic> toFirestore() {
     return {
-      'id': id,
       'name': name,
       'widthCm': widthCm,
       'heightCm': heightCm,

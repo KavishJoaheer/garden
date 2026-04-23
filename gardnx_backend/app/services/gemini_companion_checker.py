@@ -52,14 +52,14 @@ class GeminiCompanionChecker:
         if self._enabled:
             genai.configure(api_key=api_key)
             self._model = genai.GenerativeModel(
-                model_name="gemini-2.0-flash-lite",
+                model_name="gemini-2.5-flash-lite",
                 system_instruction=_SYSTEM_PROMPT,
                 generation_config=genai.GenerationConfig(
                     temperature=0.2,
                     max_output_tokens=256,
                 ),
             )
-            logger.info("GeminiCompanionChecker: initialised with gemini-2.0-flash-lite")
+            logger.info("GeminiCompanionChecker: initialised with gemini-2.5-flash-lite")
         else:
             logger.warning("GeminiCompanionChecker: no API key — AI companion checks disabled")
 

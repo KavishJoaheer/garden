@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gardnx_app/config/constants/firebase_constants.dart';
 
 enum TaskPriority { low, medium, high }
 
@@ -52,8 +53,10 @@ class PlantingTask {
   final String id;
   final String gardenId;
   final String? bedId;
+  final String? bedName;
   final String? plantId;
   final String? plantName;
+  final String? userId;
   final String description;
   final DateTime dueDate;
   final String taskType; // 'sow', 'transplant', 'harvest', 'water', etc.
@@ -65,8 +68,10 @@ class PlantingTask {
     required this.id,
     required this.gardenId,
     this.bedId,
+    this.bedName,
     this.plantId,
     this.plantName,
+    this.userId,
     required this.description,
     required this.dueDate,
     required this.taskType,
@@ -80,42 +85,58 @@ class PlantingTask {
       dueDate.isBefore(DateTime(
           DateTime.now().year, DateTime.now().month, DateTime.now().day));
 
-  factory PlantingTask.fromJson(Map<String, dynamic> json) => PlantingTask(
-        id: json['id'] as String? ?? '',
-        gardenId: json['garden_id'] as String? ?? '',
-        bedId: json['bed_id'] as String?,
-        plantId: json['plant_id'] as String?,
-        plantName: json['plant_name'] as String?,
-        description: json['description'] as String? ?? '',
-        dueDate: DateTime.parse(json['due_date'] as String),
-        taskType: json['task_type'] as String? ?? 'general',
-        isCompleted: json['is_completed'] as bool? ?? false,
-        priority: json['priority'] as String? ?? 'medium',
-        completedAt: json['completed_at'] != null
-            ? DateTime.tryParse(json['completed_at'] as String)
-            : null,
-      );
+  /// Dual-read: accepts either camelCase (canonical) or snake_case (legacy).
+  factory PlantingTask.fromJson(Map<String, dynamic> json) {
+    final dueStr = readField<String>(json, 'dueDate', 'due_date');
+    final completedStr =
+        readField<String>(json, 'completedAt', 'completed_at');
+    // Older docs wrote `is_completed`; canonical is `completed`.
+    final completed = (json['completed'] as bool?) ??
+        (json['is_completed'] as bool?) ??
+        false;
+    return PlantingTask(
+      id: json['id'] as String? ?? '',
+      gardenId: readField<String>(json, 'gardenId', 'garden_id') ?? '',
+      bedId: readField<String>(json, 'bedId', 'bed_id'),
+      bedName: readField<String>(json, 'bedName', 'bed_name'),
+      plantId: readField<String>(json, 'plantId', 'plant_id'),
+      plantName: readField<String>(json, 'plantName', 'plant_name'),
+      userId: readField<String>(json, 'userId', 'user_id'),
+      description: json['description'] as String? ?? '',
+      dueDate: DateTime.parse(dueStr ?? DateTime.now().toIso8601String()),
+      taskType: readField<String>(json, 'taskType', 'task_type') ?? 'general',
+      isCompleted: completed,
+      priority: json['priority'] as String? ?? 'medium',
+      completedAt:
+          completedStr != null ? DateTime.tryParse(completedStr) : null,
+    );
+  }
 
+  /// Canonical camelCase write. Callers must NOT persist any snake_case keys.
   Map<String, dynamic> toJson() => {
         'id': id,
-        'garden_id': gardenId,
-        'bed_id': bedId,
-        'plant_id': plantId,
-        'plant_name': plantName,
+        FirebaseConstants.fieldGardenId: gardenId,
+        FirebaseConstants.fieldBedId: bedId,
+        FirebaseConstants.fieldBedName: bedName,
+        FirebaseConstants.fieldPlantId: plantId,
+        FirebaseConstants.fieldPlantName: plantName,
+        if (userId != null) FirebaseConstants.fieldUserId: userId,
         'description': description,
-        'due_date': dueDate.toIso8601String(),
-        'task_type': taskType,
-        'is_completed': isCompleted,
+        FirebaseConstants.fieldDueDate: dueDate.toIso8601String(),
+        FirebaseConstants.fieldTaskType: taskType,
+        FirebaseConstants.fieldCompleted: isCompleted,
         'priority': priority,
-        'completed_at': completedAt?.toIso8601String(),
+        FirebaseConstants.fieldCompletedAt: completedAt?.toIso8601String(),
       };
 
   PlantingTask copyWith({
     String? id,
     String? gardenId,
     String? bedId,
+    String? bedName,
     String? plantId,
     String? plantName,
+    String? userId,
     String? description,
     DateTime? dueDate,
     String? taskType,
@@ -127,8 +148,10 @@ class PlantingTask {
       id: id ?? this.id,
       gardenId: gardenId ?? this.gardenId,
       bedId: bedId ?? this.bedId,
+      bedName: bedName ?? this.bedName,
       plantId: plantId ?? this.plantId,
       plantName: plantName ?? this.plantName,
+      userId: userId ?? this.userId,
       description: description ?? this.description,
       dueDate: dueDate ?? this.dueDate,
       taskType: taskType ?? this.taskType,

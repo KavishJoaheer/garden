@@ -1,8 +1,15 @@
 """Application configuration using pydantic-settings."""
 
+import os
 from pathlib import Path
 
+from pydantic import Field
 from pydantic_settings import BaseSettings
+
+
+def _default_use_mock() -> bool:
+    """Mock only when HF_API_TOKEN is missing — otherwise run real segmentation."""
+    return not bool(os.getenv("HF_API_TOKEN", "").strip())
 
 
 class Settings(BaseSettings):
@@ -11,7 +18,9 @@ class Settings(BaseSettings):
     firebase_credentials_path: str = "./firebase-credentials.json"
     firebase_storage_bucket: str = "gardnx-app.appspot.com"
     model_weights_path: str = "./app/ml/weights/deeplabv3_garden.pth"
-    use_mock_model: bool = True
+    use_mock_model: bool = Field(default_factory=_default_use_mock)
+    allow_anon: bool = False
+    photo_storage_path: str = "./data/photos"
     host: str = "0.0.0.0"
     port: int = 8000
     debug: bool = True
@@ -19,6 +28,9 @@ class Settings(BaseSettings):
     perenual_api_key: str = ""
     gemini_api_key: str = ""
     hf_api_token: str = ""
+    ollama_url: str = "http://localhost:11434"
+    ollama_model: str = "gemma3:1b"
+    warm_ollama_on_startup: bool = False
 
     @property
     def weights_path(self) -> Path:

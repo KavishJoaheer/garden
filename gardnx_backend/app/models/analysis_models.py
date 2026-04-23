@@ -1,7 +1,7 @@
 """Pydantic models for garden analysis, segmentation, and photo uploads."""
 
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Literal, Optional
 
 
 class Point(BaseModel):
@@ -29,6 +29,7 @@ class SegmentationResponse(BaseModel):
     mask_url: Optional[str] = None
     processing_time_ms: int
     fallback_recommended: bool = False
+    segmentationSource: Literal["mock", "hf", "pil"] = "mock"
 
 
 class PhotoUploadResponse(BaseModel):

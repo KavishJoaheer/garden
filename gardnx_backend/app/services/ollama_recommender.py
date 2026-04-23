@@ -14,6 +14,7 @@ from typing import Optional
 
 import httpx
 
+from app.config import settings
 from app.models.plant_models import (
     Plant,
     PlantRecommendation,
@@ -23,7 +24,6 @@ from app.models.plant_models import (
 
 logger = logging.getLogger("gardnx")
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
 CACHE_TTL = 86400  # 24 hours
 
 _SYSTEM_PROMPT = """\
@@ -60,9 +60,14 @@ _MONTH_NAMES = [
 class OllamaRecommender:
     """Uses a local Ollama model for plant recommendations."""
 
-    def __init__(self, model: str = "gemma3:1b"):
-        self._model = model
+    def __init__(self, model: str | None = None, base_url: str | None = None):
+        self._model = model or settings.ollama_model
+        self._base_url = (base_url or settings.ollama_url).rstrip("/")
         self._cache: dict[str, tuple[float, RecommendResponse]] = {}
+
+    @property
+    def _generate_url(self) -> str:
+        return f"{self._base_url}/api/generate"
 
     # ------------------------------------------------------------------
     # Cache helpers
@@ -70,7 +75,8 @@ class OllamaRecommender:
 
     def _cache_key(self, req: RecommendRequest) -> str:
         prefs = ",".join(sorted(req.preferences))
-        return f"ollama|{req.bed_sunlight}|{req.region}|{req.month}|{prefs}"
+        exp = req.experience_level or ""
+        return f"ollama|{req.bed_sunlight}|{req.region}|{req.month}|{prefs}|{exp}"
 
     def _get_cache(self, key: str) -> Optional[RecommendResponse]:
         entry = self._cache.get(key)
@@ -106,7 +112,7 @@ class OllamaRecommender:
         try:
             async with httpx.AsyncClient(timeout=60.0) as client:
                 resp = await client.post(
-                    OLLAMA_URL,
+                    self._generate_url,
                     json={
                         "model": self._model,
                         "system": _SYSTEM_PROMPT,
@@ -158,10 +164,11 @@ class OllamaRecommender:
                 "days_to_harvest": plant.timing.days_to_harvest,
             })
 
+        audience = req.experience_level or "intermediate"
         return (
             f"Garden bed: sun={req.bed_sunlight}, soil={req.bed_soil_type}, "
             f"region={req.region} Mauritius, month={month_name} ({req.month}), "
-            f"temp={temp_str}, preferences={prefs_str}\n\n"
+            f"temp={temp_str}, preferences={prefs_str}, audience={audience} gardener\n\n"
             f"Plant catalog ({len(catalog)} plants):\n"
             f"{json.dumps(catalog, separators=(',', ':'))}"
         )

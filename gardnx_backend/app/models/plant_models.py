@@ -1,6 +1,10 @@
 """Pydantic models for plant-related data."""
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
+
+ExperienceLevel = Literal["beginner", "intermediate", "advanced"]
 
 
 class PlantConditions(BaseModel):
@@ -134,6 +138,10 @@ class RecommendRequest(BaseModel):
     preferred_engine: str | None = Field(
         default=None, description="Preferred AI engine: gemini, ollama, or rules"
     )
+    experience_level: ExperienceLevel | None = Field(
+        default=None,
+        description="Gardener experience — beginner filters out difficult plants",
+    )
 
 
 class RecommendResponse(BaseModel):
@@ -143,3 +151,5 @@ class RecommendResponse(BaseModel):
     total: int
     filters_applied: dict = {}
     engine_used: str = "rules"
+    engine_requested: str | None = None
+    fallback_reason: str | None = None

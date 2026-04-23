@@ -11,6 +11,7 @@ Prerequisites:
 
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import sys
@@ -24,6 +25,9 @@ sys.path.insert(0, str(ROOT))
 
 import firebase_admin
 from firebase_admin import credentials, firestore
+
+from app.config import settings
+from app.services.perenual_service import PerenualService
 
 
 # ---------------------------------------------------------------------------
@@ -67,6 +71,22 @@ _CATEGORY_MAP = {
     "tree": "tree",
 }
 
+_LEGACY_IMAGE_HOSTS = (
+    "upload.wikimedia.org",
+    "commons.wikimedia.org",
+    "wikipedia.org",
+)
+
+
+def _normalize_image_url(image_url: str | None) -> str | None:
+    """Drop old Wikipedia/Wikimedia image URLs during Firestore seeding."""
+    if not image_url:
+        return None
+    image_url_lower = image_url.lower()
+    if any(host in image_url_lower for host in _LEGACY_IMAGE_HOSTS):
+        return None
+    return image_url
+
 
 def _to_firestore_plant(p: dict) -> dict:
     """Convert a backend-schema plant dict to the Flutter/Firestore schema."""
@@ -81,7 +101,7 @@ def _to_firestore_plant(p: dict) -> dict:
         "category": _CATEGORY_MAP.get(p.get("type", "vegetable"), "vegetable"),
         "description": p.get("description", ""),
         "care_notes": p.get("care_notes", ""),
-        "image_url": p.get("image_url"),
+        "image_url": _normalize_image_url(p.get("image_url")),
 
         # ---- Conditions ----
         "conditions": {
@@ -120,6 +140,11 @@ def _to_firestore_plant(p: dict) -> dict:
         "tags": _build_tags(p),
         "is_native": False,
         "difficulty_level": _estimate_difficulty(p),
+
+        # ---- Ownership ----
+        # userId=None marks curated/global plants visible to all authenticated
+        # users under the split-query catalog read (Phase B).
+        "userId": None,
     }
 
 
@@ -177,6 +202,47 @@ def _build_tags(p: dict) -> list[str]:
         tags.append("winter_crop")
 
     return tags
+
+
+async def enrich_plant_images_with_perenual(
+    plants_data: list[dict],
+    max_lookups: int | None = None,
+) -> int:
+    """Populate missing plant image URLs from Perenual before seeding."""
+    perenual = PerenualService(api_key=settings.perenual_api_key)
+    if not settings.perenual_api_key:
+        print("[WARN] PERENUAL_API_KEY is missing. Skipping image enrichment.")
+        return 0
+
+    enriched_count = 0
+    lookups_done = 0
+
+    for plant in plants_data:
+        current_image = _normalize_image_url(plant.get("image_url"))
+        if current_image:
+            plant["image_url"] = current_image
+            continue
+
+        if max_lookups is not None and lookups_done >= max_lookups:
+            break
+
+        data = await perenual.search_plant(
+            name=plant.get("name", ""),
+            scientific_name=plant.get("scientific_name", ""),
+        )
+        lookups_done += 1
+
+        image_url = data.get("image_url") if data else None
+        if image_url:
+            plant["image_url"] = image_url
+            enriched_count += 1
+            print(f"  [IMG] {plant['id']}: image added")
+        else:
+            plant["image_url"] = None
+            print(f"  [IMG] {plant['id']}: no image found")
+
+    print(f"[OK] Perenual enrichment complete: {enriched_count} images added.")
+    return enriched_count
 
 
 def _to_firestore_companion_rule(r: dict, idx: int) -> tuple[str, dict]:
@@ -279,6 +345,17 @@ def main() -> None:
         action="store_true",
         help="Only seed the companion_rules collection",
     )
+    parser.add_argument(
+        "--enrich-images",
+        action="store_true",
+        help="Fetch missing plant images from Perenual before seeding plants",
+    )
+    parser.add_argument(
+        "--max-image-lookups",
+        type=int,
+        default=None,
+        help="Optional cap on Perenual image lookups during --enrich-images",
+    )
     args = parser.parse_args()
 
     dry_run: bool = args.dry_run
@@ -303,6 +380,16 @@ def main() -> None:
 
     print(f"Loaded {len(plants_data)} plants and {len(rules_data)} companion rules.")
     print(f"Mode: {'DRY RUN' if dry_run else 'LIVE WRITE'}\n")
+
+    if args.enrich_images and not args.rules_only:
+        print("=== Enriching plant images from Perenual ===")
+        asyncio.run(
+            enrich_plant_images_with_perenual(
+                plants_data,
+                max_lookups=args.max_image_lookups,
+            )
+        )
+        print()
 
     # Init Firebase
     _init_firebase()

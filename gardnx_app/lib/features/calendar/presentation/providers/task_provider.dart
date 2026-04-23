@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gardnx_app/features/calendar/domain/models/task.dart';
 import 'package:gardnx_app/features/calendar/data/repositories/calendar_repository.dart';
 import 'package:gardnx_app/features/calendar/presentation/providers/calendar_provider.dart';
+import 'package:gardnx_app/shared/providers/firebase_providers.dart';
 
 // All tasks for a specific garden
 final gardenTasksProvider =
@@ -10,10 +11,13 @@ final gardenTasksProvider =
   return repo.getTasks(gardenId);
 });
 
-// Upcoming tasks across all gardens (next 14 days)
+// Upcoming tasks across every garden owned by the signed-in user (next 14 days).
+// Rebuilds automatically when the auth state changes.
 final upcomingTasksProvider = FutureProvider<List<PlantingTask>>((ref) async {
+  final user = ref.watch(currentFirebaseUserProvider);
+  if (user == null) return const [];
   final repo = ref.read(calendarRepositoryProvider);
-  return repo.getUpcomingTasks(daysAhead: 14);
+  return repo.getUpcomingTasks(uid: user.uid, daysAhead: 14);
 });
 
 // StateNotifier for managing tasks with complete/uncomplete actions

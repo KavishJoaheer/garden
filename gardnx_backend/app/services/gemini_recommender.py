@@ -1,8 +1,7 @@
 """Gemini-powered plant recommendation service.
 
-Uses Google Gemini 1.5 Flash (free tier: 1,500 req/day) to reason over the
-Mauritius plant catalog and produce scored recommendations with natural-language
-explanations.
+Uses Google Gemini 2.5 Flash Lite to reason over the Mauritius plant catalog
+and produce scored recommendations with natural-language explanations.
 
 Falls back silently to None so the caller can switch to the rule-based engine.
 """
@@ -75,7 +74,7 @@ class GeminiRecommender:
         if self._enabled:
             genai.configure(api_key=api_key)
             self._model = genai.GenerativeModel(
-                model_name="gemini-2.0-flash-lite",
+                model_name="gemini-2.5-flash-lite",
                 system_instruction=_SYSTEM_PROMPT,
                 generation_config=genai.GenerationConfig(
                     temperature=0.3,        # low temp = consistent, factual output
@@ -85,7 +84,8 @@ class GeminiRecommender:
 
     def _cache_key(self, req: RecommendRequest) -> str:
         prefs = ",".join(sorted(req.preferences))
-        return f"{req.bed_sunlight}|{req.region}|{req.month}|{prefs}"
+        exp = req.experience_level or ""
+        return f"{req.bed_sunlight}|{req.region}|{req.month}|{prefs}|{exp}"
 
     def _get_cache(self, key: str) -> Optional[RecommendResponse]:
         entry = self._cache.get(key)
@@ -164,6 +164,7 @@ class GeminiRecommender:
                 "incompatible": plant.incompatible_plants[:3],
             })
 
+        audience = req.experience_level or "intermediate"
         return f"""GARDEN BED PARAMETERS:
 - Sun exposure: {req.bed_sunlight}
 - Soil type: {req.bed_soil_type}
@@ -171,6 +172,7 @@ class GeminiRecommender:
 - Month: {month_name} (month {req.month})
 - Current temperature: {temp_str}
 - User preferences: {prefs_str}
+- Audience: {audience} gardener (beginner = favour easy, low-water, fast crops; advanced = all plants welcome)
 
 PLANT CATALOG ({len(catalog)} plants):
 {json.dumps(catalog, indent=2)}
@@ -200,12 +202,31 @@ Please recommend the best plants for this garden bed."""
             data = json.loads(clean)
             recs_raw = data.get("recommendations", [])
 
+            # Build a name→plant lookup for fuzzy matching when Gemini
+            # returns a slightly different ID than what's in the catalog.
+            name_index: dict[str, Plant] = {
+                p.name.lower(): p for p in plants.values()
+            }
+
             recommendations: list[PlantRecommendation] = []
             for item in recs_raw:
                 plant_id = item.get("plant_id", "")
                 plant = plants.get(plant_id)
+
                 if plant is None:
-                    continue  # Gemini hallucinated an id — skip
+                    # Try substring match on ID (e.g. "tomato" matches "tomato_mauritius")
+                    for pid, p in plants.items():
+                        if plant_id and (plant_id in pid or pid in plant_id):
+                            plant = p
+                            break
+
+                if plant is None:
+                    # Try name match as last resort
+                    plant = name_index.get(plant_id.lower().replace("_", " "))
+
+                if plant is None:
+                    logger.debug("Gemini returned unknown plant_id=%r — skipping", plant_id)
+                    continue
 
                 recommendations.append(PlantRecommendation(
                     plant=plant,
@@ -225,7 +246,7 @@ Please recommend the best plants for this garden bed."""
                 recommendations=recommendations,
                 total=len(recommendations),
                 filters_applied={
-                    "engine": "gemini-1.5-flash",
+                    "engine": "gemini-2.5-flash-lite",
                     "bed_sunlight": req.bed_sunlight,
                     "month": req.month,
                     "region": req.region,

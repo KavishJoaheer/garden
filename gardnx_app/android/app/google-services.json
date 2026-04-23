@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "1096872256835",
-    "project_id": "gardenai-6a2c7",
-    "storage_bucket": "gardenai-6a2c7.firebasestorage.app"
+    "project_number": "80360336890",
+    "project_id": "mygardenplanner-d9a9b",
+    "storage_bucket": "mygardenplanner-d9a9b.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1096872256835:android:ba8a1fac1b5c2d91aabbf6",
+        "mobilesdk_app_id": "1:80360336890:android:f780b081199c8450a80843",
         "android_client_info": {
           "package_name": "com.ayushi.gardenaiplanner"
         }
@@ -15,26 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDQad4uXqoZzDaG1LrV9biy5rbqbPPPs8g"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1096872256835:android:63742bb0dbb653f9aabbf6",
-        "android_client_info": {
-          "package_name": "com.ayushi.gendaplannerapp"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDQad4uXqoZzDaG1LrV9biy5rbqbPPPs8g"
+          "current_key": "AIzaSyDs2jN-PQBBaocKUv7sGOd4q0uJxGAIwNg"
         }
       ],
       "services": {

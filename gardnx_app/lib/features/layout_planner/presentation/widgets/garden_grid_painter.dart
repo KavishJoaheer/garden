@@ -20,6 +20,92 @@ class PlantColorMap {
   }
 }
 
+// Plant emoji icons — looked up by lowercase plant name substring.
+class PlantEmojiMap {
+  static const Map<String, String> _byName = {
+    'tomato': '🍅',
+    'lettuce': '🥬',
+    'carrot': '🥕',
+    'pepper': '🌶',
+    'capsicum': '🌶',
+    'chili': '🌶',
+    'chilli': '🌶',
+    'cucumber': '🥒',
+    'eggplant': '🍆',
+    'aubergine': '🍆',
+    'brinjal': '🍆',
+    'spinach': '🥬',
+    'cabbage': '🥦',
+    'broccoli': '🥦',
+    'cauliflower': '🥦',
+    'bean': '🫘',
+    'pea': '🫛',
+    'corn': '🌽',
+    'maize': '🌽',
+    'onion': '🧅',
+    'garlic': '🧄',
+    'potato': '🥔',
+    'sweet potato': '🍠',
+    'pumpkin': '🎃',
+    'squash': '🥒',
+    'zucchini': '🥒',
+    'courgette': '🥒',
+    'radish': '🌱',
+    'beetroot': '🌱',
+    'kale': '🥬',
+    'leek': '🧅',
+    'celery': '🌿',
+    'mint': '🌿',
+    'basil': '🌿',
+    'parsley': '🌿',
+    'coriander': '🌿',
+    'cilantro': '🌿',
+    'thyme': '🌿',
+    'rosemary': '🌿',
+    'chive': '🌿',
+    'dill': '🌿',
+    'sage': '🌿',
+    'lemongrass': '🌿',
+    'strawberry': '🍓',
+    'mango': '🥭',
+    'banana': '🍌',
+    'papaya': '🍈',
+    'pineapple': '🍍',
+    'lemon': '🍋',
+    'lime': '🍋',
+    'orange': '🍊',
+    'watermelon': '🍉',
+    'melon': '🍈',
+    'grape': '🍇',
+    'cherry': '🍒',
+    'apple': '🍎',
+    'pear': '🍐',
+    'guava': '🍈',
+    'sunflower': '🌻',
+    'rose': '🌹',
+    'lavender': '💜',
+    'marigold': '🌼',
+    'hibiscus': '🌺',
+    'jasmine': '🌸',
+  };
+
+  static const Map<String, String> _byCategory = {
+    'vegetable': '🥦',
+    'herb': '🌿',
+    'fruit': '🍓',
+    'flower': '🌸',
+  };
+
+  /// Returns the best emoji for [plantName], falling back to [category].
+  static String get(String plantName, [String category = '']) {
+    final lower = plantName.toLowerCase();
+    for (final entry in _byName.entries) {
+      if (lower.contains(entry.key)) return entry.value;
+    }
+    return _byCategory[category.toLowerCase()] ?? '🌱';
+  }
+}
+
 class GardenGridWidget extends StatefulWidget {
   final GardenLayout layout;
   final String? selectedPlacementId;
@@ -76,7 +162,9 @@ class _GardenGridWidgetState extends State<GardenGridWidget> {
     if (row < 0 ||
         row >= widget.layout.gridRows ||
         col < 0 ||
-        col >= widget.layout.gridCols) return;
+        col >= widget.layout.gridCols) {
+      return;
+    }
 
     // Check if a placement was tapped
     for (final p in widget.layout.placements) {
@@ -171,7 +259,7 @@ class GardenGridPainter extends CustomPainter {
 
   void _drawGridLines(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey.withOpacity(0.3)
+      ..color = Colors.grey.withValues(alpha: 0.3)
       ..strokeWidth = 0.5;
 
     for (int c = 0; c <= layout.gridCols; c++) {
@@ -205,55 +293,84 @@ class GardenGridPainter extends CustomPainter {
     );
 
     // Fill
-    final fillPaint = Paint()
-      ..color = baseColor.withOpacity(isSelected ? 0.85 : 0.65);
-    canvas.drawRect(rect, fillPaint);
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..color = baseColor.withValues(alpha: isSelected ? 0.85 : 0.65),
+    );
 
     // Companion border (green glow)
     if (isCompanion) {
-      final companionPaint = Paint()
-        ..color = Colors.green.withOpacity(0.5)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 3;
-      canvas.drawRect(rect.deflate(1.5), companionPaint);
+      canvas.drawRect(
+        rect.deflate(1.5),
+        Paint()
+          ..color = Colors.green.withValues(alpha: 0.5)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 3,
+      );
     }
 
     // Incompatible border (red glow)
     if (isIncompatible) {
-      final incompatiblePaint = Paint()
-        ..color = Colors.red.withOpacity(0.5)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 3;
-      canvas.drawRect(rect.deflate(1.5), incompatiblePaint);
+      canvas.drawRect(
+        rect.deflate(1.5),
+        Paint()
+          ..color = Colors.red.withValues(alpha: 0.5)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 3,
+      );
     }
 
     // Selection border
     if (isSelected) {
-      final selPaint = Paint()
-        ..color = Colors.amber
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.5;
-      canvas.drawRect(rect.deflate(1.25), selPaint);
+      canvas.drawRect(
+        rect.deflate(1.25),
+        Paint()
+          ..color = Colors.amber
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.5,
+      );
     }
 
-    // Plant initial label
-    final initials = _getInitials(placement.plantName);
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: initials,
-        style: TextStyle(
-          color: _contrastColor(baseColor),
-          fontSize: (cellSize * 0.35).clamp(8.0, 20.0),
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout(maxWidth: rect.width);
+    // Emoji icon (large cells) or initials fallback (tiny cells)
+    final emoji = PlantEmojiMap.get(placement.plantName);
+    final emojiFontSize = (cellSize * 0.55).clamp(10.0, 26.0);
 
-    textPainter.paint(
-      canvas,
-      rect.center - Offset(textPainter.width / 2, textPainter.height / 2),
-    );
+    if (cellSize >= 18) {
+      // Draw emoji
+      final emojiPainter = TextPainter(
+        text: TextSpan(
+          text: emoji,
+          style: TextStyle(fontSize: emojiFontSize),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout(maxWidth: rect.width);
+
+      emojiPainter.paint(
+        canvas,
+        rect.center -
+            Offset(emojiPainter.width / 2, emojiPainter.height / 2),
+      );
+    } else {
+      // Cells are too small for emoji — fall back to initials
+      final initials = _getInitials(placement.plantName);
+      final tp = TextPainter(
+        text: TextSpan(
+          text: initials,
+          style: TextStyle(
+            color: _contrastColor(baseColor),
+            fontSize: (cellSize * 0.35).clamp(6.0, 14.0),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout(maxWidth: rect.width);
+
+      tp.paint(
+        canvas,
+        rect.center - Offset(tp.width / 2, tp.height / 2),
+      );
+    }
   }
 
   String _getInitials(String name) {

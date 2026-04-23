@@ -49,10 +49,18 @@ class PlantDetailScreen extends ConsumerWidget {
   }
 }
 
-class _PlantDetailBody extends ConsumerWidget {
+class _PlantDetailBody extends ConsumerStatefulWidget {
   final Plant plant;
 
   const _PlantDetailBody({required this.plant});
+
+  @override
+  ConsumerState<_PlantDetailBody> createState() => _PlantDetailBodyState();
+}
+
+class _PlantDetailBodyState extends ConsumerState<_PlantDetailBody> {
+  bool _isSaving = false;
+  bool _saved = false;
 
   String _monthName(int month) {
     const names = [
@@ -67,8 +75,34 @@ class _PlantDetailBody extends ConsumerWidget {
     return months.map(_monthName).join(', ');
   }
 
+  Future<void> _saveToCollection() async {
+    setState(() => _isSaving = true);
+    try {
+      await ref.read(addPlantProvider)(widget.plant);
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+          _saved = true;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${widget.plant.name} added to your collection!'),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isSaving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save: $e')),
+        );
+      }
+    }
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final plant = widget.plant;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final companionRulesAsync =
@@ -84,7 +118,20 @@ class _PlantDetailBody extends ConsumerWidget {
             flexibleSpace: FlexibleSpaceBar(
               title: Text(plant.name),
               background: plant.imageUrl != null
-                  ? Image.network(plant.imageUrl!, fit: BoxFit.cover)
+                  ? Image.network(
+                      plant.imageUrl!,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return _PlantDetailPlaceholder(
+                          icon: Icons.local_florist,
+                        );
+                      },
+                      errorBuilder: (_, __, ___) =>
+                          const _PlantDetailPlaceholder(
+                        icon: Icons.local_florist,
+                      ),
+                    )
                   : Container(
                       color: colorScheme.primaryContainer,
                       child: Icon(Icons.local_florist,
@@ -146,7 +193,7 @@ class _PlantDetailBody extends ConsumerWidget {
                         child: LinearProgressIndicator(
                           value: plant.suitabilityScore,
                           minHeight: 10,
-                          backgroundColor: colorScheme.surfaceVariant,
+                          backgroundColor: colorScheme.surfaceContainerHighest,
                           valueColor: AlwaysStoppedAnimation<Color>(
                             plant.suitabilityScore > 0.7
                                 ? Colors.green
@@ -232,23 +279,39 @@ class _PlantDetailBody extends ConsumerWidget {
                 _SectionCard(
                   title: 'Planting Calendar',
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _InfoRow(
-                        icon: Icons.grass,
-                        label: 'Sow',
-                        value: _monthListLabel(plant.timing.sowMonths),
-                      ),
-                      _InfoRow(
-                        icon: Icons.swap_horiz,
-                        label: 'Transplant',
-                        value:
-                            _monthListLabel(plant.timing.transplantMonths),
-                      ),
-                      _InfoRow(
-                        icon: Icons.cut,
-                        label: 'Harvest',
-                        value: _monthListLabel(plant.timing.harvestMonths),
-                      ),
+                      if (plant.timing.sowMonths.isNotEmpty)
+                        _InfoRow(
+                          icon: Icons.grass,
+                          label: 'Sow',
+                          value: _monthListLabel(plant.timing.sowMonths),
+                        ),
+                      if (plant.timing.transplantMonths.isNotEmpty)
+                        _InfoRow(
+                          icon: Icons.swap_horiz,
+                          label: 'Transplant',
+                          value:
+                              _monthListLabel(plant.timing.transplantMonths),
+                        ),
+                      if (plant.timing.harvestMonths.isNotEmpty)
+                        _InfoRow(
+                          icon: Icons.cut,
+                          label: 'Harvest',
+                          value: _monthListLabel(plant.timing.harvestMonths),
+                        ),
+                      if (plant.timing.sowMonths.isEmpty &&
+                          plant.timing.transplantMonths.isEmpty &&
+                          plant.timing.harvestMonths.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Text(
+                            'Planting schedule not available for this plant.',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                          ),
+                        ),
                       _InfoRow(
                         icon: Icons.timer,
                         label: 'Days to Maturity',
@@ -307,11 +370,57 @@ class _PlantDetailBody extends ConsumerWidget {
                   loading: () => const SizedBox.shrink(),
                   error: (_, __) => const SizedBox.shrink(),
                 ),
+                // Save to collection button — only for Perenual plants
+                if (plant.id.startsWith('perenual_')) ...[
+                  const SizedBox(height: 4),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: (_isSaving || _saved)
+                          ? null
+                          : _saveToCollection,
+                      icon: _isSaving
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Icon(_saved
+                              ? Icons.check_circle_outline
+                              : Icons.add_circle_outline),
+                      label: Text(_saved
+                          ? 'Saved to Collection'
+                          : 'Save to My Collection'),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 80),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _PlantDetailPlaceholder extends StatelessWidget {
+  final IconData icon;
+
+  const _PlantDetailPlaceholder({required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      color: colorScheme.primaryContainer,
+      child: Icon(
+        icon,
+        size: 80,
+        color: colorScheme.primary.withOpacity(0.5),
       ),
     );
   }
@@ -367,9 +476,15 @@ class _InfoRow extends StatelessWidget {
                 color: colorScheme.onSurfaceVariant,
               )),
           const Spacer(),
-          Text(value,
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodySmall
-                  ?.copyWith(fontWeight: FontWeight.w600)),
+                  ?.copyWith(fontWeight: FontWeight.w600),
+            ),
+          ),
         ],
       ),
     );

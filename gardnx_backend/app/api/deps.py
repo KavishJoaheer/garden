@@ -1,24 +1,34 @@
 """Shared dependencies for API endpoints."""
 
-from fastapi import Depends, HTTPException, Header
+import logging
 from typing import Optional
 
-import logging
+from fastapi import Header, HTTPException
+
+from app.config import settings
 
 logger = logging.getLogger("gardnx")
+
+
+def _anon_or_401(reason: str) -> str:
+    """Return 'anonymous' when ALLOW_ANON is set; otherwise raise 401.
+
+    Centralising this keeps every auth failure path behind the same gate.
+    """
+    if settings.allow_anon:
+        logger.debug("allow_anon=true — returning anonymous (%s)", reason)
+        return "anonymous"
+    raise HTTPException(status_code=401, detail=f"Unauthorized: {reason}")
 
 
 async def get_current_user(authorization: Optional[str] = Header(None)) -> str:
     """Verify Firebase ID token and return user_id.
 
-    If no authorization header is provided, returns 'anonymous' for
-    development purposes. In production, this should always require
-    a valid Bearer token.
+    When `ALLOW_ANON=true` (dev/local), any unauthenticated or unverifiable
+    request is tagged `anonymous`. In production (default) we raise 401.
     """
     if not authorization or not authorization.startswith("Bearer "):
-        # In development/mock mode, allow anonymous access
-        logger.debug("No authorization header; using anonymous user")
-        return "anonymous"
+        return _anon_or_401("missing bearer token")
 
     token = authorization.split("Bearer ")[1]
     try:
@@ -27,11 +37,15 @@ async def get_current_user(authorization: Optional[str] = Header(None)) -> str:
 
         # If Firebase wasn't initialized (no credentials file), skip verification
         if not firebase_admin._apps:
-            logger.warning("Firebase not initialized; accepting token as-is for dev")
-            # Decode the JWT payload without verification to extract uid
-            import base64, json
+            if not settings.allow_anon:
+                raise HTTPException(
+                    status_code=503,
+                    detail="Firebase not initialised — cannot verify token",
+                )
+            logger.warning("Firebase not initialised; decoding token unsafely for dev")
+            import base64
+            import json
             payload_b64 = token.split(".")[1]
-            # Add padding
             payload_b64 += "=" * (4 - len(payload_b64) % 4)
             payload = json.loads(base64.urlsafe_b64decode(payload_b64))
             return payload.get("user_id") or payload.get("sub") or "anonymous"
@@ -39,13 +53,12 @@ async def get_current_user(authorization: Optional[str] = Header(None)) -> str:
         decoded_token = firebase_auth.verify_id_token(token)
         return decoded_token["uid"]
     except ImportError:
-        logger.warning("firebase_admin not available; returning anonymous user")
-        return "anonymous"
+        return _anon_or_401("firebase_admin not installed")
     except HTTPException:
         raise
     except Exception as e:
-        logger.warning("Token verification failed: %s — using anonymous", e)
-        return "anonymous"
+        logger.warning("Token verification failed: %s", e)
+        return _anon_or_401(f"token verification failed: {e}")
 
 
 def get_analyzer():

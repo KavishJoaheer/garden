@@ -132,6 +132,15 @@ class PlantRecommender:
         sun_adj = SUN_ADJACENCY.get(req.bed_sunlight, [req.bed_sunlight])
         if plant.conditions.sunlight not in sun_adj:
             return False
+        # Experience-level gate: beginners avoid water-intensive or long-cycle
+        # crops. Plant model has no explicit difficulty, so use proxies:
+        #   - water_needs == "high"     → non-beginner
+        #   - days_to_harvest > 120     → non-beginner
+        if req.experience_level == "beginner":
+            if plant.conditions.water_needs == "high":
+                return False
+            if plant.timing.days_to_harvest > 120:
+                return False
         return True
 
     # ------------------------------------------------------------------

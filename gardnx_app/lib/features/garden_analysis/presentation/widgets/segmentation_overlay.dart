@@ -1,69 +1,169 @@
+import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
 import '../../domain/models/garden_zone.dart';
 
+/// Computes the rect that BoxFit.contain places the image in within [viewport].
+Rect _containedImageRect(Size imageSize, Size viewport) {
+  if (imageSize.isEmpty || viewport.isEmpty) {
+    return Rect.fromLTWH(0, 0, viewport.width, viewport.height);
+  }
+  final imageAspect = imageSize.width / imageSize.height;
+  final viewportAspect = viewport.width / viewport.height;
+
+  if (imageAspect > viewportAspect) {
+    // Letterbox: bars on top and bottom.
+    final displayedHeight = viewport.width / imageAspect;
+    final top = (viewport.height - displayedHeight) / 2;
+    return Rect.fromLTWH(0, top, viewport.width, displayedHeight);
+  } else {
+    // Pillarbox: bars on left and right.
+    final displayedWidth = viewport.height * imageAspect;
+    final left = (viewport.width - displayedWidth) / 2;
+    return Rect.fromLTWH(left, 0, displayedWidth, viewport.height);
+  }
+}
+
 /// Renders a semi-transparent overlay of detected garden zones on top of
 /// a photo.
 ///
-/// Each zone polygon is drawn with its type-specific color. Selected zones
-/// are highlighted with a thicker border and higher opacity. Tapping on
-/// a zone triggers the [onZoneTap] callback.
-class SegmentationOverlay extends StatelessWidget {
+/// Polygon coordinates are normalised (0–1) relative to the image.  The
+/// overlay resolves the image's intrinsic size so it can map those
+/// coordinates onto the correct sub-rect that BoxFit.contain uses, instead
+/// of stretching them over the whole widget (which includes the letterbox
+/// bars and produces a misaligned result).
+class SegmentationOverlay extends StatefulWidget {
   final List<GardenZone> zones;
   final Set<String> selectedZoneIds;
   final void Function(String zoneId) onZoneTap;
+
+  /// Local file path or network URL of the photo being displayed.
+  /// Required so the overlay can resolve the image's intrinsic dimensions.
+  final String? photoPath;
 
   const SegmentationOverlay({
     super.key,
     required this.zones,
     required this.selectedZoneIds,
     required this.onZoneTap,
+    this.photoPath,
   });
+
+  @override
+  State<SegmentationOverlay> createState() => _SegmentationOverlayState();
+}
+
+class _SegmentationOverlayState extends State<SegmentationOverlay> {
+  Size _imageSize = Size.zero;
+  ImageStream? _imageStream;
+  ImageStreamListener? _listener;
+
+  @override
+  void initState() {
+    super.initState();
+    _resolveImageSize();
+  }
+
+  @override
+  void didUpdateWidget(covariant SegmentationOverlay oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.photoPath != widget.photoPath) {
+      _disposeStream();
+      setState(() => _imageSize = Size.zero);
+      _resolveImageSize();
+    }
+  }
+
+  @override
+  void dispose() {
+    _disposeStream();
+    super.dispose();
+  }
+
+  void _disposeStream() {
+    if (_imageStream != null && _listener != null) {
+      _imageStream!.removeListener(_listener!);
+    }
+    _imageStream = null;
+    _listener = null;
+  }
+
+  void _resolveImageSize() {
+    final path = widget.photoPath;
+    if (path == null || path.isEmpty) return;
+
+    final ImageProvider provider = path.startsWith('http')
+        ? NetworkImage(path)
+        : FileImage(File(path)) as ImageProvider;
+
+    final stream = provider.resolve(const ImageConfiguration());
+    late final ImageStreamListener listener;
+    listener = ImageStreamListener((info, _) {
+      if (!mounted) return;
+      setState(() {
+        _imageSize = Size(
+          info.image.width.toDouble(),
+          info.image.height.toDouble(),
+        );
+      });
+      stream.removeListener(listener);
+      if (identical(_imageStream, stream)) {
+        _imageStream = null;
+        _listener = null;
+      }
+    });
+    _imageStream = stream;
+    _listener = listener;
+    stream.addListener(listener);
+  }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
+        final viewport = constraints.biggest;
+        final imageRect = _containedImageRect(_imageSize, viewport);
+
         return GestureDetector(
-          onTapDown: (details) {
-            _handleTap(details.localPosition, constraints.biggest);
-          },
+          onTapDown: (details) =>
+              _handleTap(details.localPosition, imageRect),
           child: CustomPaint(
             painter: _SegmentationPainter(
-              zones: zones,
-              selectedZoneIds: selectedZoneIds,
+              zones: widget.zones,
+              selectedZoneIds: widget.selectedZoneIds,
+              imageRect: imageRect,
             ),
-            size: constraints.biggest,
+            size: viewport,
           ),
         );
       },
     );
   }
 
-  void _handleTap(Offset tapPosition, Size canvasSize) {
+  void _handleTap(Offset tapPosition, Rect imageRect) {
     // Check zones in reverse order (top-most drawn last).
-    for (int i = zones.length - 1; i >= 0; i--) {
-      final zone = zones[i];
+    for (int i = widget.zones.length - 1; i >= 0; i--) {
+      final zone = widget.zones[i];
       if (zone.polygon.isEmpty) continue;
 
-      // Scale polygon to canvas size and check if tap is inside.
       final path = Path();
-      final scaledPoints = zone.polygon
-          .map((p) => Offset(p.dx * canvasSize.width, p.dy * canvasSize.height))
+      final pts = zone.polygon
+          .map((p) => Offset(
+                imageRect.left + p.dx * imageRect.width,
+                imageRect.top + p.dy * imageRect.height,
+              ))
           .toList();
 
-      if (scaledPoints.isEmpty) continue;
-
-      path.moveTo(scaledPoints.first.dx, scaledPoints.first.dy);
-      for (int j = 1; j < scaledPoints.length; j++) {
-        path.lineTo(scaledPoints[j].dx, scaledPoints[j].dy);
+      path.moveTo(pts.first.dx, pts.first.dy);
+      for (int j = 1; j < pts.length; j++) {
+        path.lineTo(pts[j].dx, pts[j].dy);
       }
       path.close();
 
       if (path.contains(tapPosition)) {
-        onZoneTap(zone.zoneId);
+        widget.onZoneTap(zone.zoneId);
         return;
       }
     }
@@ -73,10 +173,12 @@ class SegmentationOverlay extends StatelessWidget {
 class _SegmentationPainter extends CustomPainter {
   final List<GardenZone> zones;
   final Set<String> selectedZoneIds;
+  final Rect imageRect;
 
   _SegmentationPainter({
     required this.zones,
     required this.selectedZoneIds,
+    required this.imageRect,
   });
 
   @override
@@ -86,52 +188,57 @@ class _SegmentationPainter extends CustomPainter {
 
       final isSelected = selectedZoneIds.contains(zone.zoneId);
 
-      // Scale polygon points from normalised (0-1) to canvas coordinates.
-      final scaledPoints = zone.polygon
-          .map((p) => Offset(p.dx * size.width, p.dy * size.height))
+      // Map normalised (0–1) coords onto the actual displayed image rect.
+      final pts = zone.polygon
+          .map((p) => Offset(
+                imageRect.left + p.dx * imageRect.width,
+                imageRect.top + p.dy * imageRect.height,
+              ))
           .toList();
 
       final path = Path();
-      path.moveTo(scaledPoints.first.dx, scaledPoints.first.dy);
-      for (int i = 1; i < scaledPoints.length; i++) {
-        path.lineTo(scaledPoints[i].dx, scaledPoints[i].dy);
+      path.moveTo(pts.first.dx, pts.first.dy);
+      for (int i = 1; i < pts.length; i++) {
+        path.lineTo(pts[i].dx, pts[i].dy);
       }
       path.close();
 
       // Fill
-      final fillPaint = Paint()
-        ..color = zone.color.withValues(alpha: isSelected ? 0.45 : 0.25)
-        ..style = PaintingStyle.fill;
-      canvas.drawPath(path, fillPaint);
+      canvas.drawPath(
+        path,
+        Paint()
+          ..color = zone.color.withValues(alpha: isSelected ? 0.45 : 0.25)
+          ..style = PaintingStyle.fill,
+      );
 
       // Stroke
-      final strokePaint = Paint()
-        ..color = isSelected
-            ? zone.color
-            : zone.color.withValues(alpha: 0.6)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = isSelected ? 3.0 : 1.5;
-      canvas.drawPath(path, strokePaint);
+      canvas.drawPath(
+        path,
+        Paint()
+          ..color =
+              isSelected ? zone.color : zone.color.withValues(alpha: 0.6)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = isSelected ? 3.0 : 1.5,
+      );
 
-      // Label
+      // Label on selected zones
       if (isSelected) {
-        final center = _computeCentroid(scaledPoints);
-        _drawLabel(canvas, zone.displayLabel, center);
+        _drawLabel(canvas, zone.displayLabel, _centroid(pts));
       }
     }
   }
 
-  Offset _computeCentroid(List<Offset> points) {
+  Offset _centroid(List<Offset> pts) {
     double cx = 0, cy = 0;
-    for (final p in points) {
+    for (final p in pts) {
       cx += p.dx;
       cy += p.dy;
     }
-    return Offset(cx / points.length, cy / points.length);
+    return Offset(cx / pts.length, cy / pts.length);
   }
 
   void _drawLabel(Canvas canvas, String label, Offset position) {
-    final paragraphBuilder = ui.ParagraphBuilder(
+    final builder = ui.ParagraphBuilder(
       ui.ParagraphStyle(
         textAlign: TextAlign.center,
         fontSize: 11,
@@ -141,29 +248,24 @@ class _SegmentationPainter extends CustomPainter {
       ..pushStyle(ui.TextStyle(
         color: Colors.white,
         shadows: [
-          Shadow(
-            color: Colors.black.withValues(alpha: 0.8),
-            blurRadius: 3,
-          ),
+          Shadow(color: Colors.black.withValues(alpha: 0.8), blurRadius: 3),
         ],
       ))
       ..addText(label);
 
-    final paragraph = paragraphBuilder.build()
+    final paragraph = builder.build()
       ..layout(const ui.ParagraphConstraints(width: 100));
 
-    // Background pill
     final bgRect = Rect.fromCenter(
       center: position,
       width: paragraph.longestLine + 12,
       height: paragraph.height + 6,
     );
-    final bgPaint = Paint()
-      ..color = Colors.black.withValues(alpha: 0.55)
-      ..style = PaintingStyle.fill;
     canvas.drawRRect(
       RRect.fromRectAndRadius(bgRect, const Radius.circular(6)),
-      bgPaint,
+      Paint()
+        ..color = Colors.black.withValues(alpha: 0.55)
+        ..style = PaintingStyle.fill,
     );
 
     canvas.drawParagraph(
@@ -176,8 +278,8 @@ class _SegmentationPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _SegmentationPainter oldDelegate) {
-    return oldDelegate.zones != zones ||
-        oldDelegate.selectedZoneIds != selectedZoneIds;
-  }
+  bool shouldRepaint(covariant _SegmentationPainter old) =>
+      old.zones != zones ||
+      old.selectedZoneIds != selectedZoneIds ||
+      old.imageRect != imageRect;
 }

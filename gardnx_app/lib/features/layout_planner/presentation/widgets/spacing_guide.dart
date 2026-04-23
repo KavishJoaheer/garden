@@ -53,7 +53,7 @@ class SpacingGuide extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: occupiedCells / totalCells.clamp(1, totalCells),
                       minHeight: 10,
-                      backgroundColor: colorScheme.surfaceVariant,
+                      backgroundColor: colorScheme.surfaceContainerHighest,
                       valueColor: AlwaysStoppedAnimation<Color>(
                           utilizationColor),
                     ),

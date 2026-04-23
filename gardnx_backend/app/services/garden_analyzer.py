@@ -80,10 +80,12 @@ class GardenAnalyzer:
     ) -> SegmentationResponse:
         start_time = time.time()
 
+        source: str
         if self.use_mock:
             zones = self._mock_analyze()
+            source = "mock"
         else:
-            zones = self._ml_analyze(image_bytes, selected_area)
+            zones, source = self._ml_analyze(image_bytes, selected_area)
 
         processing_time = int((time.time() - start_time) * 1000)
         avg_confidence = (
@@ -95,13 +97,14 @@ class GardenAnalyzer:
             zones=zones,
             processing_time_ms=processing_time,
             fallback_recommended=avg_confidence < 0.5,
+            segmentationSource=source,  # type: ignore[arg-type]
         )
 
     # ------------------------------------------------------------------
     # ML pipeline: HF first, PIL fallback
     # ------------------------------------------------------------------
 
-    def _ml_analyze(self, image_bytes: bytes, selected_area) -> List[ZoneInfo]:
+    def _ml_analyze(self, image_bytes: bytes, selected_area) -> tuple[List[ZoneInfo], str]:
         # 1. Try Hugging Face ML segmentation
         if self._hf is not None:
             try:
@@ -110,13 +113,13 @@ class GardenAnalyzer:
                     logger.info(
                         "HF ML segmentation succeeded: %d zones", len(result.zones)
                     )
-                    return result.zones
+                    return result.zones, "hf"
             except Exception as exc:
                 logger.warning("HF analyzer raised %s — falling back to PIL", exc)
 
         # 2. PIL colour fallback
         logger.info("Using PIL colour-analysis fallback")
-        return self._colour_analyze(image_bytes, selected_area)
+        return self._colour_analyze(image_bytes, selected_area), "pil"
 
     # ------------------------------------------------------------------
     # PIL colour-analysis pipeline (offline fallback)

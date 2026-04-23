@@ -3,6 +3,7 @@ import 'package:gardnx_app/features/layout_planner/data/repositories/layout_repo
 import 'package:gardnx_app/features/layout_planner/domain/models/layout_suggestion.dart';
 import 'package:gardnx_app/features/layout_planner/presentation/providers/layout_provider.dart';
 import 'package:gardnx_app/features/plant_database/presentation/providers/plant_provider.dart';
+import 'package:gardnx_app/features/profile/presentation/providers/profile_provider.dart';
 
 // Parameters passed to the recommendation request
 class RecommendationParams {
@@ -34,6 +35,8 @@ final recommendationParamsProvider =
 final enginePreferenceProvider = StateProvider<String?>((ref) => null);
 
 final engineUsedProvider = StateProvider<String?>((ref) => null);
+final engineRequestedProvider = StateProvider<String?>((ref) => null);
+final fallbackReasonProvider = StateProvider<String?>((ref) => null);
 
 final engineStatusProvider = FutureProvider<Map<String, EngineStatus>>((ref) async {
   final repo = ref.read(layoutRepositoryProvider);
@@ -48,6 +51,11 @@ final recommendationsProvider =
   final preferredEngine = ref.watch(enginePreferenceProvider);
   final repo = ref.read(layoutRepositoryProvider);
 
+  // Source preferences + experience level from the signed-in user's profile.
+  final profile = ref.watch(currentUserProfileProvider).asData?.value;
+  final preferences = profile?.preferences.plantTypes ?? const <String>[];
+  final experienceLevel = profile?.preferences.experienceLevel;
+
   final result = await repo.getRecommendations(
     gardenId: params.gardenId,
     bedId: params.bedId,
@@ -57,8 +65,13 @@ final recommendationsProvider =
     soilType: params.soilType,
     season: params.season,
     region: params.region,
+    preferences: preferences,
+    experienceLevel: experienceLevel,
     preferredEngine: preferredEngine,
   );
+
+  ref.read(engineRequestedProvider.notifier).state = result.engineRequested;
+  ref.read(fallbackReasonProvider.notifier).state = result.fallbackReason;
 
   if (result.suggestions.isNotEmpty) {
     ref.read(engineUsedProvider.notifier).state = result.engineUsed;
@@ -74,8 +87,7 @@ Future<List<LayoutSuggestion>> _localRecommendations(
   Ref ref,
   RecommendationParams params,
 ) async {
-  final plants =
-      await ref.read(plantRepositoryProvider).getAllPlants();
+  final plants = await ref.read(allPlantsProvider.future);
   final month = DateTime.now().month;
   final suggestions = <LayoutSuggestion>[];
 
