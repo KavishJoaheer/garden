@@ -6,6 +6,7 @@ import 'package:gardnx_app/features/plant_database/presentation/providers/plant_
 import 'package:gardnx_app/features/plant_database/presentation/screens/plant_detail_screen.dart';
 import 'package:gardnx_app/features/plant_database/presentation/widgets/filter_chips.dart';
 import 'package:gardnx_app/features/plant_database/presentation/widgets/plant_card.dart';
+import 'package:gardnx_app/features/profile/presentation/providers/profile_provider.dart';
 
 class PlantCatalogScreen extends ConsumerStatefulWidget {
   const PlantCatalogScreen({super.key});
@@ -102,6 +103,8 @@ class _PlantCatalogScreenState extends ConsumerState<PlantCatalogScreen> {
       body: Column(
         children: [
           const PlantFilterChips(),
+          // ── Preference filter banner ──────────────────────────────────
+          _PreferencesFilterBanner(),
           const SizedBox(height: 4),
           Expanded(
             child: CustomScrollView(
@@ -172,6 +175,60 @@ class _PlantCatalogScreenState extends ConsumerState<PlantCatalogScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ── Preference filter banner ─────────────────────────────────────────────────
+
+class _PreferencesFilterBanner extends ConsumerWidget {
+  const _PreferencesFilterBanner();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFiltered = ref.watch(isFilteredByPreferencesProvider);
+    if (!isFiltered) return const SizedBox.shrink();
+
+    final profile = ref.watch(currentUserProfileProvider).asData?.value;
+    final types = profile?.preferences.plantTypes ?? [];
+    final label = types.map((t) => t[0].toUpperCase() + t.substring(1)).join(', ');
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.teal.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.teal.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.filter_alt_outlined, size: 16, color: Colors.teal),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              'Filtered by your preferences: $label',
+              style: const TextStyle(fontSize: 12, color: Colors.teal),
+            ),
+          ),
+          TextButton(
+            onPressed: () =>
+                ref.read(plantFilterProvider.notifier).showAll(),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text('Show all',
+                style: TextStyle(
+                    fontSize: 12,
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.bold)),
+          ),
+        ],
       ),
     );
   }

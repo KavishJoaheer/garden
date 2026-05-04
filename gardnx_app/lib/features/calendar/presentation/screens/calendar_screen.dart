@@ -212,9 +212,19 @@ class _EventListTile extends ConsumerWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
-        onTap: () => ref
-            .read(gardenEventsProvider.notifier)
-            .toggleEventCompletion(event),
+        onTap: () async {
+          final err = await ref
+              .read(gardenEventsProvider.notifier)
+              .toggleEventCompletion(event);
+          if (err != null && context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Could not update event: $err'),
+                backgroundColor: colorScheme.error,
+              ),
+            );
+          }
+        },
         leading: Container(
           width: 40,
           height: 40,
@@ -235,16 +245,30 @@ class _EventListTile extends ConsumerWidget {
                 : null,
           ),
         ),
-        subtitle: event.notes != null
-            ? Text(event.notes!,
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (event.bedName != null && event.bedName!.isNotEmpty)
+              Text(
+                event.bedName!,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ))
-            : null,
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            if (event.notes != null)
+              Text(event.notes!,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  )),
+          ],
+        ),
         trailing: event.isCompleted
-            ? Icon(Icons.check_circle, color: Colors.green, size: 20)
-            : null,
+            ? const Icon(Icons.check_circle, color: Colors.green, size: 24)
+            : Icon(Icons.radio_button_unchecked,
+                color: colorScheme.onSurfaceVariant, size: 24),
       ),
     );
   }
 }
+

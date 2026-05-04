@@ -5,11 +5,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'config/routes/app_router.dart';
 import 'config/theme/app_theme.dart';
+import 'shared/providers/theme_provider.dart';
 import 'features/auth/presentation/providers/auth_provider.dart';
 import 'features/calendar/presentation/providers/calendar_provider.dart';
+import 'features/calendar/presentation/providers/task_provider.dart';
 import 'features/manual_input/presentation/providers/manual_input_provider.dart';
 import 'features/onboarding/presentation/providers/onboarding_provider.dart';
 import 'features/plant_database/presentation/providers/plant_provider.dart';
+import 'features/plant_database/presentation/providers/plant_filter_provider.dart';
+import 'features/profile/presentation/providers/profile_provider.dart';
 import 'shared/providers/firebase_providers.dart';
 import 'shared/services/session_service.dart';
 
@@ -26,7 +30,7 @@ class _GardNxAppState extends ConsumerState<GardNxApp>
   final SessionService _sessionService = SessionService();
   Timer? _inactivityTimer;
 
-  static const _inactivityTimeout = Duration(seconds: 30);
+  static const _inactivityTimeout = Duration(minutes: 15);
 
   @override
   void initState() {
@@ -81,19 +85,37 @@ class _GardNxAppState extends ConsumerState<GardNxApp>
 
     // Invalidate user-scoped providers whenever the signed-in uid changes,
     // so a returning user never inherits the previous user's in-memory state
-    // (active garden, drawn beds, selected day, cached plant list).
+    // (active garden, drawn beds, selected day, cached plant list, etc.).
     ref.listen(firebaseAuthStateProvider, (prev, next) {
       final prevUid = prev?.valueOrNull?.uid;
       final nextUid = next.valueOrNull?.uid;
       if (prevUid == nextUid) return;
+
+      // Calendar / Garden state
       ref.invalidate(activeGardenIdProvider);
+      ref.invalidate(resolvedGardenIdProvider);
+      ref.invalidate(gardenEventsProvider);
       ref.invalidate(selectedCalendarDayProvider);
+      ref.invalidate(upcomingTasksProvider);
+      ref.invalidate(activeGardenTasksProvider);
+
+      // Plant catalog cache (PlantRepository uses an in-memory cache;
+      // invalidating this provider forces a fresh Firestore fetch scoped
+      // to the new user's UID so user-A's custom plants never show for user-B)
+      ref.invalidate(allPlantsProvider);
+      ref.invalidate(plantFilterProvider);
+
+      // Profile data
+      ref.invalidate(currentUserProfileProvider);
+      ref.invalidate(profileNotifierProvider);
+
+      // Manual input / layout state
       ref.invalidate(manualInputProvider);
       ref.invalidate(selectedBedIdProvider);
-      ref.invalidate(allPlantsProvider);
     });
 
     final router = ref.watch(appRouterProvider);
+    final themeMode = ref.watch(themeModeProvider);
 
     return Listener(
       onPointerDown: (_) => _resetInactivityTimer(),
@@ -102,6 +124,8 @@ class _GardNxAppState extends ConsumerState<GardNxApp>
         title: 'MYGarden Planner',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: themeMode,
         routerConfig: router,
       ),
     );

@@ -127,7 +127,7 @@ class RecommendationScreen extends ConsumerWidget {
                         Icon(Icons.search_off,
                             size: 64,
                             color: colorScheme.onSurfaceVariant
-                                .withOpacity(0.4)),
+                                .withValues(alpha: 0.4)),
                         const SizedBox(height: 16),
                         Text(
                           'No recommendations available',
@@ -231,10 +231,13 @@ class _EngineSelector extends ConsumerWidget {
     final engineUsed = ref.watch(engineUsedProvider);
     final engineRequested = ref.watch(engineRequestedProvider);
     final fallbackReason = ref.watch(fallbackReasonProvider);
+    final recommendationsAsync = ref.watch(recommendationsProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    // Fixed list: Auto first, then each specific engine.
     const engines = [
+      (null, 'Auto (best available)', Icons.auto_awesome_outlined),
       ('gemini', 'Gemini AI', Icons.auto_awesome),
       ('ollama', 'Ollama (Local)', Icons.computer),
       ('rules', 'Rule-based', Icons.rule),
@@ -255,7 +258,8 @@ class _EngineSelector extends ConsumerWidget {
                   color: colorScheme.primary, fontWeight: FontWeight.bold,
                 )),
                 const Spacer(),
-                if (engineRequested != null)
+                // Show what was requested vs what was actually used
+                if (engineRequested != null && engineRequested != preferredEngine)
                   Padding(
                     padding: const EdgeInsets.only(right: 4),
                     child: Chip(
@@ -268,11 +272,23 @@ class _EngineSelector extends ConsumerWidget {
                   ),
                 if (engineUsed != null)
                   Chip(
-                    label: Text('Using: $engineUsed', style: const TextStyle(fontSize: 10)),
+                    label: Text('Using: $engineUsed',
+                        style: const TextStyle(fontSize: 10)),
                     padding: EdgeInsets.zero,
                     visualDensity: VisualDensity.compact,
-                    backgroundColor: colorScheme.primaryContainer,
+                    backgroundColor: engineUsed == engineRequested || engineRequested == null
+                        ? colorScheme.primaryContainer
+                        : Colors.orange.withValues(alpha: 0.3),
                   ),
+                // Loading spinner when fetching new recommendations
+                if (recommendationsAsync.isLoading) ...[
+                  const SizedBox(width: 8),
+                  const SizedBox(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ],
               ],
             ),
             if (fallbackReason != null) ...[
@@ -282,8 +298,7 @@ class _EngineSelector extends ConsumerWidget {
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Colors.amber.withValues(alpha: 0.15),
-                  border: Border.all(
-                      color: Colors.amber.withValues(alpha: 0.5)),
+                  border: Border.all(color: Colors.amber.withValues(alpha: 0.5)),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -308,77 +323,98 @@ class _EngineSelector extends ConsumerWidget {
             const SizedBox(height: 8),
             engineStatusAsync.when(
               loading: () => const LinearProgressIndicator(),
-              error: (_, __) => const Text('Could not check engine status', style: TextStyle(fontSize: 12)),
+              error: (_, __) => const Text('Could not check engine status',
+                  style: TextStyle(fontSize: 12)),
               data: (statuses) => Column(
                 children: engines.map((e) {
-                  final key = e.$1;
+                  final key = e.$1;       // null = auto
                   final label = e.$2;
                   final icon = e.$3;
-                  final status = statuses[key];
-                  final available = status?.available ?? false;
-                  final reason = status?.reason ?? '';
-                  final isChecked = preferredEngine == key ||
-                      (preferredEngine == null && key == 'gemini');
+
+                  final status = key != null ? statuses[key] : null;
+                  // Auto is always available; specific engines check their status.
+                  final available = key == null ? true : (status?.available ?? false);
+                  final reason = key == null
+                      ? 'Let the backend pick the best available engine'
+                      : (status?.reason ?? '');
+
+                  // Highlighted when: key matches preference, or (auto + no preference set)
+                  final isSelected = preferredEngine == key;
 
                   return InkWell(
-                    onTap: available ? () {
-                      ref.read(enginePreferenceProvider.notifier).state = key;
-                      ref.invalidate(recommendationsProvider);
-                    } : () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('$label unavailable: $reason'),
-                          duration: const Duration(seconds: 4),
-                          action: SnackBarAction(
-                            label: 'OK',
-                            onPressed: () {},
-                          ),
-                        ),
-                      );
-                    },
+                    onTap: available
+                        ? () {
+                            ref.read(enginePreferenceProvider.notifier).state = key;
+                            ref.invalidate(recommendationsProvider);
+                          }
+                        : () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('$label unavailable: $reason'),
+                                duration: const Duration(seconds: 4),
+                                action: SnackBarAction(
+                                  label: 'OK',
+                                  onPressed: () {},
+                                ),
+                              ),
+                            );
+                          },
                     borderRadius: BorderRadius.circular(8),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 4),
                       child: Row(
                         children: [
-                          Icon(icon, size: 18,
-                            color: available
-                                ? colorScheme.primary
-                                : colorScheme.onSurface.withValues(alpha: 0.3),
-                          ),
+                          Icon(icon,
+                              size: 18,
+                              color: available
+                                  ? (isSelected
+                                      ? colorScheme.primary
+                                      : colorScheme.onSurface)
+                                  : colorScheme.onSurface
+                                      .withValues(alpha: 0.3)),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(label, style: theme.textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: available
-                                      ? null
-                                      : colorScheme.onSurface.withValues(alpha: 0.4),
-                                )),
-                                Text(reason, style: theme.textTheme.bodySmall?.copyWith(
-                                  fontSize: 10,
-                                  color: available
-                                      ? colorScheme.onSurfaceVariant
-                                      : colorScheme.error.withValues(alpha: 0.7),
-                                )),
+                                Text(label,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: available
+                                          ? (isSelected
+                                              ? colorScheme.primary
+                                              : null)
+                                          : colorScheme.onSurface
+                                              .withValues(alpha: 0.4),
+                                    )),
+                                Text(reason,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      fontSize: 10,
+                                      color: available
+                                          ? colorScheme.onSurfaceVariant
+                                          : colorScheme.error
+                                              .withValues(alpha: 0.7),
+                                    )),
                               ],
                             ),
                           ),
                           if (available)
                             Icon(
-                              isChecked
+                              isSelected
                                   ? Icons.radio_button_checked
                                   : Icons.radio_button_unchecked,
                               size: 20,
-                              color: isChecked
+                              color: isSelected
                                   ? colorScheme.primary
-                                  : colorScheme.onSurface.withValues(alpha: 0.4),
+                                  : colorScheme.onSurface
+                                      .withValues(alpha: 0.4),
                             )
                           else
-                            Icon(Icons.block, size: 16,
-                                color: colorScheme.error.withValues(alpha: 0.5)),
+                            Icon(Icons.block,
+                                size: 16,
+                                color:
+                                    colorScheme.error.withValues(alpha: 0.5)),
                         ],
                       ),
                     ),
@@ -424,7 +460,7 @@ class _SuggestionCard extends StatelessWidget {
       shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       color: isSelected
-          ? colorScheme.primaryContainer.withOpacity(0.4)
+          ? colorScheme.primaryContainer.withValues(alpha: 0.4)
           : null,
       child: InkWell(
         onTap: onToggle,
@@ -506,7 +542,7 @@ class _SuggestionCard extends StatelessWidget {
                             avatar: const Icon(Icons.favorite,
                                 size: 12, color: Colors.green),
                             backgroundColor:
-                                Colors.green.withOpacity(0.1),
+                                Colors.green.withValues(alpha: 0.1),
                             visualDensity: VisualDensity.compact,
                             labelStyle: const TextStyle(fontSize: 11),
                           ))

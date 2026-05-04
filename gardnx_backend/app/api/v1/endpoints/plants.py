@@ -7,6 +7,12 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.api.deps import get_current_user
 from app.config import settings
+from app.dependencies import (
+    get_gemini_recommender,
+    get_ollama_recommender,
+    get_perenual_service,
+    get_plant_recommender,
+)
 from app.models.plant_models import (
     Plant,
     RecommendRequest,
@@ -14,45 +20,10 @@ from app.models.plant_models import (
 )
 from app.services.gemini_recommender import GeminiRecommender
 from app.services.ollama_recommender import OllamaRecommender
-from app.services.perenual_service import PerenualService
 from app.services.plant_recommender import PlantRecommender
 
 logger = logging.getLogger("gardnx")
 router = APIRouter()
-
-# Singletons — initialised once at first request
-_recommender: PlantRecommender | None = None
-_perenual: PerenualService | None = None
-_gemini: GeminiRecommender | None = None
-_ollama: OllamaRecommender | None = None
-
-
-def _get_recommender() -> PlantRecommender:
-    global _recommender
-    if _recommender is None:
-        _recommender = PlantRecommender()
-    return _recommender
-
-
-def _get_perenual() -> PerenualService:
-    global _perenual
-    if _perenual is None:
-        _perenual = PerenualService(api_key=settings.perenual_api_key)
-    return _perenual
-
-
-def _get_gemini() -> GeminiRecommender:
-    global _gemini
-    if _gemini is None:
-        _gemini = GeminiRecommender(api_key=settings.gemini_api_key)
-    return _gemini
-
-
-def _get_ollama() -> OllamaRecommender:
-    global _ollama
-    if _ollama is None:
-        _ollama = OllamaRecommender()
-    return _ollama
 
 
 async def _run_engine_chain(
@@ -99,7 +70,7 @@ async def _run_engine_chain(
 
 @router.get("/search")
 async def search_plants_global(
-    q: str = Query(..., min_length=2, description="Search term"),
+    q: str = Query(..., min_length=2, max_length=100, description="Search term"),
     page: int = Query(1, ge=1, description="Perenual page number"),
     user_id: str = Depends(get_current_user),
 ):
@@ -112,9 +83,11 @@ async def search_plants_global(
     Results are cached 24 h on the backend — safe to call on
     every search keystroke after debouncing.
     """
-    perenual = _get_perenual()
-    results = await perenual.search_catalog(query=q, page=page)
-    logger.info("Global search '%s' p%d → %d results", q, page, len(results))
+    # Sanitize search input
+    q_clean = q.strip()
+    perenual = get_perenual_service()
+    results = await perenual.search_catalog(query=q_clean, page=page)
+    logger.info("Global search '%s' p%d → %d results", q_clean, page, len(results))
     return results
 
 
@@ -124,7 +97,7 @@ async def get_catalog(
     sun: Optional[str] = Query(None, description="Filter by sun requirement (full_sun, partial_shade, full_shade)"),
     season: Optional[int] = Query(None, ge=1, le=12, description="Filter by sowing month (1-12)"),
     region: Optional[str] = Query(None, description="Filter by Mauritius region"),
-    search: Optional[str] = Query(None, description="Search term for plant name"),
+    search: Optional[str] = Query(None, max_length=100, description="Search term for plant name"),
     enrich: bool = Query(False, description="Enrich results with Perenual images (uses API quota)"),
     user_id: str = Depends(get_current_user),
 ):
@@ -133,7 +106,7 @@ async def get_catalog(
     Pass ?enrich=true to fetch plant images from the Perenual API.
     Images are cached for 24 hours so repeated calls don't burn quota.
     """
-    recommender = _get_recommender()
+    recommender = get_plant_recommender()
     plants = list(recommender.plants.values())
 
     if type:
@@ -145,7 +118,7 @@ async def get_catalog(
     if region:
         plants = [p for p in plants if region in p.mauritius_regions]
     if search:
-        term = search.lower()
+        term = search.strip().lower()
         plants = [
             p for p in plants
             if term in p.name.lower()
@@ -155,7 +128,7 @@ async def get_catalog(
         ]
 
     if enrich:
-        perenual = _get_perenual()
+        perenual = get_perenual_service()
         plants = await perenual.enrich_plants(plants, max_lookups=10)
 
     logger.info(
@@ -168,9 +141,6 @@ async def get_catalog(
 @router.get("/engine-status")
 async def get_engine_status(user_id: str = Depends(get_current_user)):
     """Return availability status of each recommendation engine."""
-    gemini = _get_gemini()
-    ollama = _get_ollama()
-
     statuses = {}
 
     # Check Gemini
@@ -184,23 +154,45 @@ async def get_engine_status(user_id: str = Depends(get_current_user)):
         except Exception as e:
             statuses["gemini"] = {"available": False, "reason": f"Gemini error: {str(e)[:80]}"}
 
-    # Check Ollama
+    # Check Ollama — use configured model name (settings.ollama_model) so the
+    # check passes regardless of which model the user has installed.
+    configured_model = getattr(settings, "ollama_model", "gemma3:1b")
+    # Normalise for comparison: strip tag (e.g. "gemma3:1b" → "gemma3")
+    configured_base = configured_model.split(":")[0].lower()
     try:
-        import httpx
-        async with httpx.AsyncClient(timeout=3.0) as client:
-            resp = await client.get("http://localhost:11434/api/tags")
+        import httpx as _httpx
+        ollama_url = getattr(settings, "ollama_url", "http://localhost:11434")
+        async with _httpx.AsyncClient(timeout=3.0) as client:
+            resp = await client.get(f"{ollama_url}/api/tags")
             if resp.status_code == 200:
                 models = resp.json().get("models", [])
-                model_names = [m.get("name", "") for m in models]
-                has_gemma = any("gemma" in n for n in model_names)
-                if has_gemma:
-                    statuses["ollama"] = {"available": True, "reason": "Gemma via Ollama (local AI, offline)"}
+                model_names = [m.get("name", "").lower() for m in models]
+                # Check for any installed model whose name starts with the configured base.
+                matched = [n for n in model_names if n.startswith(configured_base)]
+                if matched:
+                    statuses["ollama"] = {
+                        "available": True,
+                        "reason": f"Using {matched[0]} via Ollama (local AI, offline)",
+                    }
                 else:
-                    statuses["ollama"] = {"available": False, "reason": "Ollama running but gemma model not installed. Run: ollama pull gemma3:1b"}
+                    installed = ", ".join(model_names) or "none"
+                    statuses["ollama"] = {
+                        "available": False,
+                        "reason": (
+                            f"Ollama running but '{configured_model}' not installed. "
+                            f"Installed: {installed}. Run: ollama pull {configured_model}"
+                        ),
+                    }
             else:
-                statuses["ollama"] = {"available": False, "reason": "Ollama server not responding"}
+                statuses["ollama"] = {
+                    "available": False,
+                    "reason": "Ollama server not responding",
+                }
     except Exception:
-        statuses["ollama"] = {"available": False, "reason": "Ollama not running. Install from ollama.ai and run: ollama serve"}
+        statuses["ollama"] = {
+            "available": False,
+            "reason": f"Ollama not running. Install from ollama.ai and run: ollama serve && ollama pull {configured_model}",
+        }
 
     statuses["rules"] = {"available": True, "reason": "Built-in rules (always available, works offline)"}
     return statuses
@@ -213,12 +205,12 @@ async def get_plant(
     user_id: str = Depends(get_current_user),
 ):
     """Return a single plant by its ID, optionally Perenual-enriched."""
-    recommender = _get_recommender()
+    recommender = get_plant_recommender()
     plant = recommender.plants.get(plant_id)
     if plant is None:
         raise HTTPException(status_code=404, detail=f"Plant '{plant_id}' not found")
 
-    perenual = _get_perenual() if enrich else None
+    perenual = get_perenual_service() if enrich else None
     if enrich and perenual and (
         plant.image_url is None
         or perenual.uses_legacy_image_source(plant.image_url)
@@ -249,13 +241,13 @@ async def recommend_plants(
       3. Rule-based weighted algorithm (always works)
     Results are then enriched with Perenual plant images.
     """
-    recommender = _get_recommender()
+    recommender = get_plant_recommender()
     result, engine, requested, fallback = await _run_engine_chain(
-        body, recommender, _get_gemini(), _get_ollama(),
+        body, recommender, get_gemini_recommender(), get_ollama_recommender(),
     )
 
     # Enrich with Perenual images
-    perenual = _get_perenual()
+    perenual = get_perenual_service()
     enriched_plants = await perenual.enrich_plants(
         [r.plant for r in result.recommendations],
         max_lookups=10,
@@ -274,5 +266,3 @@ async def recommend_plants(
     result.engine_requested = requested
     result.fallback_reason = fallback
     return result
-
-

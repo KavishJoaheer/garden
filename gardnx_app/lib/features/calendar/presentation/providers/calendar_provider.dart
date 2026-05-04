@@ -7,25 +7,29 @@ final calendarRepositoryProvider =
     Provider<CalendarRepository>((ref) => CalendarRepository());
 
 // Current garden id context — set when user saves a layout or taps a garden.
+// Resets to null on sign-out (invalidated in app.dart listener).
 final activeGardenIdProvider = StateProvider<String?>((ref) => null);
 
 /// Auto-resolves which garden to show on the calendar.
 ///
 /// Priority: explicit [activeGardenIdProvider] → most recent garden from
-/// Firestore (client-side sort, no composite index needed).
+/// Firestore for the *currently signed-in user only*.
+/// Rebuilds whenever [currentFirebaseUserProvider] changes so it is always
+/// scoped to the right account.
 final resolvedGardenIdProvider = FutureProvider<String?>((ref) async {
-  final explicit = ref.watch(activeGardenIdProvider);
-  if (explicit != null && explicit.isNotEmpty) return explicit;
-
+  // Watch the auth state so this re-executes on sign-in / sign-out.
   final user = ref.watch(currentFirebaseUserProvider);
   if (user == null) return null;
+
+  final explicit = ref.watch(activeGardenIdProvider);
+  if (explicit != null && explicit.isNotEmpty) return explicit;
 
   try {
     final firestore = ref.read(firestoreProvider);
     // No orderBy — avoids composite-index requirement; sort client-side.
     final snap = await firestore
         .collection('gardens')
-        .where('userId', isEqualTo: user.uid)
+        .where('userId', isEqualTo: user.uid) // always scoped to current user
         .limit(20)
         .get();
     if (snap.docs.isEmpty) return null;
@@ -51,7 +55,7 @@ final resolvedGardenIdProvider = FutureProvider<String?>((ref) async {
       });
 
     final id = sorted.first.id;
-    // Cache so future reads don't hit Firestore again.
+    // Cache so future reads don't hit Firestore again in the same session.
     ref.read(activeGardenIdProvider.notifier).state = id;
     return id;
   } catch (_) {
@@ -61,8 +65,9 @@ final resolvedGardenIdProvider = FutureProvider<String?>((ref) async {
 
 /// Single source of truth for the events list shown on the calendar.
 ///
-/// Tap-to-complete mutates this notifier; the screen reads its state so the
-/// toggle is reflected immediately without refetching.
+/// Keyed on the resolved gardenId so switching gardens always loads fresh
+/// data from Firestore. Tap-to-complete mutates this notifier; the screen
+/// reads its state so the toggle is reflected immediately without refetching.
 class GardenEventsNotifier
     extends StateNotifier<AsyncValue<List<PlantingEvent>>> {
   final CalendarRepository _repo;
@@ -90,22 +95,25 @@ class GardenEventsNotifier
   Future<void> reload() => _load();
 
   /// Optimistic toggle: flip UI first, persist second, roll back on failure.
-  Future<void> toggleEventCompletion(PlantingEvent event) async {
+  /// Returns a non-null error message only when persistence fails.
+  Future<String?> toggleEventCompletion(PlantingEvent event) async {
     final gid = gardenId;
-    if (gid == null || gid.isEmpty) return;
+    if (gid == null || gid.isEmpty) return 'Garden not set';
     final current = state.value;
-    if (current == null) return;
+    if (current == null) return 'Events not loaded';
 
     final updated = event.copyWith(isCompleted: !event.isCompleted);
+    // Apply optimistic update immediately so UI feels instant.
     state = AsyncData(
       current.map((e) => e.id == event.id ? updated : e).toList(),
     );
     try {
       await _repo.updateEventCompletion(gid, event.id, updated.isCompleted);
-    } catch (_) {
-      // Roll back to the prior list on persistence failure.
+      return null; // success
+    } catch (e) {
+      // Roll back to prior list on persistence failure.
       state = AsyncData(current);
-      rethrow;
+      return e.toString();
     }
   }
 }

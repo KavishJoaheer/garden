@@ -6,6 +6,14 @@ import math
 from fastapi import APIRouter, Depends
 
 from app.api.deps import get_current_user
+from app.dependencies import (
+    get_companion_checker,
+    get_gemini_companion_checker,
+    get_gemini_recommender,
+    get_layout_generator,
+    get_ollama_recommender,
+    get_plant_recommender,
+)
 from app.models.layout_models import (
     LayoutRequest,
     LayoutResponse,
@@ -18,67 +26,19 @@ from app.models.layout_models import (
     BedSuggestion,
 )
 from app.models.plant_models import RecommendRequest
-from app.config import settings
-from app.services.layout_generator import LayoutGenerator
-from app.services.companion_checker import CompanionChecker
-from app.services.gemini_companion_checker import GeminiCompanionChecker
-from app.services.gemini_recommender import GeminiRecommender
-from app.services.ollama_recommender import OllamaRecommender
-from app.services.plant_recommender import PlantRecommender
 from app.services.spacing_calculator import calculate_max_plants
 
 logger = logging.getLogger("gardnx")
 router = APIRouter()
 
-# Singleton instances
-_layout_gen: LayoutGenerator | None = None
-_companion: CompanionChecker | None = None
-_gemini_companion: GeminiCompanionChecker | None = None
-_plant_rec: PlantRecommender | None = None
-_gemini_rec: GeminiRecommender | None = None
-_ollama_rec: OllamaRecommender | None = None
 
-
-def _get_layout_generator() -> LayoutGenerator:
-    global _layout_gen
-    if _layout_gen is None:
-        _layout_gen = LayoutGenerator()
-    return _layout_gen
-
-
-def _get_companion_checker() -> CompanionChecker:
-    global _companion
-    if _companion is None:
-        _companion = CompanionChecker()
-    return _companion
-
-
-def _get_gemini_companion_checker() -> GeminiCompanionChecker:
-    global _gemini_companion
-    if _gemini_companion is None:
-        _gemini_companion = GeminiCompanionChecker(api_key=settings.gemini_api_key)
-    return _gemini_companion
-
-
-def _get_plant_recommender() -> PlantRecommender:
-    global _plant_rec
-    if _plant_rec is None:
-        _plant_rec = PlantRecommender()
-    return _plant_rec
-
-
-def _get_gemini_recommender() -> GeminiRecommender:
-    global _gemini_rec
-    if _gemini_rec is None:
-        _gemini_rec = GeminiRecommender(api_key=settings.gemini_api_key)
-    return _gemini_rec
-
-
-def _get_ollama_recommender() -> OllamaRecommender:
-    global _ollama_rec
-    if _ollama_rec is None:
-        _ollama_rec = OllamaRecommender()
-    return _ollama_rec
+# Season name → list of sowing months
+_SEASON_MONTHS: dict[str, list[int]] = {
+    "summer": [11, 12, 1, 2, 3],
+    "winter": [5, 6, 7, 8, 9],
+    "autumn": [3, 4, 5],
+    "spring": [9, 10, 11],
+}
 
 
 @router.post("/generate", response_model=LayoutResponse)
@@ -92,7 +52,7 @@ async def generate_layout(
     Returns a grid-based layout with placements, utilisation statistics,
     and companion-planting warnings.
     """
-    generator = _get_layout_generator()
+    generator = get_layout_generator()
     result = generator.generate(body)
 
     logger.info(
@@ -115,7 +75,7 @@ async def validate_layout(
     and returns any warnings or errors.
     """
     # Try AI companion check first; fall back to static rules if offline/unavailable
-    gemini = _get_gemini_companion_checker()
+    gemini = get_gemini_companion_checker()
     warnings = gemini.check_layout(
         placements=body.placements,
         bed_width_cm=body.bed.width_cm,
@@ -123,7 +83,7 @@ async def validate_layout(
     )
     if warnings is None:
         logger.info("Validate: Gemini unavailable, using static companion rules")
-        checker = _get_companion_checker()
+        checker = get_companion_checker()
         warnings = checker.check_layout(
             placements=body.placements,
             bed_width_cm=body.bed.width_cm,
@@ -173,15 +133,6 @@ async def calculate_spacing(
     )
 
 
-# Season name → list of sowing months
-_SEASON_MONTHS: dict[str, list[int]] = {
-    "summer": [11, 12, 1, 2, 3],
-    "winter": [5, 6, 7, 8, 9],
-    "autumn": [3, 4, 5],
-    "spring": [9, 10, 11],
-}
-
-
 @router.post("/recommend", response_model=RecommendBedResponse)
 async def recommend_plants_for_bed(
     body: RecommendBedRequest,
@@ -192,7 +143,7 @@ async def recommend_plants_for_bed(
     Engine priority: Gemini 2.5 Flash Lite → Ollama (local) → rule-based.
     Falls back transparently — the client always gets results.
     """
-    rec = _get_plant_recommender()
+    rec = get_plant_recommender()
     season_months = _SEASON_MONTHS.get(body.season.lower(), list(range(1, 13)))
     current_month = season_months[0] if season_months else 1
 
@@ -211,7 +162,7 @@ async def recommend_plants_for_bed(
 
     from app.api.v1.endpoints.plants import _run_engine_chain
     ai_result, engine_used, engine_requested, fallback_reason = await _run_engine_chain(
-        ai_req, rec, _get_gemini_recommender(), _get_ollama_recommender(),
+        ai_req, rec, get_gemini_recommender(), get_ollama_recommender(),
     )
 
     def _max_count_for_plant(plant) -> int:

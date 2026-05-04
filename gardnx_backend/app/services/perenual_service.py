@@ -41,19 +41,25 @@ WATERING_MAP: dict[str, str] = {
     "none": "low",
 }
 
-
-# Keyword rules for classification. Ordered: the first matching bucket wins.
+# ---------------------------------------------------------------------------
+# Category classification — keyword rules (ordered: first match wins)
+# ---------------------------------------------------------------------------
+# Each bucket contains a set of substrings; if any appears in the plant's
+# common-name or scientific-name, we assign that category.
 _CATEGORY_KEYWORDS: list[tuple[str, tuple[str, ...]]] = [
     ("herb", (
         "basil", "mint", "thyme", "parsley", "rosemary", "sage", "oregano",
         "cilantro", "coriander", "chive", "dill", "lavender", "lemon balm",
-        "tarragon", "bay", "marjoram",
+        "tarragon", "bay", "marjoram", "fennel", "anise", "chamomile",
+        "stevia", "lemongrass", "curry leaf",
     )),
     ("fruit", (
         "apple", "pear", "peach", "plum", "cherry", "strawberry", "raspberry",
         "blueberry", "blackberry", "mango", "papaya", "banana", "pineapple",
         "grape", "citrus", "orange", "lemon", "lime", "melon", "watermelon",
-        "passionfruit", "fig", "guava", "lychee",
+        "passionfruit", "fig", "guava", "lychee", "avocado", "coconut",
+        "jackfruit", "breadfruit", "starfruit", "carambola", "longan",
+        "rambutan", "durian", "sapodilla", "soursop",
     )),
     ("vegetable", (
         "tomato", "lettuce", "cabbage", "carrot", "onion", "potato", "pepper",
@@ -61,21 +67,40 @@ _CATEGORY_KEYWORDS: list[tuple[str, tuple[str, ...]]] = [
         "broccoli", "cauliflower", "spinach", "kale", "chard", "corn", "maize",
         "radish", "beet", "eggplant", "aubergine", "pumpkin", "okra", "garlic",
         "leek", "celery", "turnip", "sweet potato", "yam", "cassava",
+        "artichoke", "asparagus", "brussels sprout", "collard", "mustard green",
+        "watercress", "fennel bulb", "pak choi", "bok choy", "taro",
     )),
     ("flower", (
         "rose", "tulip", "daisy", "sunflower", "lily", "orchid", "marigold",
         "hibiscus", "jasmine", "peony", "daffodil", "dahlia", "iris", "poppy",
         "petunia", "zinnia", "begonia", "geranium", "pansy", "anthurium",
+        "bougainvillea", "frangipani", "plumeria", "lantana", "heliconia",
+        "bird of paradise", "strelitzia", "chrysanthemum", "carnation",
+        "gerbera", "impatiens", "salvia", "verbena", "cosmos", "aster",
     )),
-    ("tree", ("tree", "oak", "maple", "pine", "palm", "eucalyptus")),
-    ("shrub", ("shrub", "hedge", "bush")),
+    ("ornamental", (
+        "fern", "succulent", "cactus", "aloe", "agave", "palm", "bamboo",
+        "grass", "sedge", "rush", "hosta", "philodendron", "pothos", "monstera",
+        "dracaena", "sansevieria", "snake plant", "peace lily", "bromeliad",
+        "air plant", "tillandsia", "calathea", "maranta", "dieffenbachia",
+        "rubber plant", "fiddle leaf", "schefflera", "yucca",
+    )),
+    ("tree", (
+        "tree", "oak", "maple", "pine", "eucalyptus", "teak", "mahogany",
+        "neem", "moringa", "casuarina", "acacia", "tamarind",
+    )),
+    ("shrub", ("shrub", "hedge", "bush", "bougainvillea shrub")),
 ]
 
 
 def _categorize_perenual(item: dict) -> str:
     """Classify a Perenual species-list item into our internal category.
 
-    Priority: common-name keyword → Perenual cycle/type → fallback 'vegetable'.
+    Priority:
+    1. Common-name + scientific-name keyword matching (most reliable)
+    2. Perenual's ``type`` field (often null, but useful when present)
+    3. Perenual's ``cycle`` field as a weak hint
+    4. Default to ``'ornamental'`` (much safer than ``'vegetable'``)
     """
     name = (item.get("common_name") or "").lower()
     sci_names = item.get("scientific_name") or []
@@ -86,17 +111,112 @@ def _categorize_perenual(item: dict) -> str:
         if any(kw in haystack for kw in keywords):
             return category
 
-    # Perenual's own hints — 'cycle' ('Annual'/'Perennial'/'Biennial') and
-    # 'type' (sometimes 'flower', 'tree', etc.). Only useful as a weak signal.
+    # Perenual's own ``type`` field (sometimes "herb", "flower", etc.)
     p_type = (item.get("type") or "").lower()
-    if p_type in {"herb", "fruit", "vegetable", "flower", "tree", "shrub"}:
+    if p_type in {"herb", "fruit", "vegetable", "flower", "ornamental", "tree", "shrub"}:
         return p_type
 
+    # If the cycle is "Perennial" it is probably an ornamental or shrub
+    cycle = (item.get("cycle") or "").lower()
+    if "perennial" in cycle:
+        return "ornamental"
+
     logger.debug(
-        "Perenual categorize: no rule matched for '%s' (%s); defaulting to vegetable",
+        "Perenual categorize: no rule matched for '%s' (%s); defaulting to ornamental",
         name, sci,
     )
-    return "vegetable"
+    # Default to 'ornamental' — far less misleading than 'vegetable'
+    return "ornamental"
+
+
+# ---------------------------------------------------------------------------
+# Category-aware defaults for spacing and timing
+# ---------------------------------------------------------------------------
+# These are sensible fallbacks when Perenual doesn't provide specific data.
+# They vary significantly by category so each plant at least looks realistic.
+
+_CATEGORY_SPACING: dict[str, dict] = {
+    "vegetable": {"plant_spacing_cm": 30.0, "row_spacing_cm": 45.0, "grid_cells_required": 1},
+    "herb":      {"plant_spacing_cm": 20.0, "row_spacing_cm": 25.0, "grid_cells_required": 1},
+    "fruit":     {"plant_spacing_cm": 150.0, "row_spacing_cm": 200.0, "grid_cells_required": 4},
+    "flower":    {"plant_spacing_cm": 25.0, "row_spacing_cm": 30.0, "grid_cells_required": 1},
+    "ornamental":{"plant_spacing_cm": 45.0, "row_spacing_cm": 45.0, "grid_cells_required": 2},
+    "tree":      {"plant_spacing_cm": 300.0, "row_spacing_cm": 300.0, "grid_cells_required": 9},
+    "shrub":     {"plant_spacing_cm": 90.0, "row_spacing_cm": 90.0, "grid_cells_required": 4},
+}
+
+# Typical sowing / harvest months for each category in a tropical/subtropical
+# climate like Mauritius (where most months are viable but some are optimal).
+_CATEGORY_TIMING: dict[str, dict] = {
+    "vegetable": {
+        "sow_months": [3, 4, 5, 6, 7, 8, 9],      # cooler dry months
+        "transplant_months": [4, 5, 6, 7, 8],
+        "harvest_months": [6, 7, 8, 9, 10, 11],
+        "days_to_maturity": 75,
+        "days_to_transplant": 21,
+    },
+    "herb": {
+        "sow_months": [3, 4, 5, 9, 10, 11],
+        "transplant_months": [4, 5, 10, 11],
+        "harvest_months": list(range(1, 13)),       # harvest year-round
+        "days_to_maturity": 45,
+        "days_to_transplant": 14,
+    },
+    "fruit": {
+        "sow_months": [10, 11, 12],
+        "transplant_months": [11, 12, 1],
+        "harvest_months": [1, 2, 3, 4, 12],
+        "days_to_maturity": 365,
+        "days_to_transplant": 90,
+    },
+    "flower": {
+        "sow_months": [3, 4, 5, 9, 10],
+        "transplant_months": [4, 5, 10],
+        "harvest_months": [6, 7, 11, 12],
+        "days_to_maturity": 90,
+        "days_to_transplant": 28,
+    },
+    "ornamental": {
+        "sow_months": list(range(1, 13)),
+        "transplant_months": [3, 4, 9, 10],
+        "harvest_months": [],
+        "days_to_maturity": 120,
+        "days_to_transplant": 30,
+    },
+    "tree": {
+        "sow_months": [10, 11, 12],
+        "transplant_months": [11, 12],
+        "harvest_months": [],
+        "days_to_maturity": 730,
+        "days_to_transplant": 180,
+    },
+    "shrub": {
+        "sow_months": [3, 4, 9, 10],
+        "transplant_months": [4, 10],
+        "harvest_months": [],
+        "days_to_maturity": 365,
+        "days_to_transplant": 60,
+    },
+}
+
+_CATEGORY_DIFFICULTY: dict[str, str] = {
+    "vegetable": "easy",
+    "herb": "easy",
+    "fruit": "moderate",
+    "flower": "easy",
+    "ornamental": "moderate",
+    "tree": "hard",
+    "shrub": "moderate",
+}
+
+_DEFAULT_SPACING = {"plant_spacing_cm": 30.0, "row_spacing_cm": 30.0, "grid_cells_required": 1}
+_DEFAULT_TIMING = {
+    "sow_months": list(range(1, 13)),
+    "transplant_months": [],
+    "harvest_months": list(range(1, 13)),
+    "days_to_maturity": 60,
+    "days_to_transplant": 14,
+}
 
 
 class PerenualService:
@@ -210,6 +330,12 @@ class PerenualService:
 
         Returns a list of Flutter-compatible plant dicts (max 20 per page).
         Results are cached 24 h to protect the daily quota.
+
+        Improvements over v1:
+        - Accurate category detection using expanded keyword rules
+        - Category-aware spacing defaults (herb ≠ tree ≠ vegetable)
+        - Category-aware timing defaults (seasonal planting windows)
+        - Default type 'ornamental' instead of 'vegetable' when unknown
         """
         cache_key = f"catalog:{query.lower()}:p{page}"
         cached = self._get_cache(cache_key)
@@ -248,15 +374,29 @@ class PerenualService:
                 water = WATERING_MAP.get(watering, "moderate")
                 sci_names = item.get("scientific_name") or []
 
+                # Use improved categorisation so plants aren't all "vegetable"
+                category = _categorize_perenual(item)
+
+                # Category-aware spacing & timing — each plant type has
+                # realistic defaults instead of every plant showing 30cm spacing
+                spacing = _CATEGORY_SPACING.get(category, _DEFAULT_SPACING)
+                timing = _CATEGORY_TIMING.get(category, _DEFAULT_TIMING)
+                difficulty = _CATEGORY_DIFFICULTY.get(category, "easy")
+
+                cycle = item.get("cycle") or "Annual"
+                description = (
+                    f"{item.get('common_name', 'Unknown')} — "
+                    f"Watering: {item.get('watering', 'Average')}. "
+                    f"Cycle: {cycle}. "
+                    f"Category: {category.capitalize()}."
+                )
+
                 results.append({
                     "id": f"perenual_{item['id']}",
                     "name": item.get("common_name") or "Unknown Plant",
                     "scientific_name": sci_names[0] if sci_names else "",
-                    "category": _categorize_perenual(item),
-                    "description": (
-                        f"Watering: {item.get('watering', 'Average')}. "
-                        f"Cycle: {item.get('cycle', 'Annual')}."
-                    ),
+                    "category": category,
+                    "description": description,
                     "image_url": image_url,
                     "conditions": {
                         "min_temp_c": 18.0, "max_temp_c": 35.0,
@@ -264,19 +404,13 @@ class PerenualService:
                         "suitable_soils": ["loamy"],
                         "min_humidity": 50.0, "max_humidity": 90.0,
                     },
-                    "spacing": {
-                        "plant_spacing_cm": 30.0, "row_spacing_cm": 30.0,
-                        "grid_cells_required": 1,
-                    },
-                    "timing": {
-                        "sow_months": list(range(1, 13)),
-                        "transplant_months": [],
-                        "harvest_months": list(range(1, 13)),
-                        "days_to_maturity": 60, "days_to_transplant": 14,
-                    },
+                    "spacing": spacing,
+                    "timing": timing,
                     "companion_plant_ids": [], "incompatible_plant_ids": [],
-                    "suitability_score": 0.5, "tags": ["perenual"],
-                    "is_native": False, "difficulty_level": "easy",
+                    "suitability_score": 0.5,
+                    "tags": ["perenual", category],
+                    "is_native": False,
+                    "difficulty_level": difficulty,
                 })
 
             self._set_cache(cache_key, {"results": results})

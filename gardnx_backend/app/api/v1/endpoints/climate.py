@@ -7,19 +7,11 @@ from pydantic import BaseModel, Field
 from typing import List
 
 from app.api.deps import get_current_user
+from app.dependencies import get_climate_service as _get_climate_service
 from app.services.climate_service import ClimateService
 
 logger = logging.getLogger("gardnx")
 router = APIRouter()
-
-_climate_service: ClimateService | None = None
-
-
-def _get_climate_service() -> ClimateService:
-    global _climate_service
-    if _climate_service is None:
-        _climate_service = ClimateService()
-    return _climate_service
 
 
 # --- Response models ---

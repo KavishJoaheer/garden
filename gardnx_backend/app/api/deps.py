@@ -1,16 +1,21 @@
-"""Shared dependencies for API endpoints."""
+"""Shared dependencies for API endpoints.
+
+This module provides the `get_current_user` dependency used by all
+authenticated endpoints. It verifies Firebase ID tokens and supports
+an anonymous development mode when ALLOW_ANON=true + DEBUG=true.
+"""
 
 import logging
-from typing import Optional
 
-from fastapi import Header, HTTPException
+from fastapi import Header
 
 from app.config import settings
+from app.errors import AuthorizationError, ModelNotLoadedError
 
 logger = logging.getLogger("gardnx")
 
 
-def _anon_or_401(reason: str) -> str:
+def _anon_or_raise(reason: str) -> str:
     """Return 'anonymous' when ALLOW_ANON is set; otherwise raise 401.
 
     Centralising this keeps every auth failure path behind the same gate.
@@ -18,54 +23,57 @@ def _anon_or_401(reason: str) -> str:
     if settings.allow_anon:
         logger.debug("allow_anon=true — returning anonymous (%s)", reason)
         return "anonymous"
-    raise HTTPException(status_code=401, detail=f"Unauthorized: {reason}")
+    raise AuthorizationError(detail=f"Unauthorized: {reason}")
 
 
-async def get_current_user(authorization: Optional[str] = Header(None)) -> str:
+async def get_current_user(authorization: str | None = Header(None)) -> str:
     """Verify Firebase ID token and return user_id.
 
-    When `ALLOW_ANON=true` (dev/local), any unauthenticated or unverifiable
-    request is tagged `anonymous`. In production (default) we raise 401.
+    When ``ALLOW_ANON=true`` (dev/local), any unauthenticated request is
+    tagged ``anonymous``. In production (default) we raise 401.
+
+    NOTE: We never decode JWTs manually. Either Firebase verifies them
+    or we return anonymous in dev mode. No unsafe base64 decoding.
     """
     if not authorization or not authorization.startswith("Bearer "):
-        return _anon_or_401("missing bearer token")
+        return _anon_or_raise("missing bearer token")
 
-    token = authorization.split("Bearer ")[1]
+    token = authorization.split("Bearer ", 1)[1].strip()
+    if not token:
+        return _anon_or_raise("empty bearer token")
+
     try:
         import firebase_admin
         from firebase_admin import auth as firebase_auth
 
-        # If Firebase wasn't initialized (no credentials file), skip verification
+        # If Firebase wasn't initialized, we can't verify tokens
         if not firebase_admin._apps:
             if not settings.allow_anon:
-                raise HTTPException(
-                    status_code=503,
-                    detail="Firebase not initialised — cannot verify token",
+                raise AuthorizationError(
+                    detail="Firebase not initialized — cannot verify token"
                 )
-            logger.warning("Firebase not initialised; decoding token unsafely for dev")
-            import base64
-            import json
-            payload_b64 = token.split(".")[1]
-            payload_b64 += "=" * (4 - len(payload_b64) % 4)
-            payload = json.loads(base64.urlsafe_b64decode(payload_b64))
-            return payload.get("user_id") or payload.get("sub") or "anonymous"
+            logger.warning(
+                "Firebase not initialized; accepting request as anonymous (dev mode)"
+            )
+            return "anonymous"
 
         decoded_token = firebase_auth.verify_id_token(token)
         return decoded_token["uid"]
+
     except ImportError:
-        return _anon_or_401("firebase_admin not installed")
-    except HTTPException:
+        return _anon_or_raise("firebase_admin not installed")
+    except AuthorizationError:
         raise
     except Exception as e:
         logger.warning("Token verification failed: %s", e)
-        return _anon_or_401(f"token verification failed: {e}")
+        return _anon_or_raise(f"token verification failed: {e}")
 
 
 def get_analyzer():
     """Return the global GardenAnalyzer instance from app state."""
-    from app.main import app_state
+    from app.main import app
 
-    analyzer = app_state.get("model")
+    analyzer = getattr(app.state, "analyzer", None)
     if analyzer is None:
-        raise HTTPException(status_code=503, detail="Model not loaded yet")
+        raise ModelNotLoadedError()
     return analyzer

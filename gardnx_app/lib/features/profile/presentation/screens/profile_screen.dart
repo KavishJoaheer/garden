@@ -448,11 +448,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Text('Experience Level', style: theme.textTheme.titleMedium),
             const SizedBox(height: 12),
             SegmentedButton<String>(
+              style: SegmentedButton.styleFrom(
+                visualDensity: VisualDensity.compact,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
               segments: levels
                   .map((level) => ButtonSegment(
                         value: level,
-                        label: Text(
-                          level[0].toUpperCase() + level.substring(1),
+                        label: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            level[0].toUpperCase() + level.substring(1),
+                            style: const TextStyle(fontSize: 12),
+                            maxLines: 1,
+                          ),
                         ),
                       ))
                   .toList(),

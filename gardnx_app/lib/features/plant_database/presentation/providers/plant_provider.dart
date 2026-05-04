@@ -7,14 +7,69 @@ import 'package:gardnx_app/features/plant_database/domain/models/companion_rule.
 import 'package:gardnx_app/features/plant_database/data/repositories/plant_repository.dart';
 import 'package:gardnx_app/shared/providers/firebase_providers.dart';
 
+// autoDispose ensures the in-memory plant cache is cleared whenever the
+// provider is no longer watched (e.g., after sign-out), preventing
+// user A's custom plants from showing for user B.
 final plantRepositoryProvider =
-    Provider<PlantRepository>((ref) => PlantRepository());
+    Provider.autoDispose<PlantRepository>((ref) => PlantRepository());
 
-/// All plants (cached)
+/// All plants (Firestore + local fallback), with Perenual image enrichment
+/// applied when the backend is reachable.
+///
+/// The repository fetches curated + user-owned plants from Firestore. Then we
+/// request the backend catalog (which runs Perenual enrichment server-side)
+/// and merge in any image URLs that are missing locally.
 final allPlantsProvider = FutureProvider<List<Plant>>((ref) async {
   final repo = ref.read(plantRepositoryProvider);
   final uid = ref.watch(currentFirebaseUserProvider)?.uid;
-  return repo.getAllPlants(uid: uid);
+
+  // 1. Fetch from Firestore (curated + user-owned plants).
+  final plants = await repo.getAllPlants(uid: uid);
+
+  // 2. Attempt to enrich with backend image URLs (best-effort; never blocks).
+  try {
+    final dio = ref.read(_enrichDioProvider);
+    final response = await dio.get<List<dynamic>>(
+      '/plants/catalog',
+      queryParameters: {'enrich': 'true'},
+    );
+    if (response.statusCode == 200 && response.data != null) {
+      final backendPlants = response.data!
+          .map((e) => Plant.fromJson(e as Map<String, dynamic>))
+          .toList();
+      // Build a lookup by plant ID and name (both keys used for matching).
+      final byId = <String, Plant>{};
+      final byName = <String, Plant>{};
+      for (final bp in backendPlants) {
+        byId[bp.id] = bp;
+        byName[bp.name.toLowerCase()] = bp;
+      }
+      // Merge: if a local plant has no image, use backend's image URL.
+      return plants.map((p) {
+        if (p.imageUrl != null) return p;
+        final match = byId[p.id] ?? byName[p.name.toLowerCase()];
+        if (match?.imageUrl != null) {
+          return p.copyWith(imageUrl: match!.imageUrl);
+        }
+        return p;
+      }).toList();
+    }
+  } catch (_) {
+    // Backend unreachable — just return unenriched plants.
+  }
+
+  return plants;
+});
+
+/// Dio instance used only for plant image enrichment (no auth required for catalog).
+final _enrichDioProvider = Provider<Dio>((ref) {
+  final dio = Dio(BaseOptions(
+    baseUrl: ApiConstants.baseUrl,
+    connectTimeout: const Duration(seconds: 5),
+    receiveTimeout: const Duration(seconds: 10),
+  ));
+  dio.interceptors.add(AuthInterceptor());
+  return dio;
 });
 
 /// Single plant by id

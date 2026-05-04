@@ -15,6 +15,7 @@ service cloud.firestore {
       allow update, delete: if request.auth != null &&
         resource.data.userId == request.auth.uid;
     }
+
     match /companion_rules/{ruleId} {
       allow read: if request.auth != null;
       allow write: if false;
@@ -50,13 +51,13 @@ service cloud.firestore {
           request.auth.uid == get(/databases/$(database)/documents/gardens/$(gardenId)).data.userId;
       }
 
-      // Events subcollection (calendar planting events)
+      // Events subcollection (calendar planting events) — owner via parent garden
       match /events/{eventId} {
         allow read, write: if request.auth != null &&
           request.auth.uid == get(/databases/$(database)/documents/gardens/$(gardenId)).data.userId;
       }
 
-      // Tasks subcollection (per-garden planting tasks)
+      // Tasks subcollection (per-garden planting tasks) — owner via parent garden
       match /tasks/{taskId} {
         allow read, write: if request.auth != null &&
           request.auth.uid == get(/databases/$(database)/documents/gardens/$(gardenId)).data.userId;
@@ -64,12 +65,20 @@ service cloud.firestore {
     }
 
     // collectionGroup query for tasks (UpcomingTasksWidget reads across all gardens)
+    // Requires the userId field to be stamped on every task document.
     match /{path=**}/tasks/{taskId} {
       allow read: if request.auth != null &&
         request.auth.uid == resource.data.userId;
     }
 
-    // Tasks — owner only
+    // collectionGroup query for events (cross-garden reads, e.g. home dashboard)
+    // Requires the userId field to be stamped on every event document.
+    match /{path=**}/events/{eventId} {
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+    }
+
+    // Legacy top-level tasks collection (kept for backward compatibility)
     match /tasks/{taskId} {
       allow read, write: if request.auth != null &&
         request.auth.uid == resource.data.userId;
@@ -77,7 +86,7 @@ service cloud.firestore {
         request.auth.uid == request.resource.data.userId;
     }
 
-    // Calendars — owner only
+    // Legacy top-level calendars collection (kept for backward compatibility)
     match /calendars/{calendarId} {
       allow read, write: if request.auth != null &&
         request.auth.uid == resource.data.userId;
