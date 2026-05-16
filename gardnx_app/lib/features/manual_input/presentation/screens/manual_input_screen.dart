@@ -52,16 +52,33 @@ class _ManualInputScreenState extends ConsumerState<ManualInputScreen> {
         return;
       }
 
+      // New garden (no gardenId and no initial beds) — clear any leftover
+      // state from a previous session so old beds don't leak into the new garden.
+      if (widget.gardenId == null) {
+        ref.read(manualInputProvider.notifier).clear();
+        ref.read(selectedBedIdProvider.notifier).state = null;
+        _bedCounter = 0;
+        return;
+      }
+
       // Editing an existing garden — hydrate from Firestore so the canvas
       // shows the beds the user previously drew.
       final gardenId = widget.gardenId;
       if (gardenId != null && gardenId.isNotEmpty) {
         final repo = ref.read(manualGardenRepositoryProvider);
         final beds = await repo.getBeds(gardenId);
-        if (!mounted || beds.isEmpty) return;
-        _originalBeds
-          ..clear()
-          ..addEntries(beds.map((b) => MapEntry(b.id, b)));
+        
+        _originalBeds.clear();
+        if (!mounted) return;
+        
+        if (beds.isEmpty) {
+          ref.read(manualInputProvider.notifier).clear();
+          ref.read(selectedBedIdProvider.notifier).state = null;
+          _bedCounter = 0;
+          return;
+        }
+
+        _originalBeds.addEntries(beds.map((b) => MapEntry(b.id, b)));
         ref.read(manualInputProvider.notifier).setAll(beds);
         _bedCounter = beds.length;
         ref.read(selectedBedIdProvider.notifier).state = beds.first.id;

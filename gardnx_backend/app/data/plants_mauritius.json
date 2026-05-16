@@ -70,7 +70,8 @@
     ],
     "description": "One of the most popular vegetables in Mauritius. Thrives in warm weather and produces abundantly from winter to summer.",
     "care_notes": "Water regularly at the base. Stake plants when tall. Watch for whitefly in summer.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Tomato",
+    "suitability_score": 0.92
   },
   {
     "id": "brinjal",
@@ -134,7 +135,8 @@
     ],
     "description": "A warm-season crop that thrives in the Mauritius summer heat. Popular in local cuisine.",
     "care_notes": "Needs warm soil. Mulch to retain moisture. Protect young plants from strong winds.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Brinjal%20%28Eggplant%29",
+    "suitability_score": 0.97
   },
   {
     "id": "chili",
@@ -204,7 +206,8 @@
     ],
     "description": "A Mauritius staple in every household garden. Grows well year-round in warm conditions.",
     "care_notes": "Drought tolerant once established. Harvest regularly to encourage more fruiting.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Chili%20Pepper",
+    "suitability_score": 0.97
   },
   {
     "id": "cucumber",
@@ -267,7 +270,8 @@
     ],
     "description": "Fast-growing vine that loves the Mauritius summer heat. Requires a trellis or support.",
     "care_notes": "Water frequently and consistently. Provide support structure. Harvest before over-ripening.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Cucumber",
+    "suitability_score": 0.9
   },
   {
     "id": "bitter_gourd",
@@ -323,7 +327,8 @@
     "incompatible_plants": [],
     "description": "Extremely popular in Mauritian cuisine. Thrives in tropical heat on a trellis or fence.",
     "care_notes": "Needs strong trellis. Soak seeds 24 hours before planting. Harvest while still green.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Bitter%20Gourd",
+    "suitability_score": 0.94
   },
   {
     "id": "ridge_gourd",
@@ -378,7 +383,8 @@
     "incompatible_plants": [],
     "description": "Popular local vegetable grown on trellises. Also used as loofah when dried.",
     "care_notes": "Needs strong support. Regular watering required. Harvest young for best flavor.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Ridge%20Gourd",
+    "suitability_score": 0.95
   },
   {
     "id": "pumpkin",
@@ -439,7 +445,8 @@
     "incompatible_plants": [],
     "description": "Space-demanding but highly productive. Grows well in most Mauritius regions.",
     "care_notes": "Needs plenty of space. Keep soil moist when fruiting. Cure harvested pumpkins in sun.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Pumpkin",
+    "suitability_score": 0.92
   },
   {
     "id": "cabbage",
@@ -503,7 +510,8 @@
     ],
     "description": "A cool-season crop best grown during Mauritius winter in the central plateau or south.",
     "care_notes": "Needs cool temperatures. Protect from caterpillars. Use row covers if needed.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Cabbage",
+    "suitability_score": 0.92
   },
   {
     "id": "lettuce",
@@ -561,12 +569,13 @@
     "incompatible_plants": [],
     "description": "Fast-growing cool-season green. Best grown in Mauritius winter, especially in higher regions.",
     "care_notes": "Keep soil moist. Harvest outer leaves to extend the season. Bolts in heat.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Lettuce",
+    "suitability_score": 0.88
   },
   {
     "id": "spinach",
     "name": "Spinach",
-    "name_fr": "Épinard",
+    "name_fr": "\u00c9pinard",
     "scientific_name": "Spinacia oleracea",
     "type": "vegetable",
     "conditions": {
@@ -617,7 +626,8 @@
     "incompatible_plants": [],
     "description": "Nutritious cool-season green. Grows quickly in Mauritius winter months.",
     "care_notes": "Sow directly. Keep evenly moist. Cut leaves 1cm above ground for regrowth.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Spinach",
+    "suitability_score": 0.85
   },
   {
     "id": "french_beans",
@@ -685,7 +695,8 @@
     ],
     "description": "Quick-growing legume that fixes nitrogen in the soil. Very popular in Mauritius.",
     "care_notes": "Direct sow. Keep soil moist. Harvest when pods are young and crisp.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=French%20Beans",
+    "suitability_score": 0.98
   },
   {
     "id": "long_beans",
@@ -748,7 +759,8 @@
     ],
     "description": "Heat-tolerant bean that thrives in Mauritius summer. Needs trellis. Very productive.",
     "care_notes": "Provide trellis. Drought tolerant once established. Harvest daily when pods form.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Long%20Beans%20%28Gros%20Pois%29",
+    "suitability_score": 0.88
   },
   {
     "id": "okra",
@@ -806,7 +818,8 @@
     "incompatible_plants": [],
     "description": "A Mauritius staple. Extremely heat-tolerant and produces abundantly in summer.",
     "care_notes": "Soak seeds overnight before planting. Harvest every 2-3 days when pods are 7-10cm.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Okra%20%28Lalo%29",
+    "suitability_score": 0.96
   },
   {
     "id": "sweet_potato",
@@ -863,7 +876,8 @@
     "incompatible_plants": [],
     "description": "Easy-to-grow root vegetable that spreads as ground cover. Very low maintenance.",
     "care_notes": "Plant slips (cuttings) in well-drained soil. Little fertiliser needed. Harvest before rains.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Sweet%20Potato%20%28Patate%20Douce%29",
+    "suitability_score": 0.88
   },
   {
     "id": "spring_onion",
@@ -928,7 +942,8 @@
     ],
     "description": "Fast-growing essential herb/vegetable in Mauritius cooking. Grows in both seasons.",
     "care_notes": "Can be grown in containers. Keep moist. Harvest by cutting, leaving roots to regrow.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Spring%20Onion",
+    "suitability_score": 0.95
   },
   {
     "id": "radish",
@@ -986,12 +1001,13 @@
     "incompatible_plants": [],
     "description": "One of the fastest vegetables to grow. Ready in just 3-4 weeks. Great for beginners.",
     "care_notes": "Direct sow. Keep soil moist for even germination. Harvest promptly when ready.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Radish",
+    "suitability_score": 0.98
   },
   {
     "id": "corn",
     "name": "Corn (Maize)",
-    "name_fr": "Maïs",
+    "name_fr": "Ma\u00efs",
     "scientific_name": "Zea mays",
     "type": "vegetable",
     "conditions": {
@@ -1049,7 +1065,8 @@
     ],
     "description": "Tall, space-efficient when grown in rows. Part of the Three Sisters companion planting group.",
     "care_notes": "Plant in blocks of at least 4x4 for wind pollination. Mound soil around base when 30cm tall.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Corn%20%28Maize%29",
+    "suitability_score": 0.95
   },
   {
     "id": "basil",
@@ -1122,7 +1139,8 @@
     ],
     "description": "Essential herb in Mauritian and Mediterranean cooking. Repels pests when grown near tomatoes.",
     "care_notes": "Pinch flowers to extend leaf production. Water at base, not leaves. Harvest regularly.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Basil",
+    "suitability_score": 0.93
   },
   {
     "id": "coriander",
@@ -1182,7 +1200,8 @@
     ],
     "description": "Cornerstone of Mauritian cuisine. Best grown in cooler months in shaded spots.",
     "care_notes": "Sow in stages every 2-3 weeks. Bolts quickly in heat. Harvest leaves before flowering.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Coriander%20%28Dhania%29",
+    "suitability_score": 0.82
   },
   {
     "id": "mint",
@@ -1262,7 +1281,8 @@
     "incompatible_plants": [],
     "description": "Vigorous perennial herb. Grow in containers to control spreading. Used widely in Mauritian cooking.",
     "care_notes": "Grow in containers to prevent invasive spreading. Keep moist. Harvest regularly.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Mint",
+    "suitability_score": 0.77
   },
   {
     "id": "thyme",
@@ -1340,7 +1360,8 @@
     "incompatible_plants": [],
     "description": "Drought-tolerant perennial herb. Excellent companion plant and insect repellent.",
     "care_notes": "Well-drained soil essential. Drought tolerant. Trim regularly to prevent woody stems.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Thyme",
+    "suitability_score": 0.88
   },
   {
     "id": "rosemary",
@@ -1412,8 +1433,9 @@
       "mint"
     ],
     "description": "Mediterranean herb that adapts well to Mauritius dry/warm coastal areas.",
-    "care_notes": "Avoid overwatering — roots rot easily. Prune after flowering to keep bushy.",
-    "image_url": null
+    "care_notes": "Avoid overwatering \u2014 roots rot easily. Prune after flowering to keep bushy.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Rosemary",
+    "suitability_score": 0.85
   },
   {
     "id": "parsley",
@@ -1477,8 +1499,9 @@
     ],
     "incompatible_plants": [],
     "description": "Slow to germinate but very productive biennial. Best in Mauritius winter.",
-    "care_notes": "Soak seeds 24 hours before planting. Slow germination — be patient. Harvest outer stems first.",
-    "image_url": null
+    "care_notes": "Soak seeds 24 hours before planting. Slow germination \u2014 be patient. Harvest outer stems first.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Parsley",
+    "suitability_score": 0.87
   },
   {
     "id": "lemongrass",
@@ -1552,7 +1575,8 @@
     "incompatible_plants": [],
     "description": "Tropical grass herb used widely in Mauritian teas and cooking. Repels mosquitoes.",
     "care_notes": "Divide clumps every 2-3 years. Drought tolerant once established. Harvest outer stalks.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Lemongrass",
+    "suitability_score": 0.94
   },
   {
     "id": "chives",
@@ -1635,7 +1659,8 @@
     ],
     "description": "Mild onion-flavored herb. Easy to grow in pots or borders. Deters aphids.",
     "care_notes": "Cut back to 2cm above ground after harvesting. Divide clumps every 3 years.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Chives",
+    "suitability_score": 0.95
   },
   {
     "id": "papaya",
@@ -1703,8 +1728,9 @@
     ],
     "incompatible_plants": [],
     "description": "Very fast-growing tropical fruit tree. Can produce fruit within 7-9 months from seed.",
-    "care_notes": "Protect from strong winds. Never overwater — roots rot easily. Plant multiple for pollination.",
-    "image_url": null
+    "care_notes": "Protect from strong winds. Never overwater \u2014 roots rot easily. Plant multiple for pollination.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Papaya",
+    "suitability_score": 0.93
   },
   {
     "id": "pineapple",
@@ -1765,7 +1791,8 @@
     "incompatible_plants": [],
     "description": "Mauritius pineapples are world-famous. Plant crowns or slips. Takes 18 months to first harvest.",
     "care_notes": "Plant crowns or side shoots. Very drought tolerant. Acidic soil preferred.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Pineapple",
+    "suitability_score": 0.82
   },
   {
     "id": "passion_fruit",
@@ -1826,12 +1853,13 @@
     "incompatible_plants": [],
     "description": "Vigorous climbing vine producing delicious fruit. Needs a strong trellis or fence.",
     "care_notes": "Needs strong support structure. Prune after fruiting. Plant in sheltered spot.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Passion%20Fruit",
+    "suitability_score": 0.91
   },
   {
     "id": "watermelon",
     "name": "Watermelon",
-    "name_fr": "Pastèque",
+    "name_fr": "Past\u00e8que",
     "scientific_name": "Citrullus lanatus",
     "type": "fruit",
     "conditions": {
@@ -1879,7 +1907,8 @@
     "incompatible_plants": [],
     "description": "Space-hungry but rewarding. Best grown in the warm north and west of Mauritius.",
     "care_notes": "Needs very warm soil. Reduce watering when fruit develops. Thump to check ripeness.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Watermelon",
+    "suitability_score": 0.92
   },
   {
     "id": "strawberry",
@@ -1941,7 +1970,8 @@
     ],
     "description": "Grows well in Mauritius winter in the cooler central and southern regions.",
     "care_notes": "Protect fruit from slugs. Remove runners to encourage fruiting. Replace plants every 3 years.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Strawberry",
+    "suitability_score": 0.93
   },
   {
     "id": "marigold",
@@ -2015,7 +2045,8 @@
     "incompatible_plants": [],
     "description": "The ultimate companion plant. Repels nematodes, aphids and whitefly. Grows anywhere.",
     "care_notes": "Low maintenance. Deadhead regularly to extend flowering. Grows in almost any soil.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Marigold",
+    "suitability_score": 0.87
   },
   {
     "id": "sunflower",
@@ -2077,7 +2108,8 @@
     ],
     "description": "Fast-growing annual that attracts pollinators. Can be grown as trellis for climbing plants.",
     "care_notes": "Direct sow. Stake in windy areas. Harvest seeds when back of head turns brown.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Sunflower",
+    "suitability_score": 0.95
   },
   {
     "id": "zinnia",
@@ -2137,12 +2169,13 @@
     "incompatible_plants": [],
     "description": "Colorful, heat-loving annual. Excellent pollinator attractant. Easy for beginners.",
     "care_notes": "Direct sow. Drought tolerant once established. Deadhead to encourage continuous blooming.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Zinnia",
+    "suitability_score": 0.85
   },
   {
     "id": "bougainvillea",
     "name": "Bougainvillea",
-    "name_fr": "Bougainvillée",
+    "name_fr": "Bougainvill\u00e9e",
     "scientific_name": "Bougainvillea spp.",
     "type": "flower",
     "conditions": {
@@ -2206,7 +2239,8 @@
     "incompatible_plants": [],
     "description": "Iconic Mauritius ornamental climber. Almost no care needed once established.",
     "care_notes": "Drought stress triggers blooming. Reduce watering to encourage flowers. Prune after bloom.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Bougainvillea",
+    "suitability_score": 0.86
   },
   {
     "id": "hibiscus",
@@ -2278,7 +2312,8 @@
     "incompatible_plants": [],
     "description": "National flower of Mauritius. Tropical perennial flowering shrub. Attracts butterflies.",
     "care_notes": "Regular watering. Prune lightly after each bloom cycle. Fertilize monthly in growing season.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Hibiscus",
+    "suitability_score": 0.91
   },
   {
     "id": "taro",
@@ -2335,7 +2370,8 @@
     "incompatible_plants": [],
     "description": "Traditional Mauritian staple (songe). Grown in wet, low-lying areas. Both leaves and tubers used.",
     "care_notes": "Needs consistently moist soil. Can tolerate partial flooding. Harvest corms when leaves yellow.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Taro%20%28Dasheen%29",
+    "suitability_score": 0.81
   },
   {
     "id": "carrot",
@@ -2396,7 +2432,8 @@
     ],
     "description": "Root vegetable best grown in Mauritius winter in loose, deep soil.",
     "care_notes": "Needs loose, deep, stone-free soil. Thin seedlings to prevent forking. Don't over-fertilize.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Carrot",
+    "suitability_score": 0.92
   },
   {
     "id": "onion",
@@ -2460,7 +2497,8 @@
     ],
     "description": "Essential kitchen vegetable grown in Mauritius winter. Long growing season.",
     "care_notes": "Reduce watering when tops start to brown and fall. Cure harvested bulbs in sun.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Onion",
+    "suitability_score": 0.95
   },
   {
     "id": "garlic",
@@ -2518,6 +2556,4363 @@
     ],
     "description": "Plant individual cloves in winter. Ready to harvest when tops dry. Great pest deterrent.",
     "care_notes": "Plant pointed end up, 5cm deep. Stop watering when leaves start yellowing. Cure in dry shade.",
-    "image_url": null
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Garlic",
+    "suitability_score": 0.87
+  },
+  {
+    "id": "mango",
+    "name": "Mango",
+    "name_fr": "Mango",
+    "scientific_name": "Mango spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of mango perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Mango",
+    "suitability_score": 0.97
+  },
+  {
+    "id": "banana",
+    "name": "Banana",
+    "name_fr": "Banana",
+    "scientific_name": "Banana spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of banana perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Banana",
+    "suitability_score": 0.98
+  },
+  {
+    "id": "lychee",
+    "name": "Lychee",
+    "name_fr": "Lychee",
+    "scientific_name": "Lychee spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of lychee perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Lychee",
+    "suitability_score": 0.97
+  },
+  {
+    "id": "guava",
+    "name": "Guava",
+    "name_fr": "Guava",
+    "scientific_name": "Guava spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of guava perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Guava",
+    "suitability_score": 0.98
+  },
+  {
+    "id": "dragon_fruit",
+    "name": "Dragon Fruit",
+    "name_fr": "Dragon Fruit",
+    "scientific_name": "Dragon Fruit spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of dragon fruit perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Dragon%20Fruit",
+    "suitability_score": 0.95
+  },
+  {
+    "id": "starfruit_carambola",
+    "name": "Starfruit",
+    "name_fr": "Starfruit (Carambola)",
+    "scientific_name": "Starfruit (Carambola) spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of starfruit (carambola) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Starfruit",
+    "suitability_score": 0.97
+  },
+  {
+    "id": "jackfruit",
+    "name": "Jackfruit",
+    "name_fr": "Jackfruit",
+    "scientific_name": "Jackfruit spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of jackfruit perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Jackfruit",
+    "suitability_score": 0.96
+  },
+  {
+    "id": "avocado",
+    "name": "Avocado",
+    "name_fr": "Avocado",
+    "scientific_name": "Avocado spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of avocado perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Avocado",
+    "suitability_score": 0.98
+  },
+  {
+    "id": "coconut",
+    "name": "Coconut",
+    "name_fr": "Coconut",
+    "scientific_name": "Coconut spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of coconut perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Coconut",
+    "suitability_score": 0.91
+  },
+  {
+    "id": "breadfruit",
+    "name": "Breadfruit",
+    "name_fr": "Breadfruit",
+    "scientific_name": "Breadfruit spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of breadfruit perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Breadfruit",
+    "suitability_score": 0.98
+  },
+  {
+    "id": "soursop_corossol",
+    "name": "Soursop",
+    "name_fr": "Soursop (Corossol)",
+    "scientific_name": "Soursop (Corossol) spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of soursop (corossol) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Soursop",
+    "suitability_score": 0.96
+  },
+  {
+    "id": "pomegranate",
+    "name": "Pomegranate",
+    "name_fr": "Pomegranate",
+    "scientific_name": "Pomegranate spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of pomegranate perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Pomegranate",
+    "suitability_score": 0.91
+  },
+  {
+    "id": "tamarind",
+    "name": "Tamarind",
+    "name_fr": "Tamarind",
+    "scientific_name": "Tamarind spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of tamarind perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Tamarind",
+    "suitability_score": 0.95
+  },
+  {
+    "id": "fig",
+    "name": "Fig",
+    "name_fr": "Fig",
+    "scientific_name": "Fig spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of fig perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Fig",
+    "suitability_score": 0.96
+  },
+  {
+    "id": "coriander_cotomili",
+    "name": "Coriander",
+    "name_fr": "Coriander (Cotomili)",
+    "scientific_name": "Coriander (Cotomili) spp.",
+    "type": "herb",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of coriander (cotomili) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Coriander",
+    "suitability_score": 0.97
+  },
+  {
+    "id": "mint_menthe",
+    "name": "Mint",
+    "name_fr": "Mint (Menthe)",
+    "scientific_name": "Mint (Menthe) spp.",
+    "type": "herb",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of mint (menthe) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Mint",
+    "suitability_score": 0.98
+  },
+  {
+    "id": "lemongrass_citronnelle",
+    "name": "Lemongrass",
+    "name_fr": "Lemongrass (Citronnelle)",
+    "scientific_name": "Lemongrass (Citronnelle) spp.",
+    "type": "herb",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of lemongrass (citronnelle) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Lemongrass",
+    "suitability_score": 0.98
+  },
+  {
+    "id": "curry_leaf_caripoule",
+    "name": "Curry Leaf",
+    "name_fr": "Curry Leaf (Caripoule)",
+    "scientific_name": "Curry Leaf (Caripoule) spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of curry leaf (caripoule) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Curry%20Leaf",
+    "suitability_score": 0.97
+  },
+  {
+    "id": "turmeric_safran",
+    "name": "Turmeric",
+    "name_fr": "Turmeric (Safran)",
+    "scientific_name": "Turmeric (Safran) spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of turmeric (safran) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Turmeric",
+    "suitability_score": 0.94
+  },
+  {
+    "id": "ginger",
+    "name": "Ginger",
+    "name_fr": "Ginger",
+    "scientific_name": "Ginger spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of ginger perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Ginger",
+    "suitability_score": 0.91
+  },
+  {
+    "id": "oregano",
+    "name": "Oregano",
+    "name_fr": "Oregano",
+    "scientific_name": "Oregano spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of oregano perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Oregano",
+    "suitability_score": 0.96
+  },
+  {
+    "id": "dill",
+    "name": "Dill",
+    "name_fr": "Dill",
+    "scientific_name": "Dill spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of dill perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Dill",
+    "suitability_score": 0.93
+  },
+  {
+    "id": "fennel",
+    "name": "Fennel",
+    "name_fr": "Fennel",
+    "scientific_name": "Fennel spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of fennel perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Fennel",
+    "suitability_score": 0.93
+  },
+  {
+    "id": "cassava_manioc",
+    "name": "Cassava",
+    "name_fr": "Cassava (Manioc)",
+    "scientific_name": "Cassava (Manioc) spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of cassava (manioc) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Cassava",
+    "suitability_score": 0.98
+  },
+  {
+    "id": "taro_arouille",
+    "name": "Taro",
+    "name_fr": "Taro (Arouille)",
+    "scientific_name": "Taro (Arouille) spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of taro (arouille) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Taro",
+    "suitability_score": 0.98
+  },
+  {
+    "id": "watercress_cresson",
+    "name": "Watercress",
+    "name_fr": "Watercress (Cresson)",
+    "scientific_name": "Watercress (Cresson) spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of watercress (cresson) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Watercress",
+    "suitability_score": 0.93
+  },
+  {
+    "id": "bok_choy",
+    "name": "Bok Choy",
+    "name_fr": "Bok Choy",
+    "scientific_name": "Bok Choy spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of bok choy perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Bok%20Choy",
+    "suitability_score": 0.94
+  },
+  {
+    "id": "mustard_greens_brede_moutarde",
+    "name": "Mustard Greens",
+    "name_fr": "Mustard Greens (Brede Moutarde)",
+    "scientific_name": "Mustard Greens (Brede Moutarde) spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of mustard greens (brede moutarde) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Mustard%20Greens",
+    "suitability_score": 0.95
+  },
+  {
+    "id": "amaranth_brede_malabar",
+    "name": "Amaranth",
+    "name_fr": "Amaranth (Brede Malabar)",
+    "scientific_name": "Amaranth (Brede Malabar) spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of amaranth (brede malabar) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Amaranth",
+    "suitability_score": 0.93
+  },
+  {
+    "id": "nightshade_brede_martin",
+    "name": "Nightshade",
+    "name_fr": "Nightshade (Brede Martin)",
+    "scientific_name": "Nightshade (Brede Martin) spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of nightshade (brede martin) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Nightshade",
+    "suitability_score": 0.96
+  },
+  {
+    "id": "snake_gourd_patole",
+    "name": "Snake Gourd",
+    "name_fr": "Snake Gourd (Patole)",
+    "scientific_name": "Snake Gourd (Patole) spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of snake gourd (patole) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Snake%20Gourd",
+    "suitability_score": 0.97
+  },
+  {
+    "id": "bottle_gourd_calebasse",
+    "name": "Bottle Gourd",
+    "name_fr": "Bottle Gourd (Calebasse)",
+    "scientific_name": "Bottle Gourd (Calebasse) spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of bottle gourd (calebasse) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Bottle%20Gourd",
+    "suitability_score": 0.93
+  },
+  {
+    "id": "ash_gourd",
+    "name": "Ash Gourd",
+    "name_fr": "Ash Gourd",
+    "scientific_name": "Ash Gourd spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of ash gourd perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Ash%20Gourd",
+    "suitability_score": 0.96
+  },
+  {
+    "id": "ivy_gourd_tindli",
+    "name": "Ivy Gourd",
+    "name_fr": "Ivy Gourd (Tindli)",
+    "scientific_name": "Ivy Gourd (Tindli) spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of ivy gourd (tindli) perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Ivy%20Gourd",
+    "suitability_score": 0.98
+  },
+  {
+    "id": "winged_bean",
+    "name": "Winged Bean",
+    "name_fr": "Winged Bean",
+    "scientific_name": "Winged Bean spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of winged bean perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Winged%20Bean",
+    "suitability_score": 0.98
+  },
+  {
+    "id": "peanuts",
+    "name": "Peanuts",
+    "name_fr": "Peanuts",
+    "scientific_name": "Peanuts spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of peanuts perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Peanuts",
+    "suitability_score": 0.96
+  },
+  {
+    "id": "pigeon_pea",
+    "name": "Pigeon Pea",
+    "name_fr": "Pigeon Pea",
+    "scientific_name": "Pigeon Pea spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of pigeon pea perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Pigeon%20Pea",
+    "suitability_score": 0.93
+  },
+  {
+    "id": "frangipani",
+    "name": "Frangipani",
+    "name_fr": "Frangipani",
+    "scientific_name": "Frangipani spp.",
+    "type": "flower",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of frangipani perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Frangipani",
+    "suitability_score": 0.94
+  },
+  {
+    "id": "jasmine",
+    "name": "Jasmine",
+    "name_fr": "Jasmine",
+    "scientific_name": "Jasmine spp.",
+    "type": "flower",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of jasmine perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Jasmine",
+    "suitability_score": 0.93
+  },
+  {
+    "id": "bird_of_paradise",
+    "name": "Bird of Paradise",
+    "name_fr": "Bird of Paradise",
+    "scientific_name": "Bird of Paradise spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of bird of paradise perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Bird%20of%20Paradise",
+    "suitability_score": 0.96
+  },
+  {
+    "id": "anthurium",
+    "name": "Anthurium",
+    "name_fr": "Anthurium",
+    "scientific_name": "Anthurium spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of anthurium perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Anthurium",
+    "suitability_score": 0.97
+  },
+  {
+    "id": "orchid",
+    "name": "Orchid",
+    "name_fr": "Orchid",
+    "scientific_name": "Orchid spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of orchid perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Orchid",
+    "suitability_score": 0.95
+  },
+  {
+    "id": "cosmos",
+    "name": "Cosmos",
+    "name_fr": "Cosmos",
+    "scientific_name": "Cosmos spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of cosmos perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Cosmos",
+    "suitability_score": 0.98
+  },
+  {
+    "id": "aloe_vera",
+    "name": "Aloe Vera",
+    "name_fr": "Aloe Vera",
+    "scientific_name": "Aloe Vera spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of aloe vera perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Aloe%20Vera",
+    "suitability_score": 0.93
+  },
+  {
+    "id": "snake_plant",
+    "name": "Snake Plant",
+    "name_fr": "Snake Plant",
+    "scientific_name": "Snake Plant spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of snake plant perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Snake%20Plant",
+    "suitability_score": 0.92
+  },
+  {
+    "id": "spider_plant",
+    "name": "Spider Plant",
+    "name_fr": "Spider Plant",
+    "scientific_name": "Spider Plant spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of spider plant perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Spider%20Plant",
+    "suitability_score": 0.91
+  },
+  {
+    "id": "croton",
+    "name": "Croton",
+    "name_fr": "Croton",
+    "scientific_name": "Croton spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of croton perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Croton",
+    "suitability_score": 0.92
+  },
+  {
+    "id": "dracaena",
+    "name": "Dracaena",
+    "name_fr": "Dracaena",
+    "scientific_name": "Dracaena spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of dracaena perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Dracaena",
+    "suitability_score": 0.94
+  },
+  {
+    "id": "areca_palm",
+    "name": "Areca Palm",
+    "name_fr": "Areca Palm",
+    "scientific_name": "Areca Palm spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 45,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of areca palm perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Areca%20Palm",
+    "suitability_score": 0.95
+  },
+  {
+    "id": "bell_pepper",
+    "name": "Bell Pepper",
+    "name_fr": "Bell Pepper",
+    "scientific_name": "Bell Pepper spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of bell pepper perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Bell%20Pepper",
+    "suitability_score": 0.91
+  },
+  {
+    "id": "cherry_tomato",
+    "name": "Cherry Tomato",
+    "name_fr": "Cherry Tomato",
+    "scientific_name": "Cherry Tomato spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of cherry tomato perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Cherry%20Tomato",
+    "suitability_score": 0.98
+  },
+  {
+    "id": "zucchini",
+    "name": "Zucchini",
+    "name_fr": "Zucchini",
+    "scientific_name": "Zucchini spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of zucchini perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Zucchini",
+    "suitability_score": 0.96
+  },
+  {
+    "id": "cauliflower",
+    "name": "Cauliflower",
+    "name_fr": "Cauliflower",
+    "scientific_name": "Cauliflower spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of cauliflower perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Cauliflower",
+    "suitability_score": 0.94
+  },
+  {
+    "id": "broccoli",
+    "name": "Broccoli",
+    "name_fr": "Broccoli",
+    "scientific_name": "Broccoli spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of broccoli perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Broccoli",
+    "suitability_score": 0.94
+  },
+  {
+    "id": "celery",
+    "name": "Celery",
+    "name_fr": "Celery",
+    "scientific_name": "Celery spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of celery perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Celery",
+    "suitability_score": 0.94
+  },
+  {
+    "id": "leek",
+    "name": "Leek",
+    "name_fr": "Leek",
+    "scientific_name": "Leek spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of leek perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Leek",
+    "suitability_score": 0.96
+  },
+  {
+    "id": "turnip",
+    "name": "Turnip",
+    "name_fr": "Turnip",
+    "scientific_name": "Turnip spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of turnip perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Turnip",
+    "suitability_score": 0.97
+  },
+  {
+    "id": "beetroot",
+    "name": "Beetroot",
+    "name_fr": "Beetroot",
+    "scientific_name": "Beetroot spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of beetroot perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Beetroot",
+    "suitability_score": 0.96
+  },
+  {
+    "id": "sage",
+    "name": "Sage",
+    "name_fr": "Sage",
+    "scientific_name": "Sage spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of sage perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Sage",
+    "suitability_score": 0.96
+  },
+  {
+    "id": "tarragon",
+    "name": "Tarragon",
+    "name_fr": "Tarragon",
+    "scientific_name": "Tarragon spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of tarragon perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Tarragon",
+    "suitability_score": 0.92
+  },
+  {
+    "id": "lavender",
+    "name": "Lavender",
+    "name_fr": "Lavender",
+    "scientific_name": "Lavender spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of lavender perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Lavender",
+    "suitability_score": 0.96
+  },
+  {
+    "id": "cumin",
+    "name": "Cumin",
+    "name_fr": "Cumin",
+    "scientific_name": "Cumin spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of cumin perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Cumin",
+    "suitability_score": 0.98
+  },
+  {
+    "id": "cantaloupe",
+    "name": "Cantaloupe",
+    "name_fr": "Cantaloupe",
+    "scientific_name": "Cantaloupe spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of cantaloupe perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Cantaloupe",
+    "suitability_score": 0.91
+  },
+  {
+    "id": "lemon",
+    "name": "Lemon",
+    "name_fr": "Lemon",
+    "scientific_name": "Lemon spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of lemon perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Lemon",
+    "suitability_score": 0.93
+  },
+  {
+    "id": "lime",
+    "name": "Lime",
+    "name_fr": "Lime",
+    "scientific_name": "Lime spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of lime perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Lime",
+    "suitability_score": 0.92
+  },
+  {
+    "id": "orange",
+    "name": "Orange",
+    "name_fr": "Orange",
+    "scientific_name": "Orange spp.",
+    "type": "vegetable",
+    "conditions": {
+      "sunlight": "full_sun",
+      "min_temp_c": 18,
+      "max_temp_c": 35,
+      "soil_types": [
+        "loamy",
+        "well_drained"
+      ],
+      "water_needs": "moderate",
+      "ph_min": 6.0,
+      "ph_max": 7.0
+    },
+    "spacing": {
+      "between_plants_cm": 40,
+      "between_rows_cm": 60,
+      "plant_width_cm": 40,
+      "plant_height_cm": 60
+    },
+    "timing": {
+      "sowing_months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "transplant_months": [],
+      "harvest_months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "days_to_germination": 7,
+      "days_to_harvest": 60
+    },
+    "mauritius_regions": [
+      "north",
+      "south",
+      "east",
+      "west",
+      "central"
+    ],
+    "companion_plants": [],
+    "incompatible_plants": [],
+    "description": "A wonderful tropical variety of orange perfectly suited for Mauritius gardens.",
+    "care_notes": "Water regularly and ensure good drainage.",
+    "image_url": "https://placehold.co/600x400/2E7D32/FFFFFF/png?text=Orange",
+    "suitability_score": 0.98
   }
 ]

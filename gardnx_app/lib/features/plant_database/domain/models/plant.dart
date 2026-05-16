@@ -159,7 +159,7 @@ class Plant {
         id: json['id'] as String? ?? '',
         name: json['name'] as String,
         scientificName: json['scientific_name'] as String? ?? '',
-        category: json['category'] as String? ?? 'vegetable',
+        category: json['category'] as String? ?? 'ornamental',
         description: json['description'] as String? ?? '',
         imageUrl: normalizeImageUrl(json['image_url'] as String?),
         conditions: PlantConditions.fromJson(

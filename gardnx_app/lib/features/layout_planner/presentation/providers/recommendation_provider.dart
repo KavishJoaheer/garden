@@ -37,6 +37,7 @@ final enginePreferenceProvider = StateProvider<String?>((ref) => null);
 final engineUsedProvider = StateProvider<String?>((ref) => null);
 final engineRequestedProvider = StateProvider<String?>((ref) => null);
 final fallbackReasonProvider = StateProvider<String?>((ref) => null);
+final aiReasoningProvider = StateProvider<String?>((ref) => null);
 
 final engineStatusProvider = FutureProvider<Map<String, EngineStatus>>((ref) async {
   final repo = ref.read(layoutRepositoryProvider);
@@ -72,6 +73,7 @@ final recommendationsProvider =
 
   ref.read(engineRequestedProvider.notifier).state = result.engineRequested;
   ref.read(fallbackReasonProvider.notifier).state = result.fallbackReason;
+  ref.read(aiReasoningProvider.notifier).state = result.aiReasoning;
 
   if (result.suggestions.isNotEmpty) {
     ref.read(engineUsedProvider.notifier).state = result.engineUsed;
@@ -92,23 +94,45 @@ Future<List<LayoutSuggestion>> _localRecommendations(
   final suggestions = <LayoutSuggestion>[];
 
   for (final plant in plants) {
-    double score = plant.suitabilityScore;
+    double score = 0.40; // Lower base so matching criteria differentiate
     final reasons = <String>[];
 
+    // Sun exposure scoring
     if (plant.conditions.sunRequirement == params.sunExposure) {
-      score = (score + 0.10).clamp(0.0, 1.0);
+      score = (score + 0.15).clamp(0.0, 1.0);
       reasons.add('Suits ${params.sunExposure.replaceAll('_', ' ')}');
+    } else if (params.sunExposure == 'partial_shade') {
+      // Partial shade beds tolerate adjacent sun levels
+      score = (score + 0.05).clamp(0.0, 1.0);
+      reasons.add('Tolerates ${params.sunExposure.replaceAll('_', ' ')}');
+    } else {
+      // Sun mismatch — penalise
+      continue;
     }
+
+    // Soil type scoring
+    final soilLower = params.soilType.toLowerCase();
+    final plantSoils = plant.conditions.suitableSoils
+        .map((s) => s.toLowerCase())
+        .toList();
+    if (plantSoils.contains(soilLower) ||
+        plantSoils.any((s) => soilLower.contains(s) || s.contains(soilLower))) {
+      score = (score + 0.15).clamp(0.0, 1.0);
+      reasons.add('Thrives in ${params.soilType} soil');
+    } else if (plantSoils.any((s) => s.contains('loam'))) {
+      score = (score + 0.05).clamp(0.0, 1.0);
+      reasons.add('Adaptable soil requirements');
+    } else {
+      continue;
+    }
+
+    // Season scoring
     if (plant.timing.sowMonths.contains(month)) {
       score = (score + 0.10).clamp(0.0, 1.0);
       reasons.add('Good planting season right now');
     }
-    if (plant.conditions.suitableSoils.contains(params.soilType) ||
-        plant.conditions.suitableSoils.any((s) => s.contains('loam'))) {
-      score = (score + 0.05).clamp(0.0, 1.0);
-    }
 
-    if (score < 0.35) continue;
+    if (score < 0.30) continue;
 
     final bedArea = params.widthCm * params.heightCm;
     final spacing = plant.spacing.plantSpacingCm * plant.spacing.rowSpacingCm;

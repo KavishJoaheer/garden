@@ -70,12 +70,14 @@ class _AuthTextFieldState extends State<AuthTextField> {
       onFieldSubmitted: widget.onFieldSubmitted,
       enabled: widget.enabled,
       maxLines: widget.maxLines,
-      style: const TextStyle(fontSize: 16),
+      style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w500),
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: widget.hint,
+        labelStyle: TextStyle(color: Colors.grey.shade700),
+        hintStyle: TextStyle(color: Colors.grey.shade500),
         prefixIcon:
-            widget.prefixIcon != null ? Icon(widget.prefixIcon) : null,
+            widget.prefixIcon != null ? Icon(widget.prefixIcon, color: kGardNxGreen) : null,
         suffixIcon: widget.obscureText
             ? IconButton(
                 icon: Icon(

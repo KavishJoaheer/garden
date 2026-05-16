@@ -73,6 +73,7 @@ class _GardNxAppState extends ConsumerState<GardNxApp>
     if (user == null) return; // already signed out
     try {
       await ref.read(signOutProvider)();
+      await _sessionService.clearSession();
     } catch (_) {
       // Ignore — GoRouter will redirect to login on auth state change anyway.
     }
@@ -109,9 +110,20 @@ class _GardNxAppState extends ConsumerState<GardNxApp>
       ref.invalidate(currentUserProfileProvider);
       ref.invalidate(profileNotifierProvider);
 
-      // Manual input / layout state
+      // Manual input / layout state — clear beds to prevent cross-garden leaks
+      ref.read(manualInputProvider.notifier).clear();
       ref.invalidate(manualInputProvider);
       ref.invalidate(selectedBedIdProvider);
+
+      // Reset inactivity timer and session on sign-in
+      if (nextUid != null) {
+        Future.microtask(() async {
+          await _sessionService.startSession();
+          _resetInactivityTimer();
+        });
+      } else {
+        _inactivityTimer?.cancel();
+      }
     });
 
     final router = ref.watch(appRouterProvider);

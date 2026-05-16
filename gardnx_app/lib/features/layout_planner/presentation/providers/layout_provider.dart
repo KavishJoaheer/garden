@@ -2,9 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gardnx_app/features/layout_planner/domain/models/garden_layout.dart';
 import 'package:gardnx_app/features/layout_planner/domain/models/plant_placement.dart';
 import 'package:gardnx_app/features/layout_planner/data/repositories/layout_repository.dart';
+import 'package:gardnx_app/core/network/api_client.dart';
 
-final layoutRepositoryProvider =
-    Provider<LayoutRepository>((ref) => LayoutRepository());
+final layoutRepositoryProvider = Provider<LayoutRepository>((ref) {
+  final apiClient = ref.watch(apiClientProvider);
+  return LayoutRepository(dio: apiClient.dio);
+});
 
 class LayoutNotifier extends StateNotifier<GardenLayout?> {
   final LayoutRepository _repository;

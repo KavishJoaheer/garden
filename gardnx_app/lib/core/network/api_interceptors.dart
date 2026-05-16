@@ -38,10 +38,11 @@ class AuthInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     if (err.response?.statusCode == 401) {
-      debugPrint('AuthInterceptor: Received 401 — signing out.');
-      // Sign out asynchronously; the authStateChanges() stream triggers
-      // GoRouter redirect to /login automatically.
-      Future.microtask(() => _firebaseAuth.signOut());
+      // The backend will return 401 if token is expired or invalid.
+      // Signing out kicks the user back to login.
+      debugPrint('AuthInterceptor: Received 401 from ${err.requestOptions.uri} '
+          '— signing out user due to invalid or expired session.');
+      _firebaseAuth.signOut();
     }
     handler.next(err);
   }

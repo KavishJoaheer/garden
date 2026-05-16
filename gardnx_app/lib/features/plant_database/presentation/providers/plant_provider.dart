@@ -42,12 +42,23 @@ final allPlantsProvider = FutureProvider<List<Plant>>((ref) async {
       final byName = <String, Plant>{};
       for (final bp in backendPlants) {
         byId[bp.id] = bp;
-        byName[bp.name.toLowerCase()] = bp;
+        byName[bp.name.toLowerCase().trim()] = bp;
+        // Also index by words to catch partial matches
+        final words = bp.name.toLowerCase().split(RegExp(r'\s+'));
+        if (words.length == 1 && words[0].length >= 4) {
+          byName[words[0]] = bp;
+        }
       }
-      // Merge: if a local plant has no image, use backend's image URL.
+      // Merge: if a local plant has no image (or a legacy wiki URL), use backend's image URL.
       return plants.map((p) {
-        if (p.imageUrl != null) return p;
-        final match = byId[p.id] ?? byName[p.name.toLowerCase()];
+        final hasGoodImage = p.imageUrl != null &&
+            !p.imageUrl!.toLowerCase().contains('upgrade_access') &&
+            !p.imageUrl!.toLowerCase().contains('wikipedia.org/wiki/') &&
+            !p.imageUrl!.toLowerCase().contains('commons.wikimedia.org/wiki/');
+        if (hasGoodImage) return p;
+        final match = byId[p.id] ??
+            byName[p.name.toLowerCase().trim()] ??
+            byName[p.name.toLowerCase().split(RegExp(r'\s+')).first];
         if (match?.imageUrl != null) {
           return p.copyWith(imageUrl: match!.imageUrl);
         }

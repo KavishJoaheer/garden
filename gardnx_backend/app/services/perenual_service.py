@@ -391,6 +391,14 @@ class PerenualService:
                     f"Category: {category.capitalize()}."
                 )
 
+                # Dynamic Mauritius suitability based on tropical hardiness traits
+                suitability = 0.6
+                if sun == "full_sun": suitability += 0.2
+                elif sun == "partial_shade": suitability += 0.1
+                if water == "moderate": suitability += 0.1
+                if difficulty == "easy": suitability += 0.05
+                suitability = round(min(0.98, suitability), 2)
+
                 results.append({
                     "id": f"perenual_{item['id']}",
                     "name": item.get("common_name") or "Unknown Plant",
@@ -407,7 +415,7 @@ class PerenualService:
                     "spacing": spacing,
                     "timing": timing,
                     "companion_plant_ids": [], "incompatible_plant_ids": [],
-                    "suitability_score": 0.5,
+                    "suitability_score": suitability,
                     "tags": ["perenual", category],
                     "is_native": False,
                     "difficulty_level": difficulty,

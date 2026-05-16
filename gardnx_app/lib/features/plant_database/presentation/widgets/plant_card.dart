@@ -17,6 +17,12 @@ class PlantCard extends StatelessWidget {
         return Colors.orange;
       case 'flower':
         return Colors.pink;
+      case 'ornamental':
+        return Colors.indigo;
+      case 'tree':
+        return Colors.brown;
+      case 'shrub':
+        return Colors.deepPurple;
       default:
         return Colors.blueGrey;
     }
@@ -32,6 +38,12 @@ class PlantCard extends StatelessWidget {
         return Icons.apple;
       case 'flower':
         return Icons.local_florist;
+      case 'ornamental':
+        return Icons.park;
+      case 'tree':
+        return Icons.nature;
+      case 'shrub':
+        return Icons.grass;
       default:
         return Icons.yard;
     }

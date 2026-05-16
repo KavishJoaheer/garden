@@ -55,7 +55,7 @@ class Settings(BaseSettings):
 
     # ── Ollama (local LLM) ────────────────────────────────────────────────
     ollama_url: str = "http://localhost:11434"
-    ollama_model: str = "gemma3:1b"
+    ollama_model: str = "gemma:2b"
     warm_ollama_on_startup: bool = False
 
     # ── Derived properties ────────────────────────────────────────────────

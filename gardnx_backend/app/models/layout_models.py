@@ -168,3 +168,4 @@ class RecommendBedResponse(BaseModel):
     engine_used: str = "rules"
     engine_requested: str | None = None
     fallback_reason: str | None = None
+    ai_reasoning: str | None = None

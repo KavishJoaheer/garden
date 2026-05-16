@@ -90,6 +90,18 @@ class RecommendationScreen extends ConsumerWidget {
           ),
           // Engine selector
           _EngineSelector(bed: bed, gardenId: gardenId, season: season, region: region),
+          // AI Reasoning card — only shown when Gemini or Ollama provided reasoning
+          Consumer(builder: (context, ref, _) {
+            final reasoning = ref.watch(aiReasoningProvider);
+            final engineUsed = ref.watch(engineUsedProvider);
+            if (reasoning == null || reasoning.isEmpty) {
+              return const SizedBox.shrink();
+            }
+            return _AiReasoningCard(
+              reasoning: reasoning,
+              engineUsed: engineUsed ?? 'ai',
+            );
+          }),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
             child: Row(
@@ -557,6 +569,110 @@ class _SuggestionCard extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AiReasoningCard extends StatefulWidget {
+  final String reasoning;
+  final String engineUsed;
+
+  const _AiReasoningCard({
+    required this.reasoning,
+    required this.engineUsed,
+  });
+
+  @override
+  State<_AiReasoningCard> createState() => _AiReasoningCardState();
+}
+
+class _AiReasoningCardState extends State<_AiReasoningCard> {
+  bool _expanded = false;
+
+  String get _engineLabel {
+    switch (widget.engineUsed) {
+      case 'gemini':
+        return '✨ Gemini AI';
+      case 'ollama':
+        return '🖥️ Ollama (Local)';
+      default:
+        return '🤖 AI';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Card(
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      color: colorScheme.tertiaryContainer.withValues(alpha: 0.3),
+      child: InkWell(
+        onTap: () => setState(() => _expanded = !_expanded),
+        borderRadius: BorderRadius.circular(14),
+        child: AnimatedSize(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      widget.engineUsed == 'gemini'
+                          ? Icons.auto_awesome
+                          : Icons.computer,
+                      size: 18,
+                      color: colorScheme.tertiary,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '$_engineLabel Reasoning',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.tertiary,
+                      ),
+                    ),
+                    const Spacer(),
+                    Icon(
+                      _expanded
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                      color: colorScheme.tertiary,
+                    ),
+                  ],
+                ),
+                if (_expanded) ...[
+                  const SizedBox(height: 8),
+                  const Divider(height: 1),
+                  const SizedBox(height: 8),
+                  Text(
+                    widget.reasoning,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurface,
+                      height: 1.5,
+                    ),
+                  ),
+                ] else ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    'Tap to see why these plants were recommended',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
       ),

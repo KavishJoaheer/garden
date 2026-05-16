@@ -23,6 +23,8 @@ Take a photo of your garden → get plant recommendations → generate a layout 
 ## Setting up on a new machine
 
 See the full step-by-step guide: **[SETUP_GUIDE.md](SETUP_GUIDE.md)**
+Or specifically for mobile: **[MOBILE_SETUP.md](MOBILE_SETUP.md)**
+
 
 The short version:
 

@@ -25,7 +25,10 @@ class SessionService {
   Future<bool> isSessionExpired() async {
     final prefs = await SharedPreferences.getInstance();
     final expiresAt = prefs.getInt(_sessionExpiresAtKey);
-    if (expiresAt == null) return _firebaseAuth.currentUser != null;
+    // If there is no session timestamp, don't instantly sign them out.
+    // They just signed in or the session timer cleared it (in which case 
+    // Firebase auth is also cleared).
+    if (expiresAt == null) return false;
 
     return DateTime.now().millisecondsSinceEpoch >= expiresAt;
   }

@@ -193,15 +193,40 @@ async def recommend_plants_for_bed(
         # Pure rule-based fallback
         suggestions = []
         for plant in rec.plants.values():
-            score = 0.75
+            score = 0.50
             reasons: list[str] = []
 
+            # Sun exposure scoring
             if plant.conditions.sunlight == body.sun_exposure:
-                score = min(score + 0.10, 1.0)
+                score = min(score + 0.15, 1.0)
                 reasons.append(f"Suits {body.sun_exposure.replace('_', ' ')}")
+            elif body.sun_exposure in ("partial_shade",) and plant.conditions.sunlight in ("full_sun", "full_shade"):
+                score = min(score + 0.05, 1.0)
+                reasons.append(f"Tolerates {body.sun_exposure.replace('_', ' ')}")
+            else:
+                # Sun mismatch — skip entirely
+                continue
+
+            # Soil type scoring
+            soil_lower = body.soil_type.lower() if body.soil_type else ""
+            if soil_lower:
+                plant_soils = [s.lower() for s in plant.conditions.soil_types]
+                if soil_lower in plant_soils or any(soil_lower in ps or ps in soil_lower for ps in plant_soils):
+                    score = min(score + 0.15, 1.0)
+                    reasons.append(f"Thrives in {body.soil_type} soil")
+                elif "loamy" in plant_soils or "loam" in plant_soils:
+                    score = min(score + 0.05, 1.0)
+                    reasons.append("Adaptable soil requirements")
+                else:
+                    # Soil mismatch - skip entirely
+                    continue
+
+            # Season scoring
             if any(m in plant.timing.sowing_months for m in season_months):
                 score = min(score + 0.10, 1.0)
                 reasons.append("Good planting season")
+
+            # Region scoring
             if body.region in plant.mauritius_regions:
                 score = min(score + 0.05, 1.0)
                 reasons.append(f"Grows well in {body.region}")
@@ -224,14 +249,35 @@ async def recommend_plants_for_bed(
             ))
 
     suggestions.sort(key=lambda s: s.suitability_score, reverse=True)
+    top = suggestions[:15]
+
+    # Build a readable AI reasoning summary when an AI engine was used
+    ai_reasoning: str | None = None
+    if engine_used in ("gemini", "ollama") and top:
+        lines = [
+            f"🤖 {engine_used.capitalize()} AI analysed your garden bed "
+            f"({body.sun_exposure.replace('_', ' ')}, {body.soil_type} soil, "
+            f"{body.region} Mauritius, {body.season}) and selected "
+            f"{len(top)} plants:\n"
+        ]
+        for i, s in enumerate(top[:5], 1):
+            reasons_str = "; ".join(s.reasons[:3]) if s.reasons else "Good overall fit"
+            lines.append(
+                f"{i}. **{s.plant_name}** ({int(s.suitability_score * 100)}%) — {reasons_str}"
+            )
+        if len(top) > 5:
+            lines.append(f"\n...and {len(top) - 5} more recommendations below.")
+        ai_reasoning = "\n".join(lines)
+
     logger.info(
         "Bed recommendations [%s → %s]: %d results (sun=%s season=%s region=%s exp=%s)",
-        engine_requested or "auto", engine_used, len(suggestions[:15]),
+        engine_requested or "auto", engine_used, len(top),
         body.sun_exposure, body.season, body.region, body.experience_level,
     )
     return RecommendBedResponse(
-        recommendations=suggestions[:15],
+        recommendations=top,
         engine_used=engine_used,
         engine_requested=engine_requested,
         fallback_reason=fallback_reason,
+        ai_reasoning=ai_reasoning,
     )

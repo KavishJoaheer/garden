@@ -45,10 +45,10 @@ class DefaultFirebaseOptions {
   // Firebase project: google-services.json → client[0]
   // ---------------------------------------------------------------------------
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'REPLACE_WITH_YOUR_ANDROID_API_KEY',
-    appId: '1:000000000000:android:0000000000000000000000',
-    messagingSenderId: '000000000000',
-    projectId: 'gardnx-app',
-    storageBucket: 'gardnx-app.appspot.com',
+    apiKey: 'AIzaSyBE2ulzg1HWZa-YSL-A1Wnpz92XgstvGFA',
+    appId: '1:136474630624:android:7f72fa9936e06feb1bb385',
+    messagingSenderId: '136474630624',
+    projectId: 'gardenai-937c2',
+    storageBucket: 'gardenai-937c2.firebasestorage.app',
   );
 }

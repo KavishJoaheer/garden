@@ -15,11 +15,12 @@ from app.models.plant_models import (
 logger = logging.getLogger("gardnx")
 
 # Scoring weights (must sum to 1.0)
-W_SUN = 0.25
-W_SEASON = 0.25
-W_TEMP = 0.20
-W_REGION = 0.15
-W_PREF = 0.15
+W_SUN = 0.22
+W_SEASON = 0.22
+W_TEMP = 0.18
+W_REGION = 0.13
+W_PREF = 0.13
+W_SOIL = 0.12
 
 # Adjacent sun levels for partial matching
 SUN_ADJACENCY = {
@@ -83,6 +84,7 @@ class PlantRecommender:
             temp_sc, temp_reason = self._score_temp(plant, req.current_temp_c)
             region_sc, region_reason = self._score_region(plant, req.region)
             pref_sc, pref_reason = self._score_preference(plant, req.preferences)
+            soil_sc, soil_reason = self._score_soil(plant, req.bed_soil_type)
 
             total = (
                 W_SUN * sun_sc
@@ -90,9 +92,10 @@ class PlantRecommender:
                 + W_TEMP * temp_sc
                 + W_REGION * region_sc
                 + W_PREF * pref_sc
+                + W_SOIL * soil_sc
             )
 
-            reasons = [r for r in [sun_reason, season_reason, temp_reason, region_reason, pref_reason] if r]
+            reasons = [r for r in [sun_reason, season_reason, temp_reason, region_reason, pref_reason, soil_reason] if r]
 
             scored.append(
                 PlantRecommendation(
@@ -116,6 +119,7 @@ class PlantRecommender:
             total=len(top),
             filters_applied={
                 "bed_sunlight": req.bed_sunlight,
+                "bed_soil_type": req.bed_soil_type,
                 "month": req.month,
                 "region": req.region,
                 "preferences": req.preferences,
@@ -244,3 +248,30 @@ class PlantRecommender:
         score = min(1.0, matches / len(preferences))
         reason = f"Matches preferences: {', '.join(reasons_parts)}"
         return round(score, 3), reason
+
+    def _score_soil(self, plant: Plant, bed_soil_type: str) -> tuple[float, str]:
+        """Score soil type compatibility."""
+        if not bed_soil_type:
+            return 0.5, ""  # Neutral when no soil type specified
+
+        soil_lower = bed_soil_type.lower()
+        plant_soils = [s.lower() for s in plant.conditions.soil_types]
+
+        # Direct match
+        if soil_lower in plant_soils:
+            return 1.0, f"Thrives in {bed_soil_type} soil"
+
+        # Check partial matches (e.g. "loamy" matches "loam", "sandy" matches "sand")
+        for ps in plant_soils:
+            if soil_lower in ps or ps in soil_lower:
+                return 0.8, f"Suited for {bed_soil_type} soil"
+
+        # Loamy soil is somewhat universal — most plants tolerate it
+        if "loamy" in plant_soils or "loam" in plant_soils:
+            return 0.4, "Prefers loamy soil (adaptable)"
+
+        # Well-drained / rich are also broadly compatible
+        if any(s in plant_soils for s in ("well_drained", "rich")):
+            return 0.3, "Adaptable soil requirements"
+
+        return 0.0, ""

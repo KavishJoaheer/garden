@@ -65,28 +65,47 @@ final resolvedGardenIdProvider = FutureProvider<String?>((ref) async {
 
 /// Single source of truth for the events list shown on the calendar.
 ///
-/// Keyed on the resolved gardenId so switching gardens always loads fresh
-/// data from Firestore. Tap-to-complete mutates this notifier; the screen
-/// reads its state so the toggle is reflected immediately without refetching.
+/// Loads events from ALL gardens owned by the user (not just the active one)
+/// so every bed's planting schedule appears on the calendar. The resolved
+/// gardenId is still used as a rebuild key — and explicitly for toggle
+/// persistence — but _load now aggregates across all gardens.
 class GardenEventsNotifier
     extends StateNotifier<AsyncValue<List<PlantingEvent>>> {
   final CalendarRepository _repo;
-  final String? gardenId;
+  final String? _uid;
+  final Ref _ref;
 
-  GardenEventsNotifier(this._repo, this.gardenId)
+  GardenEventsNotifier(this._repo, this._uid, this._ref)
       : super(const AsyncLoading()) {
     _load();
   }
 
   Future<void> _load() async {
-    final gid = gardenId;
-    if (gid == null || gid.isEmpty) {
+    final uid = _uid;
+    if (uid == null || uid.isEmpty) {
       state = const AsyncData(<PlantingEvent>[]);
       return;
     }
     try {
-      final events = await _repo.getEvents(gid);
-      state = AsyncData(events);
+      final firestore = _ref.read(firestoreProvider);
+      // Fetch all garden IDs owned by this user.
+      final gardenSnap = await firestore
+          .collection('gardens')
+          .where('userId', isEqualTo: uid)
+          .get();
+      if (gardenSnap.docs.isEmpty) {
+        state = const AsyncData(<PlantingEvent>[]);
+        return;
+      }
+      // Load events from each garden and merge.
+      final allEvents = <PlantingEvent>[];
+      for (final gardenDoc in gardenSnap.docs) {
+        final events = await _repo.getEvents(gardenDoc.id);
+        allEvents.addAll(events);
+      }
+      // Sort chronologically.
+      allEvents.sort((a, b) => a.date.compareTo(b.date));
+      state = AsyncData(allEvents);
     } catch (e, st) {
       state = AsyncError(e, st);
     }
@@ -97,8 +116,8 @@ class GardenEventsNotifier
   /// Optimistic toggle: flip UI first, persist second, roll back on failure.
   /// Returns a non-null error message only when persistence fails.
   Future<String?> toggleEventCompletion(PlantingEvent event) async {
-    final gid = gardenId;
-    if (gid == null || gid.isEmpty) return 'Garden not set';
+    final gid = event.gardenId;
+    if (gid.isEmpty) return 'Garden not set';
     final current = state.value;
     if (current == null) return 'Events not loaded';
 
@@ -120,9 +139,12 @@ class GardenEventsNotifier
 
 final gardenEventsProvider = StateNotifierProvider<
     GardenEventsNotifier, AsyncValue<List<PlantingEvent>>>((ref) {
-  final gardenId = ref.watch(resolvedGardenIdProvider).valueOrNull;
+  // Still watch resolvedGardenIdProvider as a rebuild trigger —
+  // when user saves a new layout, it invalidates this provider.
+  ref.watch(resolvedGardenIdProvider);
+  final uid = ref.watch(currentFirebaseUserProvider)?.uid;
   final repo = ref.read(calendarRepositoryProvider);
-  return GardenEventsNotifier(repo, gardenId);
+  return GardenEventsNotifier(repo, uid, ref);
 });
 
 // Events grouped by day (for table_calendar markerBuilder)

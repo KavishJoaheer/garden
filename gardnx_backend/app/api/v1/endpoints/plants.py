@@ -150,7 +150,7 @@ async def get_engine_status(user_id: str = Depends(get_current_user)):
         try:
             import google.generativeai as genai
             genai.configure(api_key=settings.gemini_api_key)
-            statuses["gemini"] = {"available": True, "reason": "Gemini 2.5 Flash Lite (cloud AI)"}
+            statuses["gemini"] = {"available": True, "reason": "Gemini 1.5 Flash (cloud AI)"}
         except Exception as e:
             statuses["gemini"] = {"available": False, "reason": f"Gemini error: {str(e)[:80]}"}
 

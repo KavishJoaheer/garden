@@ -19,11 +19,13 @@ class RecommendationResult {
   final String engineUsed;
   final String? engineRequested;
   final String? fallbackReason;
+  final String? aiReasoning;
   RecommendationResult({
     required this.suggestions,
     required this.engineUsed,
     this.engineRequested,
     this.fallbackReason,
+    this.aiReasoning,
   });
 }
 
@@ -132,6 +134,7 @@ class LayoutRepository {
           engineUsed: body['engine_used'] as String? ?? 'rules',
           engineRequested: body['engine_requested'] as String?,
           fallbackReason: body['fallback_reason'] as String?,
+          aiReasoning: body['ai_reasoning'] as String?,
         );
       }
     } on DioException {

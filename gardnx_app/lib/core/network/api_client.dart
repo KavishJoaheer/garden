@@ -10,6 +10,8 @@ import 'package:gardnx_app/core/network/api_interceptors.dart';
 class ApiClient {
   final Dio _dio;
 
+  Dio get dio => _dio;
+
   ApiClient({Dio? dio})
       : _dio = dio ??
             Dio(

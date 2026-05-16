@@ -74,7 +74,7 @@ class GeminiRecommender:
         if self._enabled:
             genai.configure(api_key=api_key)
             self._model = genai.GenerativeModel(
-                model_name="gemini-2.5-flash-lite",
+                model_name="gemini-1.5-flash",
                 system_instruction=_SYSTEM_PROMPT,
                 generation_config=genai.GenerationConfig(
                     temperature=0.3,        # low temp = consistent, factual output

@@ -57,7 +57,7 @@ async def get_current_user(authorization: str | None = Header(None)) -> str:
             )
             return "anonymous"
 
-        decoded_token = firebase_auth.verify_id_token(token)
+        decoded_token = firebase_auth.verify_id_token(token, clock_skew_seconds=60)
         return decoded_token["uid"]
 
     except ImportError:
